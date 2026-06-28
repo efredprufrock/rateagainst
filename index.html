@@ -158,21 +158,58 @@
             if (label) label.textContent = '';
         };
 
+        // Manual push — forces all local data up to Firestore
+        window.manualPushToCloud = async () => {
+            const pushBtn = document.getElementById('firebase-push-btn');
+            const syncIcon = document.getElementById('firebase-sync-icon');
+            const userLabel = document.getElementById('firebase-user-label');
+
+            if (!auth.currentUser) {
+                alert('Please sign in first.');
+                return;
+            }
+            if (!AppState.library || AppState.library.length === 0) {
+                alert('Your library is empty — nothing to push.');
+                return;
+            }
+
+            // Show loading state
+            if (pushBtn) { pushBtn.disabled = true; pushBtn.innerHTML = '<i class="ph-bold ph-arrows-clockwise animate-spin text-lg"></i> Pushing...'; }
+            if (syncIcon) syncIcon.classList.add('animate-spin');
+
+            try {
+                await setDoc(doc(db, "users", auth.currentUser.uid, "data", "library"), { library: AppState.library });
+                if (userLabel) userLabel.textContent = `✓ ${AppState.library.length} albums synced`;
+                setTimeout(() => {
+                    if (userLabel) userLabel.textContent = auth.currentUser.displayName || auth.currentUser.email;
+                }, 3000);
+            } catch(e) {
+                alert('Push failed: ' + e.message);
+                console.error(e);
+            } finally {
+                if (pushBtn) { pushBtn.disabled = false; pushBtn.innerHTML = '<i class="ph-bold ph-cloud-arrow-up text-lg"></i> Push my data to cloud'; }
+                if (syncIcon) syncIcon.classList.remove('animate-spin');
+            }
+        };
+
         // Watch auth state — fires on every page load
         onAuthStateChanged(auth, async (user) => {
             const loginBtn   = document.getElementById('firebase-login-btn');
             const logoutBtn  = document.getElementById('firebase-logout-btn');
+            const pushBtn    = document.getElementById('firebase-push-btn');
             const userLabel  = document.getElementById('firebase-user-label');
             const syncIcon   = document.getElementById('firebase-sync-icon');
 
             if (user) {
                 if (loginBtn)  loginBtn.classList.add('hidden');
                 if (logoutBtn) logoutBtn.classList.remove('hidden');
+                if (pushBtn)   pushBtn.classList.remove('hidden');
                 if (userLabel) userLabel.textContent = user.displayName || user.email;
                 if (syncIcon)  syncIcon.classList.remove('hidden');
 
                 // Show loading indicator
                 if (syncIcon) syncIcon.classList.add('animate-spin');
+                if (userLabel) userLabel.textContent = 'Loading from cloud...';
 
                 // Load cloud data and merge with local
                 const cloudLibrary = await window.loadFromCloud();
@@ -180,22 +217,25 @@
                 if (syncIcon) syncIcon.classList.remove('animate-spin');
 
                 if (cloudLibrary && cloudLibrary.length > 0) {
-                    // Merge: cloud is source of truth, but keep any local-only items
+                    // Merge: cloud is source of truth, keep any local-only items too
                     const cloudIds = new Set(cloudLibrary.map(a => a.id));
                     const localOnly = AppState.library.filter(a => !cloudIds.has(a.id));
                     AppState.library = [...cloudLibrary, ...localOnly];
                     localStorage.setItem('albumDiaryData', JSON.stringify(AppState.library));
-                    if (window.app) {
-                        app.renderLibrary();
-                        app.renderStats();
-                    }
+                    if (window.app) { app.renderLibrary(); app.renderStats(); }
+                    if (userLabel) userLabel.textContent = user.displayName || user.email;
                 } else if (AppState.library.length > 0) {
-                    // No cloud data yet — push local data up
+                    // No cloud data yet — auto push local up
+                    if (userLabel) userLabel.textContent = 'Uploading your data...';
                     await window.saveToCloud(AppState.library);
+                    if (userLabel) userLabel.textContent = user.displayName || user.email;
+                } else {
+                    if (userLabel) userLabel.textContent = user.displayName || user.email;
                 }
             } else {
                 if (loginBtn)  loginBtn.classList.remove('hidden');
                 if (logoutBtn) logoutBtn.classList.add('hidden');
+                if (pushBtn)   pushBtn.classList.add('hidden');
                 if (syncIcon)  syncIcon.classList.add('hidden');
                 if (userLabel) userLabel.textContent = '';
             }
@@ -248,6 +288,10 @@
                 <button id="firebase-logout-btn" onclick="logoutFirebase()"
                     class="hidden w-full flex items-center gap-2 px-3 py-2.5 rounded-lg bg-lightBg dark:bg-surfaceHover border border-lightBorder dark:border-gray-700 text-sm font-bold text-gray-500 hover:bg-lightHighlight dark:hover:bg-gray-700 transition-colors active:scale-95">
                     <i class="ph ph-sign-out text-lg"></i> Sign out
+                </button>
+                <button id="firebase-push-btn" onclick="manualPushToCloud()"
+                    class="hidden w-full flex items-center gap-2 px-3 py-2.5 rounded-lg bg-primary/10 border border-primary/30 text-sm font-bold text-primary hover:bg-primary/20 transition-colors active:scale-95">
+                    <i class="ph-bold ph-cloud-arrow-up text-lg"></i> Push my data to cloud
                 </button>
             </div>
             <div class="p-4 border-b border-lightBorder dark:border-gray-800 space-y-4">
