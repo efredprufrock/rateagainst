@@ -1,0 +1,2534 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#1c140f" id="meta-theme-color">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>RateAgainst — Music Rating Diary</title>
+    <meta name="description" content="Rate your albums, track by track. Build your personal music library.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#1c140f',
+                        darker: '#140e0a',
+                        surface: '#241a13',
+                        surfaceHover: '#3b2b20',
+                        
+                        lightBg: '#f7f4f0',
+                        lightHighlight: '#ebe4dc',
+                        lightBorder: '#dcd1c6',
+                        
+                        primary: '#d17b38', 
+                        
+                        gray: {
+                            50: '#fcfbfa',
+                            100: '#f5f0eb',
+                            200: '#e6dbcf',
+                            300: '#d6c5b3',
+                            400: '#b5a18c',
+                            500: '#947e68',
+                            600: '#75604d',
+                            700: '#594636',
+                            800: '#3b2b20',
+                            900: '#241a13',
+                            950: '#140e0a',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Merriweather', 'serif'],
+                    }
+                }
+            }
+        }
+
+        if (localStorage.getItem('theme') === 'light' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+            document.documentElement.classList.remove('dark');
+            document.getElementById('meta-theme-color').setAttribute('content', '#f7f4f0');
+        } else {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" media="print" onload="this.media='all'" rel="stylesheet">
+    
+    <style>
+        * { -webkit-tap-highlight-color: transparent; }
+        body { 
+            font-family: 'Merriweather', Georgia, 'Times New Roman', serif; 
+            transition: background-color 0.3s, color 0.3s; 
+            min-height: 100vh;
+            min-height: 100dvh; 
+            overflow-x: hidden;
+            overscroll-behavior-y: none;
+        }
+        
+        @supports (padding-top: env(safe-area-inset-top)) {
+            body {
+                padding-left: env(safe-area-inset-left);
+                padding-right: env(safe-area-inset-right);
+            }
+            .safe-pt { padding-top: max(1rem, env(safe-area-inset-top)); }
+            .safe-pb { padding-bottom: max(5rem, env(safe-area-inset-bottom)); }
+        }
+
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #dcd1c6; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #3b2b20; }
+        
+        .star-btn:hover ~ .star-btn i { color: #9ca3af !important; } 
+        .star-container:hover .star-btn i { color: #d17b38 !important; }
+        .star-container .star-btn:hover ~ .star-btn i { color: #9ca3af !important; }
+        
+        .modal-enter { opacity: 0; transform: scale(0.95); }
+        .modal-enter-active { opacity: 1; transform: scale(1); transition: all 0.2s ease-out; }
+        .slide-up { transition: transform 0.3s cubic-bezier(0.33, 1, 0.68, 1); }
+    </style>
+</head>
+<body class="bg-lightBg text-gray-800 dark:bg-dark dark:text-gray-200 flex flex-col transition-colors duration-300">
+    <noscript>
+        <div style="text-align:center; padding:2rem; font-family:sans-serif; background:#fff3cd; color:#856404; border-bottom:1px solid #ffeeba;">
+            RateAgainst requires JavaScript to run. Please enable JavaScript in your browser.
+        </div>
+    </noscript>
+
+    <header class="bg-lightBg/90 dark:bg-darker/90 backdrop-blur-md border-b border-lightBorder dark:border-gray-800 safe-pt px-4 py-3 sticky top-0 z-[40] w-full flex justify-between items-center transition-colors shadow-sm">
+        <div class="flex items-center gap-2 cursor-pointer" id="header-logo">
+            <i class="ph-fill ph-vinyl-record text-primary text-3xl animate-spin-slow" style="animation-duration: 4s;"></i>
+            <h1 class="text-xl font-bold text-gray-900 dark:text-white tracking-tight" data-i18n="app_title">RateAgainst</h1>
+        </div>
+        <button id="sidebar-open-btn" aria-label="Open Menu" class="p-2 -mr-2 rounded-full hover:bg-lightHighlight dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors">
+            <i class="ph ph-list text-2xl"></i>
+        </button>
+    </header>
+
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm z-[60] hidden opacity-0 transition-opacity duration-300"></div>
+    
+    <div id="right-sidebar" class="fixed inset-y-0 right-0 z-[70] w-80 max-w-[85vw] bg-white dark:bg-surface border-l border-lightBorder dark:border-gray-800 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col safe-pt safe-pb">
+        <div class="p-4 border-b border-lightBorder dark:border-gray-800 flex justify-between items-center bg-lightBg dark:bg-darker">
+            <h2 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <i class="ph-fill ph-gear text-primary"></i> <span data-i18n="menu_settings">Menu & Settings</span>
+            </h2>
+            <button id="sidebar-close-btn" aria-label="Close Menu" class="p-2 -mr-2 rounded-full hover:bg-lightBorder dark:hover:bg-gray-700 text-gray-500 transition-colors">
+                <i class="ph ph-x text-xl"></i>
+            </button>
+        </div>
+
+        <div class="flex-grow overflow-y-auto">
+            <div class="p-4 border-b border-lightBorder dark:border-gray-800 space-y-4">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2"><i class="ph ph-globe text-lg"></i> <span data-i18n="language_label">Dil / Language</span></span>
+                    <button onclick="app.toggleLanguage()" class="bg-lightBorder dark:bg-gray-800 px-3 py-1 rounded-full text-sm font-bold w-12 text-center" id="lang-icon">TR</button>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2"><i class="ph ph-palette text-lg"></i> <span data-i18n="theme_label">Tema / Theme</span></span>
+                    <button onclick="app.toggleTheme()" class="bg-lightBorder dark:bg-gray-800 p-1.5 rounded-full text-sm font-bold">
+                        <i id="theme-icon" class="ph ph-moon text-lg px-1"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-4 border-b border-lightBorder dark:border-gray-800 space-y-2">
+                <h3 class="text-xs font-bold text-gray-500 uppercase mb-3" data-i18n="nav_data">Data</h3>
+                <button onclick="app.exportData(); app.toggleSidebar(false);" class="w-full text-left px-3 py-2.5 rounded-lg bg-lightBg dark:bg-surfaceHover text-sm flex items-center gap-3 text-gray-700 dark:text-gray-300 active:scale-95 transition-transform">
+                    <i class="ph ph-download-simple text-lg text-blue-500"></i> <span data-i18n="export_json">Export JSON</span>
+                </button>
+                <label class="w-full block text-left px-3 py-2.5 rounded-lg bg-lightBg dark:bg-surfaceHover text-sm flex items-center gap-3 text-gray-700 dark:text-gray-300 active:scale-95 transition-transform cursor-pointer">
+                    <i class="ph ph-upload-simple text-lg text-green-500"></i> <span data-i18n="import_json">Import JSON</span>
+                    <input type="file" id="import-file" class="hidden" accept=".json" onchange="app.importData(event); app.toggleSidebar(false);">
+                </label>
+                <button onclick="app.exportHighRatedTracks(); app.toggleSidebar(false);" class="w-full text-left px-3 py-2.5 rounded-lg bg-lightBg dark:bg-surfaceHover text-sm flex items-center gap-3 text-gray-700 dark:text-gray-300 active:scale-95 transition-transform">
+                    <i class="ph-fill ph-spotify-logo text-lg text-primary"></i> <span data-i18n="export_4_5_star">Favori (4-5 Yıldız) Parçalar</span>
+                </button>
+            </div>
+
+            <div class="flex flex-col h-64 flex-grow">
+                <div class="p-4 pb-2">
+                    <h3 class="text-xs font-bold text-gray-500 uppercase flex items-center gap-2 mb-2">
+                        <i class="ph-fill ph-users text-primary"></i> <span data-i18n="artists">Artists</span>
+                    </h3>
+                    <div class="relative">
+                        <i class="ph ph-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" id="sidebar-search" data-i18n-placeholder="search_artist" placeholder="Search artist..." class="w-full bg-lightBg dark:bg-darker border-none text-gray-800 dark:text-gray-200 rounded-lg pl-9 pr-3 py-2 text-sm outline-none" oninput="app.debouncedSidebarSearch(event)">
+                    </div>
+                </div>
+                <ul id="sidebar-artist-list" class="overflow-y-auto px-2 pb-4 space-y-1 hide-scrollbar"></ul>
+            </div>
+        </div>
+    </div>
+
+    <main class="w-full flex-grow relative overflow-x-hidden safe-pb pb-24">
+
+        <section id="view-library" class="view-section animate-fade-in w-full flex flex-col p-4">
+            <div id="filter-bar" class="flex overflow-x-auto hide-scrollbar gap-1.5 sm:gap-2 mb-5 pb-3 pt-1 items-center -mx-4 px-4 border-b border-lightBorder dark:border-gray-800 bg-lightBg dark:bg-dark relative justify-between md:justify-end">
+                <div class="flex items-center gap-1 sm:gap-1.5 flex-shrink-0">
+                    <button data-i18n-title="tooltip_filter_artist" data-dropdown-btn onclick="app.openDropdown(event, 'Group')" class="relative flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 bg-white dark:bg-surface border border-lightBorder dark:border-gray-800 rounded-full flex-shrink-0 shadow-sm hover:bg-lightHighlight dark:hover:bg-surfaceHover active:scale-95 transition-colors cursor-pointer">
+                        <i id="icon-filter-group" class="ph-bold ph-microphone-stage text-gray-500 transition-colors pointer-events-none text-sm sm:text-base"></i>
+                    </button>
+
+                    <button data-i18n-title="tooltip_filter_genre" data-dropdown-btn onclick="app.openDropdown(event, 'Genre')" class="relative flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 bg-white dark:bg-surface border border-lightBorder dark:border-gray-800 rounded-full flex-shrink-0 shadow-sm hover:bg-lightHighlight dark:hover:bg-surfaceHover active:scale-95 transition-colors cursor-pointer">
+                        <i id="icon-filter-genre" class="ph-bold ph-music-notes text-gray-500 transition-colors pointer-events-none text-sm sm:text-base"></i>
+                    </button>
+
+                    <button data-i18n-title="tooltip_filter_year" data-dropdown-btn onclick="app.openDropdown(event, 'Year')" class="relative flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 bg-white dark:bg-surface border border-lightBorder dark:border-gray-800 rounded-full flex-shrink-0 shadow-sm hover:bg-lightHighlight dark:hover:bg-surfaceHover active:scale-95 transition-colors cursor-pointer">
+                        <i id="icon-filter-year" class="ph-bold ph-calendar text-gray-500 transition-colors pointer-events-none text-sm sm:text-base"></i>
+                    </button>
+                    
+                    <button data-i18n-title="tooltip_filter_label" data-dropdown-btn onclick="app.openDropdown(event, 'Label')" class="relative flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 bg-white dark:bg-surface border border-lightBorder dark:border-gray-800 rounded-full flex-shrink-0 shadow-sm hover:bg-lightHighlight dark:hover:bg-surfaceHover active:scale-95 transition-colors cursor-pointer">
+                        <i id="icon-filter-label" class="ph-bold ph-record text-gray-500 transition-colors pointer-events-none text-sm sm:text-base"></i>
+                    </button>
+                </div>
+
+                <div class="h-5 w-px bg-lightBorder dark:bg-gray-700 mx-0.5 sm:mx-1 flex-shrink-0"></div>
+
+                <div class="flex items-center bg-white dark:bg-surface border border-lightBorder dark:border-gray-800 rounded-full p-0.5 flex-shrink-0 shadow-sm">
+                    <button data-i18n-title="tooltip_sort_added" onclick="app.toggleSort('dateAdded')" id="btn-sort-dateAdded" class="flex items-center gap-0.5 px-1.5 py-1 sm:px-2 sm:py-1.5 rounded-full text-gray-500 hover:text-primary transition-colors">
+                        <i class="ph-bold ph-calendar-plus text-sm sm:text-base"></i>
+                        <i id="icon-sort-dateAdded-dir" class="ph-bold ph-arrow-down text-[9px] sm:text-[10px] opacity-30"></i>
+                    </button>
+                    <button data-i18n-title="tooltip_sort_year" onclick="app.toggleSort('year')" id="btn-sort-year" class="flex items-center gap-0.5 px-1.5 py-1 sm:px-2 sm:py-1.5 rounded-full text-gray-500 hover:text-primary transition-colors">
+                        <i class="ph-bold ph-clock text-sm sm:text-base"></i>
+                        <i id="icon-sort-year-dir" class="ph-bold ph-arrow-down text-[9px] sm:text-[10px] opacity-30"></i>
+                    </button>
+                    <button data-i18n-title="tooltip_sort_rating" onclick="app.toggleSort('rating')" id="btn-sort-rating" class="flex items-center gap-0.5 px-1.5 py-1 sm:px-2 sm:py-1.5 rounded-full text-gray-500 hover:text-primary transition-colors">
+                        <i class="ph-bold ph-star text-sm sm:text-base"></i>
+                        <i id="icon-sort-rating-dir" class="ph-bold ph-arrow-down text-[9px] sm:text-[10px] opacity-30"></i>
+                    </button>
+                </div>
+                
+                <div class="flex items-center bg-white dark:bg-surface border border-lightBorder dark:border-gray-800 rounded-full p-0.5 flex-shrink-0 shadow-sm ml-0.5 sm:ml-1">
+                    <button data-i18n-title="tooltip_grid_normal" onclick="app.setGridSize('normal')" id="btn-grid-normal" class="p-1 sm:p-1.5 rounded-full text-gray-500 hover:text-primary transition-colors">
+                        <i class="ph-fill ph-square text-sm sm:text-base"></i>
+                    </button>
+                    <button data-i18n-title="tooltip_grid_small" onclick="app.setGridSize('small')" id="btn-grid-small" class="p-1 sm:p-1.5 rounded-full text-gray-500 hover:text-primary transition-colors">
+                        <i class="ph-fill ph-squares-four text-sm sm:text-base"></i>
+                    </button>
+                    <button data-i18n-title="tooltip_grid_xsmall" onclick="app.setGridSize('xsmall')" id="btn-grid-xsmall" class="p-1 sm:p-1.5 rounded-full text-gray-500 hover:text-primary transition-colors">
+                        <i class="ph-fill ph-dots-nine text-sm sm:text-base"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="library-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3"></div>
+            
+            <div id="empty-library-state" class="hidden flex-col items-center justify-center py-20 text-center w-full">
+                <div class="w-20 h-20 bg-lightHighlight dark:bg-surface rounded-full flex items-center justify-center mb-4">
+                    <i class="ph-fill ph-music-notes text-4xl text-gray-400 dark:text-gray-600"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2" data-i18n="no_albums">No albums added yet</h3>
+                <p class="text-gray-500 dark:text-gray-400 text-sm max-w-xs mx-auto mb-6" data-i18n="no_albums_desc">Search for albums while listening to music, rate tracks, and build your archive.</p>
+                <button onclick="app.showView('search')" class="bg-primary text-black px-6 py-3 rounded-full font-bold active:scale-95 transition-transform shadow-lg flex items-center gap-2">
+                    <i class="ph-bold ph-magnifying-glass"></i> <span data-i18n="add_first_album">Add Album</span>
+                </button>
+            </div>
+        </section>
+
+        <section id="view-search" class="view-section hidden animate-fade-in w-full flex flex-col p-4 pt-6 md:pt-10">
+            <div class="w-full max-w-2xl mx-auto flex flex-col gap-4 mb-8">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2 md:text-center" data-i18n="what_listening">Ne dinliyorsun?</h2>
+                
+                <div class="w-full flex flex-col gap-4">
+                    <div class="bg-white dark:bg-surface p-1 rounded-xl flex gap-1 shadow-sm border border-lightBorder dark:border-gray-800">
+                        <label class="flex-1 text-center cursor-pointer">
+                            <input type="radio" name="searchType" value="artist" checked class="peer hidden" onchange="app.updateSearchPlaceholder()">
+                            <div class="py-2 text-sm font-semibold text-gray-500 peer-checked:bg-lightHighlight dark:peer-checked:bg-darker peer-checked:text-primary rounded-lg transition-colors" data-i18n="artist_disco">Sanatçı</div>
+                        </label>
+                        <label class="flex-1 text-center cursor-pointer">
+                            <input type="radio" name="searchType" value="album" class="peer hidden" onchange="app.updateSearchPlaceholder()">
+                            <div class="py-2 text-sm font-semibold text-gray-500 peer-checked:bg-lightHighlight dark:peer-checked:bg-darker peer-checked:text-primary rounded-lg transition-colors" data-i18n="by_album">Albüm</div>
+                        </label>
+                    </div>
+
+                    <div class="relative w-full shadow-lg dark:shadow-none rounded-2xl">
+                        <i class="ph-bold ph-magnifying-glass absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl"></i>
+                        <input type="text" id="search-input" data-i18n-placeholder="placeholder_artist" placeholder="Sanatçı/grup adı yazın..." 
+                               class="w-full bg-white dark:bg-surface border-2 border-transparent text-gray-900 dark:text-white rounded-2xl pl-12 pr-16 py-4 text-base focus:outline-none focus:border-primary transition-colors shadow-sm"
+                               onkeypress="if(event.key === 'Enter') { this.blur(); app.search(); }">
+                        <button onclick="app.search()" id="search-btn" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-primary text-white rounded-xl w-10 h-10 flex items-center justify-center active:scale-95 transition-transform disabled:opacity-50">
+                            <i class="ph-bold ph-arrow-right text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="search-loading" class="hidden flex flex-col items-center justify-center gap-4 py-12">
+                <i class="ph-bold ph-spinner-gap text-primary text-4xl animate-spin"></i>
+                <p class="text-sm font-medium text-gray-500" id="search-status-text" data-i18n="search_db">Veritabanı aranıyor...</p>
+            </div>
+
+            <div id="search-results" class="w-full max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-8"></div>
+        </section>
+
+        <section id="view-stats" class="view-section hidden animate-fade-in w-full p-4 pt-6 md:pt-10">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-6 md:mb-8" data-i18n="music_taste">Müzik Zevkin</h2>
+                
+                <div class="grid grid-cols-3 md:grid-cols-4 gap-3 md:gap-6 mb-8 max-w-2xl">
+                    <div class="bg-white dark:bg-surface p-4 rounded-2xl border border-lightBorder dark:border-gray-800 shadow-sm flex flex-col items-center text-center">
+                        <div class="bg-purple-100 dark:bg-purple-500/20 p-2.5 rounded-full text-purple-600 dark:text-purple-400 mb-2">
+                            <i class="ph-fill ph-users text-2xl"></i>
+                        </div>
+                        <p class="text-gray-500 dark:text-gray-400 text-[10px] sm:text-xs font-semibold uppercase mb-1" data-i18n="unique_artists">Sanatçı</p>
+                        <p class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white" id="stat-unique-artists">0</p>
+                    </div>
+
+                    <div class="bg-white dark:bg-surface p-4 rounded-2xl border border-lightBorder dark:border-gray-800 shadow-sm flex flex-col items-center text-center">
+                        <div class="bg-blue-100 dark:bg-blue-500/20 p-2.5 rounded-full text-blue-600 dark:text-blue-400 mb-2">
+                            <i class="ph-fill ph-vinyl-record text-2xl"></i>
+                        </div>
+                        <p class="text-gray-500 dark:text-gray-400 text-[10px] sm:text-xs font-semibold uppercase mb-1" data-i18n="total_albums">Albümler</p>
+                        <p class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white" id="stat-total-albums">0</p>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-surface p-4 rounded-2xl border border-lightBorder dark:border-gray-800 shadow-sm flex flex-col items-center text-center">
+                        <div class="bg-yellow-100 dark:bg-yellow-500/20 p-2.5 rounded-full text-yellow-600 dark:text-yellow-400 mb-2">
+                            <i class="ph-fill ph-star text-2xl"></i>
+                        </div>
+                        <p class="text-gray-500 dark:text-gray-400 text-[10px] sm:text-xs font-semibold uppercase mb-1" data-i18n="overall_avg">Ortalama</p>
+                        <p class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white" id="stat-avg-rating">0.0</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-8">
+                    <div class="bg-white dark:bg-surface rounded-2xl border border-lightBorder dark:border-gray-800 shadow-sm overflow-hidden flex flex-col">
+                        <div class="bg-lightBg dark:bg-darker p-3 border-b border-lightBorder dark:border-gray-800">
+                            <h3 class="font-bold text-sm text-gray-900 dark:text-white flex items-center gap-2">
+                                <i class="ph-fill ph-trophy text-yellow-500 text-lg"></i> <span data-i18n="favorite_albums">Favori Albümlerin</span>
+                            </h3>
+                        </div>
+                        <div id="top-albums-list" class="p-2 gap-2 flex flex-col flex-1"></div>
+                    </div>
+
+                    <div class="bg-white dark:bg-surface rounded-2xl border border-lightBorder dark:border-gray-800 shadow-sm overflow-hidden flex flex-col">
+                        <div class="bg-lightBg dark:bg-darker p-3 border-b border-lightBorder dark:border-gray-800 flex justify-between items-center">
+                            <h3 class="font-bold text-sm text-gray-900 dark:text-white flex items-center gap-2">
+                                <i class="ph-fill ph-users text-primary text-lg"></i> <span data-i18n="rated_artists">Sanatçılar</span>
+                            </h3>
+                            <div class="flex items-center gap-0.5 bg-white dark:bg-surface border border-lightBorder dark:border-gray-800 rounded-full p-0.5 shadow-sm">
+                                <button data-i18n-title="tooltip_sort_artist_count" onclick="app.toggleArtistStatsSort('count')" id="btn-stats-sort-count" class="flex items-center gap-0.5 px-2 py-1.5 rounded-full text-gray-500 hover:text-primary transition-colors">
+                                    <i class="ph-fill ph-vinyl-record text-base"></i>
+                                    <i id="icon-stats-sort-count-dir" class="ph-bold ph-arrow-down text-[10px] hidden"></i>
+                                </button>
+                                <button data-i18n-title="tooltip_sort_artist_rating" onclick="app.toggleArtistStatsSort('rating')" id="btn-stats-sort-rating" class="flex items-center gap-0.5 px-2 py-1.5 rounded-full text-gray-500 hover:text-primary transition-colors">
+                                    <i class="ph-fill ph-star text-base"></i>
+                                    <i id="icon-stats-sort-rating-dir" class="ph-bold ph-arrow-down text-[10px] hidden"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <ul id="artist-list" class="divide-y divide-lightHighlight dark:divide-gray-800/50 flex-1"></ul>
+                    </div>
+
+                    <div class="bg-white dark:bg-surface rounded-2xl border border-lightBorder dark:border-gray-800 shadow-sm overflow-hidden flex flex-col md:col-span-2 lg:col-span-1">
+                        <div class="bg-lightBg dark:bg-darker p-3 border-b border-lightBorder dark:border-gray-800">
+                            <h3 class="font-bold text-sm text-gray-900 dark:text-white flex items-center gap-2">
+                                <i class="ph-fill ph-music-notes-simple text-purple-500 text-lg"></i> <span data-i18n="music_genres">Müzik Türleri</span>
+                            </h3>
+                        </div>
+                        <ul id="genre-list" class="p-2 flex flex-col gap-1 flex-1"></ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="custom-dropdown" class="fixed z-[150] hidden flex-col bg-white/95 dark:bg-surface/95 backdrop-blur-xl border border-lightBorder dark:border-gray-800 rounded-2xl shadow-2xl py-1 min-w-[180px] max-h-64 overflow-y-auto hide-scrollbar transition-opacity opacity-0 duration-200 pointer-events-auto">
+    </div>
+
+    <div class="fixed bottom-4 left-0 right-0 z-[50] flex justify-center px-4 pointer-events-none" style="padding-bottom: env(safe-area-inset-bottom);">
+        <nav class="pointer-events-auto w-full max-w-[18rem] bg-white/90 dark:bg-surface/90 backdrop-blur-xl border border-lightBorder/50 dark:border-gray-700/50 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] flex justify-between items-center p-1.5 gap-2">
+            <button id="nav-library" class="nav-btn flex-1 flex items-center justify-center h-12 rounded-full text-primary bg-primary/10 transition-all active:scale-95">
+                <i id="nav-icon-library" class="ph-fill ph-books text-2xl"></i>
+            </button>
+            <button id="nav-search" class="nav-btn flex-1 flex items-center justify-center h-12 rounded-full text-gray-400 dark:text-gray-500 hover:bg-lightHighlight dark:hover:bg-gray-800 transition-all active:scale-95">
+                <i id="nav-icon-search" class="ph ph-magnifying-glass text-2xl"></i>
+            </button>
+            <button id="nav-stats" class="nav-btn flex-1 flex items-center justify-center h-12 rounded-full text-gray-400 dark:text-gray-500 hover:bg-lightHighlight dark:hover:bg-gray-800 transition-all active:scale-95">
+                <i id="nav-icon-stats" class="ph ph-chart-bar text-2xl"></i>
+            </button>
+        </nav>
+    </div>
+
+    <div id="album-modal" class="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 transition-opacity duration-300 opacity-0">
+        <div class="modal-content w-full max-w-4xl max-h-[90vh] md:h-[85vh] bg-white dark:bg-darker border border-lightBorder dark:border-gray-800 rounded-2xl flex flex-col md:flex-row overflow-y-auto md:overflow-hidden shadow-2xl relative transform scale-95 opacity-0 transition-all duration-300" onclick="event.stopPropagation()">
+            
+            <button onclick="app.closeModal()" aria-label="Close" class="absolute top-3 right-3 md:top-4 md:right-4 bg-lightHighlight/80 hover:bg-lightBorder dark:bg-black/50 dark:hover:bg-black text-gray-800 dark:text-white p-2 rounded-full transition-colors z-[60]">
+                <i class="ph-bold ph-x text-lg"></i>
+            </button>
+
+            <div class="w-full md:w-[35%] bg-lightBg dark:bg-surface p-6 flex flex-col border-b md:border-b-0 md:border-r border-lightBorder dark:border-gray-800 relative h-auto md:h-full overflow-visible md:overflow-y-auto hide-scrollbar">
+                <div id="modal-bg-blur" class="absolute inset-0 bg-cover bg-center opacity-10 blur-2xl -z-10 pointer-events-none"></div>
+                
+                <div class="relative z-10 flex flex-col items-center md:items-start text-center md:text-left h-full w-full">
+                    
+                    <div class="relative w-48 h-48 md:w-full md:h-auto aspect-square mb-5 shadow-2xl rounded-xl group mx-auto md:mx-0 flex-shrink-0">
+                        <img loading="lazy" id="modal-cover" src="" alt="Album Cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/ebe4dc/594636?text=No+Cover';" class="w-full h-full object-cover rounded-xl bg-lightHighlight dark:bg-darker border border-lightBorder dark:border-gray-800">
+                        <button onclick="app.toggleCoverEdit()" class="absolute bottom-2 right-2 md:bottom-3 md:right-3 bg-black/60 backdrop-blur-md text-white p-2 rounded-full shadow-lg active:scale-90 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                            <i class="ph-bold ph-image-square"></i>
+                        </button>
+                    </div>
+
+                    <div id="cover-edit-section" class="hidden w-full bg-white dark:bg-darker p-3 rounded-xl border border-lightBorder dark:border-gray-800 mb-4 animate-fade-in text-left shadow-sm">
+                        <p class="text-xs text-gray-500 mb-1 font-medium" data-i18n="image_link">Görsel URL</p>
+                        <input type="text" id="custom-cover-url" class="w-full bg-lightBg dark:bg-surface border border-lightBorder dark:border-gray-800 rounded-lg px-3 py-2 text-sm mb-2 focus:border-primary focus:outline-none text-gray-800 dark:text-gray-200">
+                        <div class="flex gap-2">
+                            <button onclick="app.applyCustomCover()" class="flex-1 bg-lightBorder dark:bg-gray-800 py-2 rounded-lg text-[10px] font-bold" data-i18n="apply_url">Apply</button>
+                            <button onclick="app.searchiTunesCover()" id="itunes-search-btn" class="flex-1 bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30 py-2 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1">
+                                <i class="ph-fill ph-apple-logo"></i> <span data-i18n="search_itunes">iTunes Ara</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-start w-full relative">
+                        <div class="flex-grow min-w-0 text-left pr-16">
+                            <div class="flex items-center gap-2 mb-1 w-full">
+                                <h2 id="modal-title" class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white leading-tight outline-none break-words flex-grow italic" onblur="app.updateAlbumField('title', this.innerText)">Album Title</h2>
+                            </div>
+                            <p id="modal-artist" class="text-gray-600 dark:text-gray-300 font-medium text-base md:text-lg outline-none break-words" onblur="app.updateAlbumField('artist', this.innerText)">Artist Name</p>
+                        </div>
+                        <div class="absolute right-0 top-0 flex items-center gap-0.5 flex-shrink-0">
+                            <button onclick="app.openNotePanel('album')" id="album-note-btn" class="p-1.5 rounded-full hover:bg-lightHighlight dark:hover:bg-darker text-gray-500 transition-colors active:scale-95" data-i18n-title="album_note">
+                                <i class="ph-bold ph-paperclip text-lg"></i>
+                            </button>
+                            <button onclick="app.toggleEditMode()" id="edit-mode-btn" class="p-1.5 rounded-full hover:bg-lightHighlight dark:hover:bg-darker text-gray-500 active:scale-90 transition-colors">
+                                <i class="ph-bold ph-pencil-simple text-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="w-full mt-4 text-left flex-grow flex flex-col gap-2">
+                        <div class="flex flex-wrap gap-2 w-full">
+                            <div class="flex-1 min-w-[80px] bg-lightBg dark:bg-surface border border-lightBorder dark:border-gray-800 rounded-lg p-2 flex items-center gap-2">
+                                <i class="ph-bold ph-calendar-blank text-gray-400"></i>
+                                <p id="modal-date" class="text-xs font-semibold text-gray-800 dark:text-gray-200 outline-none w-full truncate" onblur="app.updateAlbumField('year', this.innerText)">2024</p>
+                            </div>
+                            <div class="flex-[1.5] min-w-[100px] bg-lightBg dark:bg-surface border border-lightBorder dark:border-gray-800 rounded-lg p-2 flex items-center gap-2 overflow-hidden">
+                                <i class="ph-bold ph-record text-gray-400 flex-shrink-0"></i>
+                                <p id="modal-label" class="text-xs font-semibold text-gray-800 dark:text-gray-200 outline-none w-full truncate" onblur="app.updateAlbumField('label', this.innerText)">Label</p>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 w-full">
+                            <div class="flex-1 min-w-[80px] bg-lightBg dark:bg-surface border border-lightBorder dark:border-gray-800 rounded-lg p-2 flex items-center gap-2">
+                                <div id="modal-country-icon-container" class="flex-shrink-0 flex items-center justify-center w-4 h-4">
+                                    <i class="ph-bold ph-globe text-gray-400"></i>
+                                </div>
+                                <p id="modal-country" class="text-xs font-semibold text-gray-800 dark:text-gray-200 outline-none uppercase w-full truncate" oninput="app.handleCountryInput(this.textContent)" onblur="app.updateAlbumField('country', this.textContent.toUpperCase())">UK</p>
+                            </div>
+                            <div class="flex-[1.5] min-w-[100px] bg-lightBg dark:bg-surface border border-lightBorder dark:border-gray-800 rounded-lg p-2 flex items-center gap-2 overflow-hidden">
+                                <i class="ph-bold ph-arrows-clockwise text-gray-400 flex-shrink-0"></i>
+                                <div id="modal-date-added-container" class="flex-grow min-w-0">
+                                    <p id="modal-date-added" class="text-xs font-semibold text-gray-800 dark:text-gray-200 truncate">-</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="w-full bg-lightBg dark:bg-surface border border-lightBorder dark:border-gray-800 rounded-lg p-2 flex items-center gap-2 min-h-[38px]">
+                            <i class="ph-bold ph-music-notes text-gray-400 flex-shrink-0"></i>
+                            <div id="modal-genres" class="flex flex-wrap gap-1 flex-grow items-center"></div>
+                            <button onclick="app.autoFetchGenres(false)" id="auto-fetch-genre-btn" class="hidden text-[9px] text-primary hover:underline bg-primary/10 px-1.5 py-0.5 rounded transition-colors flex-shrink-0 ml-auto" data-i18n="auto_find">Oto Bul</button>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-6 border-t border-lightBorder dark:border-gray-800 w-full text-center">
+                        <p class="text-[10px] text-gray-500 font-bold uppercase mb-2" data-i18n="album_avg">Albüm Ortalaması</p>
+                        <div class="flex items-end justify-center gap-2">
+                            <span id="modal-avg-score" class="text-4xl font-black text-primary">0.0</span>
+                            <span class="text-gray-400 font-bold mb-1">/ 5</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full md:w-[65%] flex flex-col h-auto md:h-full bg-white dark:bg-darker relative">
+                <div class="p-4 md:px-6 border-b border-lightBorder dark:border-gray-800 flex justify-between items-center sticky top-0 z-50 bg-white/95 dark:bg-darker/95 backdrop-blur-md">
+                    <h3 class="font-bold text-lg flex items-center gap-2" data-i18n="tracklist">Tracklist</h3>
+                    
+                    <div class="flex items-center gap-2 md:gap-3 mr-10 md:mr-12">
+                        <div class="flex items-center bg-lightBg dark:bg-surface border border-lightBorder dark:border-surface rounded-full p-0.5 shadow-sm text-[10px] sm:text-xs">
+                            <button onclick="app.toggleModalTrackSort('default')" id="btn-track-sort-default" class="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full font-semibold transition-all" data-i18n="default_sort">Default</button>
+                            <button onclick="app.toggleModalTrackSort('rating')" id="btn-track-sort-rating" class="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full font-semibold transition-all" data-i18n="sort_by_rating">By Rating</button>
+                        </div>
+                        <div id="modal-save-btn-container"></div>
+                    </div>
+                </div>
+                
+                <div class="p-4 md:px-6 overflow-visible md:overflow-y-auto flex-grow hide-scrollbar" id="modal-tracklist"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tekil Not Modalı -->
+    <div id="note-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[150] hidden items-center justify-center p-4 transition-opacity duration-200 opacity-0" onclick="if(event.target === this) app.closeNotePanel()">
+        <div class="bg-white dark:bg-surface border border-lightBorder dark:border-gray-800 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl relative transform scale-95 transition-transform duration-200 flex flex-col" onclick="event.stopPropagation()">
+            <div class="p-4 border-b border-lightBorder dark:border-gray-800 flex justify-between items-center bg-lightBg dark:bg-darker">
+                <div class="flex items-center gap-3">
+                    <div class="bg-primary/20 p-2 rounded-full text-primary">
+                        <i class="ph-fill ph-paperclip text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 id="note-modal-title" class="font-bold text-gray-900 dark:text-white"><span>Not</span></h3>
+                        <p id="note-modal-subtitle" class="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[200px] md:max-w-[300px] font-medium"></p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-1">
+                    <button id="note-edit-btn" onclick="app.toggleNoteEditMode()" class="text-gray-500 hover:bg-lightBorder dark:hover:bg-gray-700 p-2 rounded-full transition-colors active:scale-90"><i class="ph-bold ph-pencil-simple text-lg"></i></button>
+                    <button onclick="app.closeNotePanel()" class="text-gray-500 hover:bg-lightBorder dark:hover:bg-gray-700 p-2 rounded-full transition-colors active:scale-90"><i class="ph-bold ph-x text-lg"></i></button>
+                </div>
+            </div>
+            <div class="p-4 flex-grow relative bg-white dark:bg-surface">
+                <div id="note-display" class="w-full h-48 md:h-64 overflow-y-auto text-base md:text-lg text-gray-800 dark:text-gray-200 leading-relaxed whitespace-pre-wrap hide-scrollbar p-5 bg-lightBg dark:bg-darker rounded-xl border border-lightBorder dark:border-gray-800 shadow-inner font-medium italic"></div>
+                <textarea id="note-textarea" data-i18n-placeholder="note_placeholder" placeholder="Notlarınızı buraya yazın..." class="hidden w-full h-48 md:h-64 bg-lightBg dark:bg-darker border border-lightBorder dark:border-gray-700 rounded-xl p-5 text-base focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary resize-none text-gray-800 dark:text-gray-200 transition-colors shadow-inner hide-scrollbar leading-relaxed font-medium italic" onkeydown="app.handleNoteKeydown(event)"></textarea>
+            </div>
+            <div id="note-modal-footer" class="p-4 border-t border-lightBorder dark:border-gray-800 hidden justify-end gap-3 bg-lightBg/50 dark:bg-darker/50">
+                <button onclick="app.closeNotePanel()" class="px-5 py-2.5 rounded-xl text-sm font-bold text-gray-600 dark:text-gray-400 hover:bg-lightBorder dark:hover:bg-gray-800 transition-colors active:scale-95" data-i18n="cancel">Cancel</button>
+                <button onclick="app.saveNote()" class="px-6 py-2.5 rounded-xl text-sm font-bold bg-primary text-white hover:scale-105 transition-transform shadow-lg shadow-primary/30 flex items-center gap-2">
+                    <i class="ph-bold ph-check"></i> <span data-i18n="save_note">Notu Kaydet</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tüm Notlar Liste Modalı (KOMPAKT) -->
+    <div id="all-notes-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[160] hidden items-center justify-center p-4 transition-opacity duration-200 opacity-0" onclick="if(event.target === this) app.closeAllNotesModal()">
+        <div class="bg-white dark:bg-surface border border-lightBorder dark:border-gray-800 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl relative transform scale-95 transition-transform duration-200 flex flex-col" onclick="event.stopPropagation()">
+            <div class="p-4 border-b border-lightBorder dark:border-gray-800 flex justify-between items-center bg-lightBg dark:bg-darker">
+                <div class="flex items-center gap-3">
+                    <div class="bg-primary/20 p-2 rounded-full text-primary">
+                        <i class="ph-fill ph-notebook text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-900 dark:text-white" data-i18n="all_notes">All Notes</h3>
+                </div>
+                <button onclick="app.closeAllNotesModal()" class="text-gray-500 hover:bg-lightBorder dark:hover:bg-gray-700 p-2 rounded-full transition-colors active:scale-90"><i class="ph-bold ph-x text-lg"></i></button>
+            </div>
+            <div class="p-4 md:p-5 flex-grow max-h-[60vh] overflow-y-auto hide-scrollbar bg-white dark:bg-surface relative">
+                <div id="all-notes-content" class="w-full text-left flex flex-col gap-2"></div>
+            </div>
+            <div class="p-4 border-t border-lightBorder dark:border-gray-800 bg-lightBg/50 dark:bg-darker/50">
+                <button onclick="app.copyAllNotes()" class="w-full bg-primary text-white py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 active:scale-[0.98] transition-transform">
+                    <i class="ph-bold ph-copy"></i> <span data-i18n="copy_notes">Copy Notes</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="export-playlist-modal" onclick="document.getElementById('export-playlist-modal').classList.add('hidden')" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-surface border border-lightBorder dark:border-gray-800 rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl relative animate-fade-in" onclick="event.stopPropagation()">
+            <div class="p-4 border-b border-lightBorder dark:border-gray-800 flex justify-between">
+                <h3 class="font-bold flex items-center gap-2"><i class="ph-fill ph-spotify-logo text-primary text-xl"></i> <span data-i18n="favorite_tracks">Favoriler</span></h3>
+                <button onclick="document.getElementById('export-playlist-modal').classList.add('hidden')"><i class="ph-bold ph-x text-lg text-gray-500"></i></button>
+            </div>
+            <div class="p-4">
+                <textarea id="playlist-textarea" class="w-full h-40 bg-lightBg dark:bg-darker border border-lightBorder dark:border-gray-700 rounded-lg p-3 text-sm focus:outline-none focus:border-primary resize-none font-mono" readonly></textarea>
+            </div>
+            <div class="p-4 border-t border-lightBorder dark:border-gray-800">
+                <button onclick="app.copyPlaylistToClipboard()" class="w-full bg-primary text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2">
+                    <i class="ph-bold ph-copy"></i> <span data-i18n="copy_list">Copy List</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="genre-selection-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] hidden items-center justify-center p-4" onclick="app.closeGenreModal()">
+        <div class="bg-white dark:bg-surface border border-lightBorder dark:border-gray-800 rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl relative animate-fade-in" onclick="event.stopPropagation()">
+            <div class="p-4 border-b border-lightBorder dark:border-gray-800 flex justify-between items-center">
+                <h3 class="font-bold" data-i18n="add_genre">Add Genre</h3>
+                <button onclick="app.closeGenreModal()"><i class="ph-bold ph-x text-gray-500"></i></button>
+            </div>
+            <div class="p-4 space-y-3">
+                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium leading-relaxed" data-i18n="type_genres_comma">
+                    Eklemek istediğiniz türleri <span class="font-bold text-gray-800 dark:text-gray-200">virgülle ayırarak</span> (Maks. 3) yazabilirsiniz.
+                </p>
+                <input type="text" id="custom-genre-input" placeholder="Örn: Rock, Indie, Alternative" class="w-full bg-lightBg dark:bg-darker border border-lightBorder dark:border-gray-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-primary text-gray-800 dark:text-gray-200 transition-colors" onkeypress="if(event.key === 'Enter') { app.confirmAddGenre(); }">
+            </div>
+            <div class="p-4 border-t border-lightBorder dark:border-gray-800 bg-lightBg dark:bg-darker/50 flex gap-2">
+                <button onclick="app.autoFetchGenres(true)" class="flex-1 bg-purple-100 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400 py-3 rounded-xl font-bold active:scale-95 transition-transform flex items-center justify-center gap-1.5 border border-purple-200 dark:border-purple-500/30">
+                    <i class="ph-bold ph-magic-wand text-lg"></i> <span data-i18n="auto_find">Oto Bul</span>
+                </button>
+                <button onclick="app.confirmAddGenre()" class="flex-[2] bg-primary text-white py-3 rounded-xl font-bold active:scale-95 transition-transform" data-i18n="add">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="fixed top-12 left-1/2 transform -translate-x-1/2 z-[120] flex flex-col gap-2 w-[90vw] max-w-sm pointer-events-none safe-pt"></div>
+
+    <script>
+        const GenreTranslations = {
+            "Rock": { tr: "Rock", en: "Rock" },
+            "Pop": { tr: "Pop", en: "Pop" },
+            "Hip Hop": { tr: "Hip Hop", en: "Hip Hop" },
+            "Hip-Hop": { tr: "Hip Hop", en: "Hip Hop" },
+            "Rap": { tr: "Rap", en: "Rap" },
+            "R&B": { tr: "R&B", en: "R&B" },
+            "Rnb": { tr: "R&B", en: "R&B" },
+            "Electronic": { tr: "Elektronik", en: "Electronic" },
+            "Electronica": { tr: "Elektronik", en: "Electronic" },
+            "Dance": { tr: "Dans", en: "Dance" },
+            "Jazz": { tr: "Caz", en: "Jazz" },
+            "Blues": { tr: "Blues", en: "Blues" },
+            "Classical": { tr: "Klasik", en: "Classical" },
+            "Folk": { tr: "Folk", en: "Folk" },
+            "Country": { tr: "Country", en: "Country" },
+            "Alternative": { tr: "Alternatif", en: "Alternative" },
+            "Alternative Rock": { tr: "Alternatif Rock", en: "Alternative Rock" },
+            "Indie": { tr: "Indie", en: "Indie" },
+            "Indie Rock": { tr: "Indie Rock", en: "Indie Rock" },
+            "Indie Pop": { tr: "Indie Pop", en: "Indie Pop" },
+            "Metal": { tr: "Metal", en: "Metal" },
+            "Heavy Metal": { tr: "Heavy Metal", en: "Heavy Metal" },
+            "Punk": { tr: "Punk", en: "Punk" },
+            "Reggae": { tr: "Reggae", en: "Reggae" },
+            "Soul": { tr: "Soul", en: "Soul" },
+            "Funk": { tr: "Funk", en: "Funk" },
+            "Disco": { tr: "Disko", en: "Disco" },
+            "Techno": { tr: "Tekno", en: "Techno" },
+            "House": { tr: "House", en: "House" },
+            "Trance": { tr: "Trance", en: "Trance" },
+            "Dubstep": { tr: "Dubstep", en: "Dubstep" },
+            "Ambient": { tr: "Ambient", en: "Ambient" },
+            "Latin": { tr: "Latin", en: "Latin" },
+            "World": { tr: "Dünya Müziği", en: "World" },
+            "Acoustic": { tr: "Akustik", en: "Acoustic" },
+            "Soundtrack": { tr: "Film Müziği", en: "Soundtrack" },
+            "Vocal": { tr: "Vokal", en: "Vocal" },
+            "Turkish Pop": { tr: "Türkçe Pop", en: "Turkish Pop" },
+            "Turkish Rock": { tr: "Türkçe Rock", en: "Turkish Rock" },
+            "Turkish Rap": { tr: "Türkçe Rap", en: "Turkish Rap" },
+            "Anatolian Rock": { tr: "Anadolu Rock", en: "Anatolian Rock" },
+            "Arabesque": { tr: "Arabesk", en: "Arabesque" }
+        };
+
+        const Translations = {
+            en: {
+                app_title: "RateAgainst",
+                nav_library: "Library",
+                nav_search: "Search",
+                nav_stats: "Stats",
+                menu_settings: "Menu & Settings",
+                language_label: "Dil / Language",
+                theme_label: "Tema / Theme",
+                nav_data: "Data",
+                export_json: "Export JSON",
+                import_json: "Import JSON",
+                export_4_5_star: "Favorite (4-5 Star) Tracks",
+                artists: "Artists",
+                search_artist: "Search artist...",
+                all_artists: "All Artists",
+                all_genres: "All Genres",
+                all_years: "All Years",
+                all_labels: "All Labels",
+                no_albums: "Library is Empty",
+                no_albums_desc: "Search for albums you listen to, rate them, and build your archive.",
+                add_first_album: "Add Album",
+                what_listening: "What are you listening to?",
+                artist_disco: "Artist",
+                by_album: "Album",
+                search_btn: "Search",
+                search_db: "Searching database...",
+                music_taste: "Your Music Taste",
+                unique_artists: "Artists",
+                total_albums: "Albums",
+                overall_avg: "Average",
+                favorite_albums: "Favorite Albums",
+                rated_artists: "Artists",
+                music_genres: "Genres",
+                image_link: "Image URL",
+                apply_url: "Apply",
+                search_itunes: "Search iTunes",
+                album_avg: "Album Average",
+                tracklist: "Tracklist",
+                default_sort: "Default",
+                sort_by_rating: "By Rating",
+                favorite_tracks: "Favorites",
+                copy_list: "Copy List",
+                add_genre: "Add Genre",
+                type_genres_comma: "You can add genres by <span class=\"font-bold text-gray-800 dark:text-gray-200\">separating them with commas</span> (Max 3).",
+                auto_find: "Auto Find",
+                add: "Add",
+                update: "Update",
+                remove: "Remove",
+                add_new_track: "Add Track",
+                unknown: "Unknown",
+                independent: "Independent",
+                no_cover: "No Cover",
+                studio_album: "Album",
+                ep: "EP",
+                added_to_lib: "Added",
+                added: "Updated",
+                searching_artist: "Searching artist...",
+                searching_albums: "Searching albums...",
+                fetching_albums: "Fetching albums for",
+                no_studio_albums: "No data.",
+                no_results: "Not found.",
+                try_full_names: "Try full names.",
+                no_saved_artists: "Empty.",
+                error_loading: "Error loading data.",
+                no_tracks: "No tracks.",
+                no_data: "No data.",
+                no_rated_albums: "None.",
+                no_genre_data: "No genres.",
+                no_rating: "Unrated",
+                albums: "albums",
+                placeholder_artist: "Artist/Band name...",
+                placeholder_album: "Album name...",
+                toast_no_export: "Empty.",
+                toast_export_success: "Downloaded.",
+                toast_import_success: "added.",
+                toast_import_error: "Error.",
+                toast_no_5star: "None.",
+                toast_copied: "Copied!",
+                toast_copy_fail: "Failed.",
+                toast_conn_error: "Network error.",
+                toast_auto_genre_success: "genres added.",
+                toast_auto_genre_info: "No new genres.",
+                toast_auto_genre_fail: "Not found.",
+                toast_cover_applied: "Cover changed.",
+                toast_cover_found: "Found!",
+                toast_cover_not_found: "Not found.",
+                toast_search_error: "Error.",
+                toast_edit_mode: "Edit mode.",
+                toast_genre_added_already: "Already exists.",
+                toast_genre_limit: "Max 3.",
+                toast_select_genre: "Select.",
+                toast_type_genre: "Type.",
+                toast_changes_saved: "Saved",
+                toast_album_added: "Added",
+                toast_album_removed: "Removed",
+                toast_filtered_genre: "Filter:",
+                tooltip_filter_artist: "Filter by Artist",
+                tooltip_filter_genre: "Filter by Genre",
+                tooltip_filter_year: "Filter by Year",
+                tooltip_filter_label: "Filter by Label",
+                tooltip_sort_added: "Sort by Date Updated",
+                tooltip_sort_year: "Sort by Release Date",
+                tooltip_sort_rating: "Sort by Rating",
+                tooltip_grid_normal: "Normal View",
+                tooltip_grid_small: "Small View",
+                tooltip_grid_xsmall: "Compact View",
+                tooltip_sort_artist_rating: "Sort by Average Rating",
+                tooltip_sort_artist_count: "Sort by Rated Albums Count",
+                note: "Note",
+                save_note: "Save Note",
+                note_placeholder: "Write your notes here...",
+                album_note: "Album Note",
+                track_note: "Track Note",
+                track_notes: "Track Notes",
+                all_notes: "All Notes",
+                copy_notes: "Copy Notes",
+                toast_notes_copied: "Notes copied!",
+                cancel: "Cancel"
+            },
+            tr: {
+                app_title: "RateAgainst",
+                nav_library: "Kitaplığım",
+                nav_search: "Ara",
+                nav_stats: "İstatistik",
+                menu_settings: "Menü & Ayarlar",
+                language_label: "Dil / Language",
+                theme_label: "Tema / Theme",
+                nav_data: "Veri",
+                export_json: "Yedek Al (JSON)",
+                import_json: "Yedek Yükle",
+                export_4_5_star: "Favori (4-5 Yıldız) Parçalar",
+                artists: "Sanatçılar",
+                search_artist: "Sanatçı ara...",
+                all_artists: "Tümü (Sanatçı)",
+                all_genres: "Tümü (Tür)",
+                all_years: "Tümü (Yıl)",
+                all_labels: "Tümü (Şirket)",
+                no_albums: "Kitaplık Boş",
+                no_albums_desc: "Dinlediğin albümleri bul, puanla ve arşivini oluştur.",
+                add_first_album: "Albüm Ekle",
+                what_listening: "Ne dinliyorsun?",
+                artist_disco: "Sanatçı",
+                by_album: "Albüm",
+                search_btn: "Ara",
+                search_db: "Veritabanı aranıyor...",
+                music_taste: "Müzik Zevkin",
+                unique_artists: "Sanatçı",
+                total_albums: "Albüm",
+                overall_avg: "Ortalama",
+                favorite_albums: "Favori Albümlerin",
+                rated_artists: "Sanatçılar",
+                music_genres: "Türler",
+                image_link: "Görsel URL",
+                apply_url: "Uygula",
+                search_itunes: "iTunes Ara",
+                album_avg: "Albüm Ortalaması",
+                tracklist: "Şarkı Listesi",
+                default_sort: "Varsayılan",
+                sort_by_rating: "Puana Göre",
+                favorite_tracks: "Favoriler",
+                copy_list: "Listeyi Kopyala",
+                add_genre: "Tür Ekle",
+                type_genres_comma: "Eklemek istediğiniz türleri <span class=\"font-bold text-gray-800 dark:text-gray-200\">virgülle ayırarak</span> (Maks. 3) yazabilirsiniz.",
+                auto_find: "Oto Bul",
+                add: "Ekle",
+                update: "Güncelle",
+                remove: "Kaldır",
+                add_new_track: "Parça Ekle",
+                unknown: "Bilinmiyor",
+                independent: "Bağımsız",
+                no_cover: "Yok",
+                studio_album: "Albüm",
+                ep: "EP",
+                added_to_lib: "Eklendi",
+                added: "Güncellendi",
+                searching_artist: "Sanatçı aranıyor...",
+                searching_albums: "Albümler aranıyor...",
+                fetching_albums: "Albümler yükleniyor:",
+                no_studio_albums: "Veri yok.",
+                no_results: "Bulunamadı.",
+                try_full_names: "Tam ad deneyin.",
+                no_saved_artists: "Boş.",
+                error_loading: "Hata.",
+                no_tracks: "Parça yok.",
+                no_data: "Veri yok.",
+                placeholder_artist: "Sanatçı/grup adı yazın...",
+                placeholder_album: "Albüm adı yazın...",
+                toast_no_export: "Boş.",
+                toast_export_success: "İndirildi.",
+                toast_import_success: "eklendi.",
+                toast_import_error: "Hata.",
+                toast_no_5star: "Yok.",
+                toast_copied: "Kopyalandı!",
+                toast_copy_fail: "Başarısız.",
+                toast_conn_error: "Ağ hatası.",
+                toast_auto_genre_success: "tür eklendi.",
+                toast_auto_genre_info: "Yeni tür yok.",
+                toast_auto_genre_fail: "Bulunamadı.",
+                toast_cover_applied: "Kapak değişti.",
+                toast_cover_found: "Bulundu!",
+                toast_cover_not_found: "Bulunamadı.",
+                toast_search_error: "Hata.",
+                toast_edit_mode: "Düzenleme modu.",
+                toast_genre_added_already: "Zaten var.",
+                toast_genre_limit: "Maks. 3",
+                toast_select_genre: "Seçiniz.",
+                toast_type_genre: "Yazınız.",
+                toast_changes_saved: "Kaydedildi",
+                toast_album_added: "Eklendi",
+                toast_album_removed: "Silindi",
+                toast_filtered_genre: "Filtre:",
+                tooltip_filter_artist: "Sanatçılara Göre Filtrele",
+                tooltip_filter_genre: "Türlere Göre Filtrele",
+                tooltip_filter_year: "Yıllara Göre Filtrele",
+                tooltip_filter_label: "Şirkete Göre Filtrele",
+                tooltip_sort_added: "Güncelleme Tarihine Göre Sırala",
+                tooltip_sort_year: "Çıkış Tarihine Göre Sırala",
+                tooltip_sort_rating: "Puanına Göre Sırala",
+                tooltip_grid_normal: "Normal Görünüm",
+                tooltip_grid_small: "Küçük Görünüm",
+                tooltip_grid_xsmall: "Çok Küçük Görünüm",
+                tooltip_sort_artist_rating: "Ortalama Puana Göre Sırala",
+                tooltip_sort_artist_count: "Puanlanan Albüm Sayısına Göre Sırala",
+                note: "Not",
+                save_note: "Notu Kaydet",
+                note_placeholder: "Notlarınızı buraya yazın...",
+                album_note: "Albüm Notu",
+                track_note: "Şarkı Notu",
+                track_notes: "Şarkı Notları",
+                all_notes: "Tüm Notlar",
+                copy_notes: "Notları Kopyala",
+                toast_notes_copied: "Notlar kopyalandı!",
+                albums: "albüm",
+                cancel: "İptal"
+            }
+        };
+
+        const AppState = {
+            library: [], currentView: 'library', currentModalAlbum: null, isSearching: false,
+            gridSize: localStorage.getItem('albumDiaryGridSize') || 'normal',
+            sortBy: localStorage.getItem('albumDiarySortBy') || 'dateAdded',
+            sortDirection: localStorage.getItem('albumDiarySortDirection') || 'desc',
+            statsArtistSortBy: localStorage.getItem('albumDiaryStatsSortBy') || 'rating',
+            statsArtistSortDirection: localStorage.getItem('albumDiaryStatsSortDirection') || 'desc',
+            language: localStorage.getItem('albumDiaryLang') || 'tr',
+            modalTrackSort: localStorage.getItem('albumDiaryModalTrackSort') || 'default', 
+            
+            filterGroup: '', filterGenre: '', filterYear: '', filterLabel: '',
+            currentAllNotesRawText: ''
+        };
+
+        function t(key) { return Translations[AppState.language][key] || key; }
+        
+        function tGenre(genreString) {
+            if (!genreString) return '';
+            const normalized = genreString.trim();
+            for (let key in GenreTranslations) {
+                if (key.toLowerCase() === normalized.toLowerCase() || GenreTranslations[key].tr.toLowerCase() === normalized.toLowerCase()) {
+                    return GenreTranslations[key][AppState.language];
+                }
+            }
+            return normalized;
+        }
+
+        const Utils = {
+            escapeHTML(str) {
+                if (!str) return '';
+                return str.toString().replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
+            },
+            debounce(func, wait) {
+                let timeout; return function(...args) { clearTimeout(timeout); timeout = setTimeout(() => func(...args), wait); };
+            },
+            formatDateEN(dateStr) { return dateStr; }
+        };
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if(!container) return;
+            const toast = document.createElement('div');
+            const colors = { success: 'bg-green-600', error: 'bg-red-600', info: 'bg-gray-800 dark:bg-gray-200 text-white dark:text-black' };
+            const textColor = type === 'info' ? 'text-white dark:text-black' : 'text-white';
+            toast.className = `${colors[type]} ${textColor} px-4 py-3 rounded-2xl shadow-xl text-sm font-bold transform transition-all duration-300 -translate-y-10 opacity-0 flex items-center justify-center gap-2 mx-auto w-max`;
+            let icon = type === 'success' ? 'check-circle' : (type === 'error' ? 'warning-circle' : 'info');
+            toast.innerHTML = `<i class="ph-fill ph-${icon} text-lg"></i> <span>${Utils.escapeHTML(message)}</span>`;
+            container.appendChild(toast);
+            requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.remove('-translate-y-10', 'opacity-0')));
+            setTimeout(() => { toast.classList.add('-translate-y-10', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 2500);
+        }
+
+        const app = {
+            isEditMode: false,
+            currentDropdownType: null,
+            currentNoteTarget: null,
+            draggedGenreIndex: null,
+            isNoteEditMode: false,
+            
+            init() {
+                this.updateLanguageUI();
+                this.loadData();
+                this.updateThemeIcon();
+                this.debouncedSidebarSearch = Utils.debounce((e) => this.filterSidebarArtists(e.target.value), 300);
+                this.setGridSize(AppState.gridSize);
+                this.updateSortClasses();
+                this.showView('library');
+                this.updateSearchPlaceholder();
+                this.updateModalTrackSortButtons();
+
+                document.addEventListener('click', (e) => {
+                    const dd = document.getElementById('custom-dropdown');
+                    if(dd && !dd.contains(e.target) && !e.target.closest('[data-dropdown-btn]')) {
+                        this.closeDropdown();
+                    }
+                });
+
+                // Nav buttons
+                document.getElementById('nav-library')?.addEventListener('click', () => this.showView('library'));
+                document.getElementById('nav-search')?.addEventListener('click', () => this.showView('search'));
+                document.getElementById('nav-stats')?.addEventListener('click', () => this.showView('stats'));
+
+                // Header logo
+                document.getElementById('header-logo')?.addEventListener('click', () => this.showView('library'));
+
+                // Sidebar open/close
+                document.getElementById('sidebar-open-btn')?.addEventListener('click', () => this.toggleSidebar(true));
+                document.getElementById('sidebar-close-btn')?.addEventListener('click', () => this.toggleSidebar(false));
+                document.getElementById('sidebar-backdrop')?.addEventListener('click', () => this.toggleSidebar(false));
+
+                // Modal close on backdrop click
+                document.getElementById('album-modal')?.addEventListener('click', (e) => {
+                    if (e.target === document.getElementById('album-modal')) this.closeModal();
+                });
+            },
+
+            toggleSidebar(forceState) {
+                const sidebar = document.getElementById('right-sidebar');
+                const backdrop = document.getElementById('sidebar-backdrop');
+                if(!sidebar || !backdrop) return;
+                
+                const isOpen = forceState !== undefined ? forceState : sidebar.classList.contains('translate-x-full');
+                
+                if (isOpen) {
+                    backdrop.classList.remove('hidden');
+                    void backdrop.offsetWidth;
+                    backdrop.classList.remove('opacity-0');
+                    sidebar.classList.remove('translate-x-full');
+                    const searchEl = document.getElementById('sidebar-search');
+                    if(searchEl) searchEl.value = ''; 
+                    this.renderSidebarArtists();
+                } else {
+                    backdrop.classList.add('opacity-0');
+                    sidebar.classList.add('translate-x-full');
+                    setTimeout(() => backdrop.classList.add('hidden'), 300);
+                }
+            },
+
+            showView(viewName) {
+                this.closeModal();
+                this.closeDropdown();
+                if (typeof this.closeGenreModal === 'function') this.closeGenreModal();
+                this.closeNotePanel();
+                if (typeof this.closeAllNotesModal === 'function') this.closeAllNotesModal();
+                
+                const exportModal = document.getElementById('export-playlist-modal');
+                if(exportModal) exportModal.classList.add('hidden');
+                
+                ['library', 'search', 'stats'].forEach(v => {
+                    const btn = document.getElementById(`nav-${v}`);
+                    const icon = document.getElementById(`nav-icon-${v}`);
+                    if (v === viewName) {
+                        btn?.classList.add('text-primary', 'bg-primary/10'); 
+                        btn?.classList.remove('text-gray-400', 'dark:text-gray-500', 'hover:bg-lightHighlight', 'dark:hover:bg-gray-800');
+                        icon?.classList.add('ph-fill'); 
+                        icon?.classList.remove('ph');
+                    } else {
+                        btn?.classList.remove('text-primary', 'bg-primary/10'); 
+                        btn?.classList.add('text-gray-400', 'dark:text-gray-500', 'hover:bg-lightHighlight', 'dark:hover:bg-gray-800');
+                        icon?.classList.remove('ph-fill'); 
+                        icon?.classList.add('ph');
+                    }
+                });
+
+                document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+                
+                const currentViewEl = document.getElementById(`view-${viewName}`);
+                if(currentViewEl) currentViewEl.classList.remove('hidden');
+                
+                AppState.currentView = viewName;
+
+                if (viewName === 'library') { 
+                    this.renderLibrary(); 
+                } 
+                else if (viewName === 'stats') { this.renderStats(); }
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            },
+
+            toggleLanguage() {
+                AppState.language = AppState.language === 'en' ? 'tr' : 'en';
+                localStorage.setItem('albumDiaryLang', AppState.language);
+                this.updateLanguageUI();
+                this.updateSearchPlaceholder();
+                
+                if (AppState.currentModalAlbum && !document.getElementById('album-modal').classList.contains('hidden')) {
+                    this.updateModalUI();
+                    
+                    if (this.currentNoteTarget) {
+                        const titleSpan = document.querySelector('#note-modal-title span');
+                        if (titleSpan) {
+                            titleSpan.textContent = t(this.currentNoteTarget.type === 'album' ? 'album_note' : 'track_note');
+                        }
+                    }
+                }
+                
+                if (AppState.currentView === 'library') this.renderLibrary();
+                else if (AppState.currentView === 'stats') this.renderStats();
+            },
+
+            updateLanguageUI() {
+                const langIcon = document.getElementById('lang-icon');
+                if (langIcon) langIcon.textContent = AppState.language === 'en' ? 'TR' : 'EN';
+                document.querySelectorAll('[data-i18n]').forEach(el => el.innerHTML = Translations[AppState.language][el.getAttribute('data-i18n')] || el.innerHTML);
+                document.querySelectorAll('[data-i18n-placeholder]').forEach(el => el.placeholder = Translations[AppState.language][el.getAttribute('data-i18n-placeholder')] || el.placeholder);
+                document.querySelectorAll('[data-i18n-title]').forEach(el => el.title = Translations[AppState.language][el.getAttribute('data-i18n-title')] || el.title);
+            },
+
+            toggleTheme() {
+                const html = document.documentElement;
+                const meta = document.getElementById('meta-theme-color');
+                if (html.classList.contains('dark')) {
+                    html.classList.remove('dark'); localStorage.setItem('theme', 'light');
+                    if(meta) meta.setAttribute('content', '#f7f4f0');
+                } else {
+                    html.classList.add('dark'); localStorage.setItem('theme', 'dark');
+                    if(meta) meta.setAttribute('content', '#1c140f');
+                }
+                this.updateThemeIcon();
+            },
+
+            updateThemeIcon() {
+                const icon = document.getElementById('theme-icon');
+                if(!icon) return;
+                if (document.documentElement.classList.contains('dark')) {
+                    icon.className = 'ph-fill ph-moon text-lg px-1 text-yellow-400';
+                } else {
+                    icon.className = 'ph-fill ph-sun text-lg px-1 text-amber-500';
+                }
+            },
+
+            loadData() {
+                const saved = localStorage.getItem('albumDiaryData');
+                if (saved) { try { AppState.library = JSON.parse(saved); } catch (e) { AppState.library = []; } }
+            },
+            saveData() { localStorage.setItem('albumDiaryData', JSON.stringify(AppState.library)); },
+
+            exportData() {
+                if (AppState.library.length === 0) { showToast(t("toast_no_export"), "error"); return; }
+                const data = JSON.stringify(AppState.library, null, 2);
+                const blob = new Blob([data], { type: "application/json" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a'); a.href = url; a.download = `album_diary_${Date.now()}.json`;
+                document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+                showToast(t("toast_export_success"), "success");
+            },
+
+            importData(event) {
+                const file = event.target.files[0]; if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        if (Array.isArray(importedData)) {
+                            const currentIds = new Set(AppState.library.map(a => a.id)); let added = 0;
+                            importedData.forEach(album => { if(album.id && !currentIds.has(album.id)) { AppState.library.push(album); added++; } });
+                            this.saveData(); this.renderLibrary(); this.renderStats();
+                            showToast(`${added} ${t("toast_import_success")}`, "success");
+                        }
+                    } catch (err) { showToast(t("toast_import_error"), "error"); }
+                    event.target.value = ''; 
+                };
+                reader.readAsText(file);
+            },
+
+            exportHighRatedTracks() {
+                let list = [];
+                AppState.library.forEach(album => {
+                    if (album.tracks) album.tracks.forEach(track => { if (track.rating >= 4) list.push(`${album.artist} - ${track.title}`); });
+                });
+                if (list.length === 0) { showToast(t("toast_no_5star"), "error"); return; }
+                const plArea = document.getElementById('playlist-textarea');
+                const exModal = document.getElementById('export-playlist-modal');
+                if(plArea && exModal) {
+                    plArea.value = list.join('\n');
+                    exModal.classList.remove('hidden');
+                    exModal.classList.add('flex');
+                }
+            },
+
+            copyPlaylistToClipboard() {
+                const ta = document.getElementById('playlist-textarea'); 
+                if(!ta) return;
+                ta.select(); ta.setSelectionRange(0, 99999);
+                try { document.execCommand('copy'); showToast(t("toast_copied"), "success"); } catch (err) { showToast(t("toast_copy_fail"), "error"); }
+            },
+
+            openDropdown(event, type) {
+                event.stopPropagation();
+                const dd = document.getElementById('custom-dropdown');
+                if(!dd) return;
+                
+                if (!dd.classList.contains('hidden') && this.currentDropdownType === type) {
+                    this.closeDropdown(); return;
+                }
+
+                const btn = event.currentTarget;
+                const rect = btn.getBoundingClientRect();
+                
+                let items = new Set();
+                let defLabel = '';
+                
+                if (type === 'Group') {
+                    AppState.library.forEach(a => { if(a.artist) items.add(a.artist); });
+                    defLabel = t('all_artists');
+                } else if (type === 'Genre') {
+                    AppState.library.forEach(a => { if(a.genres) a.genres.forEach(g => items.add(g.trim())); });
+                    defLabel = t('all_genres');
+                } else if (type === 'Year') {
+                    AppState.library.forEach(a => { 
+                        if(a.year) {
+                            items.add(a.year); 
+                            const decade = Math.floor(parseInt(a.year) / 10) * 10;
+                            if (!isNaN(decade)) items.add(`${decade}s`);
+                        }
+                    });
+                    defLabel = t('all_years');
+                } else if (type === 'Label') {
+                    AppState.library.forEach(a => { if(a.label && a.label !== t('unknown')) items.add(a.label); });
+                    defLabel = t('all_labels');
+                }
+
+                const currentVal = AppState[`filter${type}`];
+                
+                let html = `
+                    <div onclick="app.setFilter('${type}', '')" class="px-5 py-3 hover:bg-lightHighlight dark:hover:bg-surfaceHover cursor-pointer text-sm font-semibold flex justify-between items-center transition-colors border-b border-lightBorder/30 dark:border-gray-800/50 ${currentVal === '' ? 'text-primary' : 'text-gray-700 dark:text-gray-300'}">
+                        <span>${defLabel}</span>
+                        ${currentVal === '' ? '<i class="ph-bold ph-check text-lg"></i>' : ''}
+                    </div>
+                `;
+                
+                let sortedItems = Array.from(items);
+                if (type === 'Year') {
+                    sortedItems.sort((a, b) => {
+                        const aVal = a.toString().endsWith('s') ? parseInt(a) + 0.5 : parseInt(a);
+                        const bVal = b.toString().endsWith('s') ? parseInt(b) + 0.5 : parseInt(b);
+                        return bVal - aVal;
+                    });
+                } else if (type === 'Genre') {
+                    sortedItems.sort((a, b) => tGenre(a).localeCompare(tGenre(b)));
+                } else {
+                    sortedItems.sort();
+                }
+
+                sortedItems.forEach(item => {
+                    const isSelected = currentVal === item;
+                    const isDecade = type === 'Year' && item.toString().endsWith('s');
+                    const displayLabel = type === 'Genre' ? tGenre(item) : item;
+                    
+                    html += `
+                        <div onclick="app.setFilter('${type}', '${Utils.escapeHTML(item)}')" class="px-5 py-3 hover:bg-lightHighlight dark:hover:bg-surfaceHover cursor-pointer text-sm ${isDecade ? 'font-bold bg-lightBg/50 dark:bg-surface/50 border-y border-lightBorder/30 dark:border-gray-800/50' : 'font-medium'} flex justify-between items-center transition-colors ${isSelected ? 'text-primary' : 'text-gray-600 dark:text-gray-400'}">
+                            <span class="truncate pr-4 ${isDecade ? 'text-gray-800 dark:text-gray-200' : ''}">${Utils.escapeHTML(displayLabel)}</span>
+                            ${isSelected ? '<i class="ph-bold ph-check text-lg"></i>' : ''}
+                        </div>
+                    `;
+                });
+
+                dd.innerHTML = html;
+                this.currentDropdownType = type;
+                
+                dd.classList.remove('hidden');
+                
+                let top = rect.bottom + 10;
+                let left = rect.left;
+                
+                const ddWidth = Math.max(200, btn.offsetWidth * 1.5);
+                dd.style.minWidth = `${ddWidth}px`;
+                
+                if (left + ddWidth > window.innerWidth) {
+                    left = window.innerWidth - ddWidth - 16;
+                }
+                
+                if (top + 250 > window.innerHeight) {
+                    top = rect.top - dd.offsetHeight - 10; 
+                }
+                
+                dd.style.top = `${top}px`;
+                dd.style.left = `${Math.max(16, left)}px`;
+                
+                requestAnimationFrame(() => dd.classList.remove('opacity-0'));
+            },
+            
+            closeDropdown() {
+                const dd = document.getElementById('custom-dropdown');
+                if(dd && !dd.classList.contains('hidden')) {
+                    dd.classList.add('opacity-0');
+                    setTimeout(() => dd.classList.add('hidden'), 200);
+                    this.currentDropdownType = null;
+                }
+            },
+            
+            setFilter(type, value) {
+                AppState[`filter${type}`] = value;
+                this.closeDropdown();
+                this.renderLibrary();
+            },
+
+            filterSidebarArtists(text) {
+                const list = document.getElementById('sidebar-artist-list');
+                if(!list) return;
+                list.innerHTML = '';
+                const artists = [...new Set(AppState.library.map(a => a.artist))].sort();
+                const filtered = artists.filter(a => a.toLowerCase().includes(text.toLowerCase()));
+                if(filtered.length === 0) {
+                    list.innerHTML = `<li class="p-3 text-center text-sm text-gray-500">${t('no_saved_artists')}</li>`;
+                    return;
+                }
+                const frag = document.createDocumentFragment();
+                filtered.forEach(art => {
+                    const count = AppState.library.filter(a => a.artist === art).length;
+                    const li = document.createElement('li');
+                    li.className = 'px-3 py-2 hover:bg-lightHighlight dark:bg-surfaceHover cursor-pointer flex justify-between items-center rounded-lg';
+                    li.onclick = () => {
+                        this.setFilter('Group', art);
+                        this.toggleSidebar(false);
+                        this.showView('library');
+                        window.scrollTo(0,0);
+                    };
+                    li.innerHTML = `<span class="text-sm font-medium text-gray-800 dark:text-gray-200 truncate pr-2">${Utils.escapeHTML(art)}</span><span class="text-xs bg-lightBorder dark:bg-gray-800 px-2 py-0.5 rounded-full font-bold">${count}</span>`;
+                    frag.appendChild(li);
+                });
+                list.appendChild(frag);
+            },
+            
+            renderSidebarArtists(text = '') { this.filterSidebarArtists(text); },
+
+            searchFromLink(query) {
+                this.closeModal();
+                this.showView('search');
+                
+                const searchTypes = document.getElementsByName('searchType');
+                for(let st of searchTypes) { 
+                    if(st.value === 'artist') st.checked = true; 
+                }
+                this.updateSearchPlaceholder();
+                
+                const searchInput = document.getElementById('search-input');
+                if(searchInput) {
+                    searchInput.value = query;
+                    this.search();
+                }
+            },
+
+            setGridSize(size) {
+                AppState.gridSize = size; localStorage.setItem('albumDiaryGridSize', size);
+                ['normal', 'small', 'xsmall'].forEach(s => {
+                    const btn = document.getElementById(`btn-grid-${s}`);
+                    if(btn) {
+                        if (s === size) {
+                            btn.classList.add('text-primary', 'bg-primary/10');
+                            btn.classList.remove('text-gray-500');
+                        } else {
+                            btn.classList.remove('text-primary', 'bg-primary/10');
+                            btn.classList.add('text-gray-500');
+                        }
+                    }
+                });
+                this.updateGridClasses(); if(AppState.currentView === 'library') this.renderLibrary();
+            },
+            
+            updateGridClasses() {
+                const grid = document.getElementById('library-grid'); if(!grid) return;
+                if(AppState.gridSize === 'normal') grid.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3';
+                else if(AppState.gridSize === 'small') grid.className = 'grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-2';
+                else grid.className = 'grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9 xl:grid-cols-10 gap-1.5';
+            },
+            
+            toggleSort(type) {
+                if (AppState.sortBy === type) AppState.sortDirection = AppState.sortDirection === 'desc' ? 'asc' : 'desc';
+                else { AppState.sortBy = type; AppState.sortDirection = 'desc'; }
+                localStorage.setItem('albumDiarySortBy', AppState.sortBy);
+                localStorage.setItem('albumDiarySortDirection', AppState.sortDirection);
+                this.updateSortClasses(); if (AppState.currentView === 'library') this.renderLibrary();
+            },
+            
+            updateSortClasses() {
+                ['dateAdded', 'year', 'rating'].forEach(type => {
+                    const btn = document.getElementById(`btn-sort-${type}`); const iconDir = document.getElementById(`icon-sort-${type}-dir`);
+                    if (!btn || !iconDir) return;
+                    if (AppState.sortBy === type) {
+                        btn.classList.add('text-primary', 'bg-primary/10'); btn.classList.remove('text-gray-500');
+                        iconDir.className = `ph-bold ph-arrow-${AppState.sortDirection === 'desc' ? 'down' : 'up'} text-[10px]`; iconDir.style.opacity = '1';
+                    } else {
+                        btn.classList.remove('text-primary', 'bg-primary/10'); btn.classList.add('text-gray-500');
+                        iconDir.className = 'ph-bold ph-arrow-down text-[10px]'; iconDir.style.opacity = '0.3';
+                    }
+                });
+            },
+
+            renderLibrary() {
+                const grid = document.getElementById('library-grid'), emptyState = document.getElementById('empty-library-state');
+                if(!grid || !emptyState) return;
+                
+                const fGroup = AppState.filterGroup;
+                const fYear = AppState.filterYear;
+                const fGenre = AppState.filterGenre;
+                const fLabel = AppState.filterLabel;
+                
+                document.getElementById('icon-filter-group')?.classList.toggle('text-primary', !!fGroup);
+                document.getElementById('icon-filter-genre')?.classList.toggle('text-primary', !!fGenre);
+                document.getElementById('icon-filter-year')?.classList.toggle('text-primary', !!fYear);
+                document.getElementById('icon-filter-label')?.classList.toggle('text-primary', !!fLabel);
+
+                let filtered = AppState.library.filter(a => {
+                    if (fGroup && a.artist !== fGroup) return false;
+                    
+                    if (fYear) {
+                        if (fYear.endsWith('s')) {
+                            const targetDecade = parseInt(fYear);
+                            const albumYear = parseInt(a.year);
+                            if (isNaN(albumYear) || albumYear < targetDecade || albumYear >= targetDecade + 10) return false;
+                        } else if (a.year !== fYear) {
+                            return false;
+                        }
+                    }
+                    
+                    if (fGenre && (!a.genres || !a.genres.some(g => g.toLowerCase() === fGenre.toLowerCase()))) return false;
+                    if (fLabel && a.label !== fLabel) return false;
+
+                    return true;
+                });
+                
+                filtered.sort((a, b) => {
+                    const dir = AppState.sortDirection === 'desc' ? 1 : -1;
+                    if (AppState.sortBy === 'rating') return ((b.averageScore || 0) - (a.averageScore || 0)) * dir;
+                    if (AppState.sortBy === 'year') return ((parseInt(b.year) || 0) - (parseInt(a.year) || 0)) * dir;
+                    return (new Date(b.dateAdded || 0) - new Date(a.dateAdded || 0)) * dir;
+                });
+
+                if (AppState.library.length === 0) { grid.innerHTML = ''; emptyState.classList.remove('hidden'); emptyState.classList.add('flex'); return; }
+                emptyState.classList.add('hidden'); emptyState.classList.remove('flex'); grid.innerHTML = '';
+                if (filtered.length === 0) { grid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-500">${t('no_data')}</div>`; return; }
+
+                const fragment = document.createDocumentFragment();
+                
+                const isXSmall = AppState.gridSize === 'xsmall';
+                const isSmall = AppState.gridSize === 'small';
+                
+                const titleSize = isXSmall ? 'text-[10px]' : (isSmall ? 'text-xs' : 'text-sm');
+                const artistSize = isXSmall ? 'text-[9px]' : (isSmall ? 'text-[10px]' : 'text-xs');
+                const metaSize = isXSmall ? 'text-[8px]' : (isSmall ? 'text-[9px]' : 'text-[10px]');
+                const padding = isXSmall ? 'p-1.5' : (isSmall ? 'p-2' : 'p-3');
+                const gapSize = isXSmall ? 'gap-1' : (isSmall ? 'gap-1.5' : 'gap-2 md:gap-3');
+                const circleSize = isXSmall ? 'w-5 h-5 text-[9px] border' : (isSmall ? 'w-7 h-7 text-xs border-2' : 'w-10 h-10 text-sm border-2');
+
+                const noCoverText = t('no_cover').replace(/ /g, '+');
+
+                filtered.forEach(album => {
+                    const avg = album.averageScore || 0;
+                    const rawGenre = (album.genres && album.genres.length > 0) ? album.genres[0] : t('unknown');
+                    const displayGenre = tGenre(rawGenre);
+
+                    const hasNotes = album.note || (album.tracks && album.tracks.some(tr => tr.note));
+
+                    let bottomBgClass = 'bg-[#2a2a2a]'; 
+                    let borderColorClass = 'border-[#3a3a3a] dark:border-[#333]';
+                    let titleColorClass = 'text-white';
+                    let subTextColorClass = 'text-gray-300';
+                    let genreBgClass = 'bg-white/10 text-gray-200';
+                    let circleClass = 'bg-gray-800 text-gray-400 border-gray-600';
+
+                    if (avg >= 4.5) { 
+                        bottomBgClass = 'bg-[#1e3a8a]'; 
+                        borderColorClass = 'border-[#1e40af] shadow-[#1e3a8a]/20';
+                        subTextColorClass = 'text-blue-100/80';
+                        genreBgClass = 'bg-white/20 text-blue-50';
+                        circleClass = 'bg-[#172554] text-[#93c5fd] border-[#1e40af]';
+                    } else if (avg >= 4.0) { 
+                        bottomBgClass = 'bg-[#14532d]'; 
+                        borderColorClass = 'border-[#166534] shadow-[#14532d]/20';
+                        subTextColorClass = 'text-green-100/80';
+                        genreBgClass = 'bg-white/20 text-green-50';
+                        circleClass = 'bg-[#064e3b] text-[#86efac] border-[#166534]';
+                    } else if (avg >= 3.5) { 
+                        bottomBgClass = 'bg-[#15803d]'; 
+                        borderColorClass = 'border-[#22c55e] shadow-[#15803d]/20';
+                        subTextColorClass = 'text-green-100/90';
+                        genreBgClass = 'bg-white/20 text-green-50';
+                        circleClass = 'bg-[#166534] text-[#bbf7d0] border-[#22c55e]';
+                    } else if (avg >= 3.0) { 
+                        bottomBgClass = 'bg-[#a16207]'; 
+                        borderColorClass = 'border-[#ca8a04] shadow-[#a16207]/20';
+                        subTextColorClass = 'text-yellow-100/80';
+                        genreBgClass = 'bg-white/20 text-yellow-50';
+                        circleClass = 'bg-[#854d0e] text-[#fef08a] border-[#ca8a04]';
+                    } else if (avg >= 2.5) { 
+                        bottomBgClass = 'bg-[#c2410c]'; 
+                        borderColorClass = 'border-[#ea580c] shadow-[#c2410c]/20';
+                        subTextColorClass = 'text-orange-100/80';
+                        genreBgClass = 'bg-white/20 text-orange-50';
+                        circleClass = 'bg-[#9a3412] text-[#fed7aa] border-[#ea580c]';
+                    } else if (avg > 0) { 
+                        bottomBgClass = 'bg-[#991b1b]'; 
+                        borderColorClass = 'border-[#dc2626] shadow-[#991b1b]/20';
+                        subTextColorClass = 'text-red-100/80';
+                        genreBgClass = 'bg-white/20 text-red-50';
+                        circleClass = 'bg-[#7f1d1d] text-[#fca5a5] border-[#dc2626]';
+                    } else { 
+                        bottomBgClass = 'bg-white dark:bg-surfaceHover';
+                        borderColorClass = 'border-lightBorder dark:border-gray-800';
+                        titleColorClass = 'text-gray-900 dark:text-white';
+                        subTextColorClass = 'text-gray-500 dark:text-gray-400';
+                        genreBgClass = 'bg-lightBg dark:bg-white/10 text-gray-700 dark:text-gray-300';
+                        circleClass = 'bg-lightBg text-gray-500 border-lightBorder dark:bg-darker dark:text-gray-500 dark:border-gray-800';
+                    }
+
+                    const card = document.createElement('div');
+                    card.className = `flex flex-col rounded-xl overflow-hidden cursor-pointer active:scale-[0.98] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:brightness-105 dark:hover:shadow-[0_10px_20px_rgba(0,0,0,0.5)] shadow-md border ${borderColorClass} h-full`;
+                    card.onclick = () => this.openAlbumModal(album.id, album.title, album.artist, album.year);
+
+                    const coverToUse = Utils.escapeHTML(album.customCoverUrl || album.coverUrl);
+                    const paperclipColorClass = subTextColorClass; 
+
+                    card.innerHTML = `
+                        <div class="relative w-full pt-[100%] shrink-0 overflow-hidden bg-lightHighlight dark:bg-[#1a1a1a] border-b border-lightBorder/50 dark:border-white/5">
+                            <img loading="lazy" src="${coverToUse}" onerror="this.src='https://placehold.co/400x400/ebe4dc/594636?text=${noCoverText}'; this.onerror=null;" alt="Cover" class="absolute inset-0 w-full h-full object-cover object-center">
+                        </div>
+                        <div class="flex ${padding} ${gapSize} ${bottomBgClass} flex-grow items-center">
+                            <div class="shrink-0 flex flex-col items-center justify-center gap-1.5">
+                                <div class="flex items-center justify-center rounded-full font-black ${circleSize} ${circleClass} shadow-sm">
+                                    ${avg > 0 ? avg : '-'}
+                                </div>
+                                <button ${hasNotes ? `onclick="event.stopPropagation(); app.showAllNotes('${album.id}')"` : ''} class="${paperclipColorClass} transition-opacity ${hasNotes ? 'hover:opacity-75 cursor-pointer' : 'invisible pointer-events-none'}" data-i18n-title="all_notes" title="Tüm Notlar"><i class="ph-bold ph-paperclip text-lg"></i></button>
+                            </div>
+                            <div class="flex flex-col justify-center min-w-0 flex-1 w-full h-full">
+                                <h3 class="font-bold ${titleColorClass} line-clamp-2 ${titleSize} leading-tight italic" title="${Utils.escapeHTML(album.title)}">${Utils.escapeHTML(album.title)}</h3>
+                                <div class="flex items-center min-w-0 mt-0.5 mb-1 w-full">
+                                    <button onclick="event.stopPropagation(); app.searchFromLink(this.textContent)" class="${subTextColorClass} truncate ${artistSize} hover:underline cursor-pointer text-left max-w-full" title="${Utils.escapeHTML(album.artist)}">${Utils.escapeHTML(album.artist)}</button>
+                                </div>
+                                <div class="flex justify-between items-end gap-1 w-full mt-auto">
+                                    <span class="${metaSize} font-semibold ${subTextColorClass} truncate text-left" style="max-width: 70%;">${Utils.escapeHTML(displayGenre)}</span>
+                                    <div class="flex gap-1 shrink-0 items-center">
+                                        <span class="${metaSize} font-bold ${genreBgClass} px-1.5 py-0.5 rounded-md text-right">${Utils.escapeHTML(album.year)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    fragment.appendChild(card);
+                });
+                grid.appendChild(fragment);
+            },
+
+            updateSearchPlaceholder() {
+                const inp = document.getElementById('search-input');
+                const searchTypes = document.getElementsByName('searchType');
+                let tType = 'artist';
+                for(let st of searchTypes) { if(st.checked) tType = st.value; }
+                if(inp) inp.placeholder = tType === 'artist' ? t('placeholder_artist') : t('placeholder_album');
+            },
+            
+            async search() {
+                if (AppState.isSearching) return;
+                const input = document.getElementById('search-input').value.trim(); if (!input) return;
+                AppState.isSearching = true; 
+                const btnSearch = document.getElementById('search-btn');
+                if(btnSearch) btnSearch.disabled = true;
+                
+                let searchType = 'artist';
+                const searchTypes = document.getElementsByName('searchType');
+                for(let st of searchTypes) { if(st.checked) searchType = st.value; }
+                
+                const resCon = document.getElementById('search-results');
+                const load = document.getElementById('search-loading');
+                const statText = document.getElementById('search-status-text');
+                
+                if(resCon) resCon.innerHTML = ''; 
+                if(load) { load.classList.remove('hidden'); load.classList.add('flex'); }
+                if(statText) statText.textContent = searchType === 'artist' ? t('searching_artist') : t('searching_albums');
+
+                try {
+                    if (searchType === 'album') {
+                        const res = await fetch(`https://musicbrainz.org/ws/2/release-group/?query=${encodeURIComponent(input)} AND (type:album OR type:ep)&fmt=json&limit=50`);
+                        const data = await res.json();
+                        const albums = (data['release-groups'] || []).filter(rg => 
+                            (rg['primary-type'] === 'Album' || rg['primary-type'] === 'EP') && 
+                            (!rg['secondary-types'] || rg['secondary-types'].length === 0)
+                        ).slice(0, 15);
+                        
+                        if (albums.length === 0 && resCon) { resCon.innerHTML = `<div class="col-span-full text-center p-8 text-gray-500">${t('no_results')}</div>`; return; }
+                        this.renderSearchResults(albums);
+                    } else {
+                        const aRes = await fetch(`https://musicbrainz.org/ws/2/artist/?query=${encodeURIComponent(input)}&fmt=json&limit=1`);
+                        const aData = await aRes.json();
+                        if ((!aData.artists || aData.artists.length === 0) && resCon) { resCon.innerHTML = `<div class="col-span-full text-center p-8 text-gray-500">${t('no_results')}</div>`; return; }
+                        const artist = aData.artists[0]; 
+                        if(statText) statText.textContent = `${t('fetching_albums')} "${artist.name}"...`;
+                        
+                        const relRes = await fetch(`https://musicbrainz.org/ws/2/release-group?artist=${artist.id}&type=album|ep&fmt=json&limit=100`);
+                        const rData = await relRes.json();
+                        const albums = (rData['release-groups'] || []).filter(rg => 
+                            (rg['primary-type'] === 'Album' || rg['primary-type'] === 'EP') && 
+                            (!rg['secondary-types'] || rg['secondary-types'].length === 0)
+                        );
+                        
+                        if (albums.length === 0 && resCon) { resCon.innerHTML = `<div class="col-span-full text-center p-8 text-gray-500">${t('no_studio_albums')}</div>`; return; }
+                        this.renderSearchResults(albums.sort((a,b)=>(b['first-release-date']||'0000').localeCompare(a['first-release-date']||'0000')), artist.name);
+                    }
+                } catch (e) { showToast(t('toast_conn_error'), "error"); } 
+                finally { 
+                    if(load) { load.classList.add('hidden'); load.classList.remove('flex'); }
+                    AppState.isSearching = false; 
+                    if(btnSearch) btnSearch.disabled = false; 
+                }
+            },
+
+            renderSearchResults(albums, fallbackArtist = null) {
+                const con = document.getElementById('search-results'); 
+                if(!con) return;
+                con.innerHTML = '';
+                const frag = document.createDocumentFragment();
+                const noCoverText = t('no_cover').replace(/ /g, '+');
+
+                albums.forEach(al => {
+                    const mbid = al.id, title = Utils.escapeHTML(al.title), artist = Utils.escapeHTML(al['artist-credit']?.[0]?.name || fallbackArtist || t('unknown'));
+                    const year = Utils.escapeHTML(al['first-release-date'] ? al['first-release-date'].substring(0, 4) : t('unknown'));
+                    const coverUrl = `https://coverartarchive.org/release-group/${mbid}/front-250`;
+                    const inLib = AppState.library.some(a => a.id === mbid);
+
+                    const card = document.createElement('div');
+                    card.className = `bg-white dark:bg-surface p-2.5 rounded-xl border ${inLib ? 'border-primary' : 'border-lightBorder dark:border-gray-800'} flex gap-3 active:scale-[0.98] transition-transform shadow-sm cursor-pointer hover:bg-lightHighlight dark:hover:bg-surfaceHover`;
+                    card.onclick = () => this.openAlbumModal(mbid, al.title, al['artist-credit']?.[0]?.name || fallbackArtist, year, coverUrl); 
+
+                    card.innerHTML = `
+                        <img loading="lazy" src="${coverUrl}" onerror="this.src='https://placehold.co/150x150/ebe4dc/594636?text=${noCoverText}'; this.onerror=null;" class="w-20 h-20 bg-lightHighlight rounded-lg object-cover flex-shrink-0">
+                        <div class="flex flex-col justify-center overflow-hidden flex-grow">
+                            <h4 class="font-bold text-gray-900 dark:text-white truncate text-sm md:text-base italic">${title}</h4>
+                            <p class="text-xs text-gray-500 truncate mb-1">${artist}</p>
+                            <div class="flex gap-1.5 mt-1">
+                                <span class="text-[10px] bg-lightBg dark:bg-darker px-2 py-0.5 rounded text-gray-600 font-bold">${year}</span>
+                                <span class="text-[10px] bg-lightHighlight dark:bg-gray-800 px-2 py-0.5 rounded text-gray-600 dark:text-gray-300 font-bold">${al['primary-type'] === 'EP' ? 'EP' : t('studio_album')}</span>
+                                ${inLib ? `<span class="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded font-bold flex items-center gap-1"><i class="ph-fill ph-check-circle"></i> ${t("added_to_lib")}</span>` : ''}
+                            </div>
+                        </div>`;
+                    frag.appendChild(card);
+                });
+                con.appendChild(frag);
+            },
+
+            async openAlbumModal(mbid, title, artist, year, defCover = null) {
+                const modal = document.getElementById('album-modal');
+                const tl = document.getElementById('modal-tracklist');
+                if(!modal || !tl) return;
+
+                this.isEditMode = false; 
+                document.getElementById('cover-edit-section')?.classList.add('hidden');
+                document.getElementById('edit-mode-btn')?.classList.remove('bg-primary/20', 'text-primary');
+                document.getElementById('auto-fetch-genre-btn')?.classList.add('hidden');
+                
+                modal.classList.remove('hidden');
+                modal.classList.add('flex'); 
+                
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => { 
+                        modal.classList.remove('opacity-0'); 
+                        const content = modal.querySelector('.modal-content');
+                        if (content) {
+                            content.classList.remove('scale-95', 'opacity-0');
+                            content.classList.add('scale-100', 'opacity-100');
+                        }
+                    });
+                });
+                
+                tl.innerHTML = `<div class="flex justify-center p-8"><i class="ph-bold ph-spinner-gap animate-spin text-3xl text-primary"></i></div>`;
+                
+                let albumData = AppState.library.find(a => a.id === mbid);
+                if (!albumData) {
+                    try {
+                        const res = await fetch(`https://musicbrainz.org/ws/2/release/?release-group=${mbid}&inc=recordings+labels+genres&fmt=json&limit=1`);
+                        const data = await res.json();
+                        let tracks = [], label = t("unknown"), country = t("unknown"), rDate = year, genres = [];
+                        if (data.releases && data.releases.length > 0) {
+                            const rel = data.releases[0];
+                            if(rel.date) rDate = rel.date; 
+                            if(rel['label-info']?.length > 0) label = rel['label-info'][0].label?.name || t("independent");
+                            if(rel.country) country = rel.country;
+                            if(rel.genres?.length > 0) genres = rel.genres.sort((a,b)=>b.count-a.count).slice(0,3).map(g=>g.name.charAt(0).toUpperCase()+g.name.slice(1));
+                            if(rel.media?.length > 0) {
+                                let c = 1; tracks = rel.media.reduce((acc, m) => acc.concat(m.tracks.map(t => ({id:t.id, title:t.recording.title, number:(c++).toString(), rating:0}))), []);
+                            }
+                        } else tracks = [{id:'1', title:t("no_tracks"), number:'1', rating:0}];
+                        
+                        albumData = { id: mbid, title: title||t('unknown'), artist: artist||t('unknown'), year: rDate.substring(0,4), label: label, country: country, coverUrl: defCover || `https://coverartarchive.org/release-group/${mbid}/front-500`, tracks: tracks, genres: genres, dateAdded: new Date().toISOString(), averageScore: 0 };
+                    } catch(e) { tl.innerHTML = `<div class="text-red-500 text-center p-8 flex flex-col items-center gap-3"><i class="ph-bold ph-wifi-x text-4xl"></i><p class="font-bold">${t('error_loading')}</p><p class="text-sm text-gray-500">${t('toast_conn_error')}</p></div>`; return; }
+                }
+                AppState.currentModalAlbum = JSON.parse(JSON.stringify(albumData)); 
+                this.updateModalUI();
+            },
+
+            closeModal() {
+                const modal = document.getElementById('album-modal');
+                if(!modal) return;
+                const content = modal.querySelector('.modal-content');
+                
+                modal.classList.add('opacity-0');
+                if (content) {
+                    content.classList.remove('scale-100', 'opacity-100');
+                    content.classList.add('scale-95', 'opacity-0');
+                }
+                
+                setTimeout(() => { 
+                    modal.classList.add('hidden'); 
+                    modal.classList.remove('flex');
+                    AppState.currentModalAlbum = null; 
+                }, 300);
+            },
+
+            updateModalUI() {
+                const al = AppState.currentModalAlbum;
+                if(!al) return;
+                
+                const setElText = (id, text) => { const el = document.getElementById(id); if(el) el.textContent = text; };
+                
+                setElText('modal-title', al.title);
+                setElText('modal-artist', al.artist);
+                setElText('modal-date', al.year);
+                setElText('modal-label', al.label);
+                
+                const countryStr = al.country || t('unknown');
+                setElText('modal-country', countryStr);
+                this.updateCountryIcon(countryStr.trim().toLowerCase());
+                
+                const artistEl = document.getElementById('modal-artist');
+                if (artistEl) {
+                    if (!this.isEditMode) {
+                        artistEl.classList.add('cursor-pointer', 'hover:underline', 'hover:text-primary');
+                        artistEl.onclick = () => app.searchFromLink(artistEl.textContent);
+                    } else {
+                        artistEl.classList.remove('cursor-pointer', 'hover:underline', 'hover:text-primary');
+                        artistEl.onclick = null;
+                    }
+                }
+
+                this.renderDateAdded();
+                this.updateAlbumNoteIcon();
+
+                const cov = document.getElementById('modal-cover'); 
+                if(cov) { cov.src = al.customCoverUrl || al.coverUrl; cov.onerror = function(){ this.onerror=null; this.src='https://placehold.co/400x400/ebe4dc/594636?text=No+Cover'; }; }
+                
+                const blurBg = document.getElementById('modal-bg-blur');
+                if(blurBg) blurBg.style.backgroundImage = `url('${Utils.escapeHTML(al.customCoverUrl || al.coverUrl)}')`;
+                
+                this.renderTracklist(); this.renderGenres(); this.updateModalButtons(); this.calculateAverageScore();
+            },
+
+            handleCountryInput(val) {
+                const code = val.trim().toLowerCase();
+                this.updateCountryIcon(code);
+            },
+
+            updateCountryIcon(code) {
+                const container = document.getElementById('modal-country-icon-container');
+                if (!container) return;
+                
+                if (code.length === 2 && /^[a-z]{2}$/.test(code)) {
+                    container.innerHTML = `<img src="https://flagcdn.com/24x18/${code}.png" alt="${code.toUpperCase()}" class="w-5 h-auto rounded-sm shadow-sm object-cover" onerror="this.onerror=null; this.outerHTML='<i class=\\'ph-bold ph-globe text-lg text-gray-400\\'></i>'">`;
+                } else {
+                    container.innerHTML = `<i class="ph-bold ph-globe text-lg text-gray-400"></i>`;
+                }
+            },
+
+            renderDateAdded() {
+                const al = AppState.currentModalAlbum;
+                if (!al) return;
+                const d = new Date(al.dateAdded);
+                const isValid = !isNaN(d.getTime());
+                const formattedDate = isValid ? d.toLocaleDateString(AppState.language === 'en' ? 'en-US' : 'tr-TR') : '-';
+                const isoDate = isValid ? d.toISOString().split('T')[0] : '';
+
+                const dateAddedContainer = document.getElementById('modal-date-added-container');
+                if (dateAddedContainer) {
+                    if (this.isEditMode) {
+                        dateAddedContainer.innerHTML = `
+                            <div class="relative flex items-center gap-1.5 cursor-pointer bg-lightHighlight dark:bg-darker border border-dashed border-primary px-1.5 py-0.5 rounded active:scale-95 transition-transform w-fit" onclick="document.getElementById('added-date-picker').showPicker()">
+                                <span class="text-[10px] font-bold text-gray-800 dark:text-gray-200">${formattedDate}</span>
+                                <i class="ph-bold ph-arrows-clockwise text-primary text-xs"></i>
+                                <input type="date" id="added-date-picker" value="${isoDate}" class="absolute opacity-0 pointer-events-none w-0 h-0" onchange="app.updateAddedDate(this.value); event.stopPropagation();">
+                            </div>
+                        `;
+                    } else {
+                        dateAddedContainer.innerHTML = `<p id="modal-date-added" class="text-xs font-semibold text-gray-800 dark:text-gray-200 truncate">${formattedDate}</p>`;
+                    }
+                }
+            },
+
+            updateAddedDate(val) {
+                if (AppState.currentModalAlbum && val) {
+                    const newDate = new Date(val);
+                    if (!isNaN(newDate.getTime())) {
+                        AppState.currentModalAlbum.dateAdded = newDate.toISOString();
+                        this.updateModalUI();
+                    }
+                }
+            },
+
+            toggleEditMode() {
+                this.isEditMode = !this.isEditMode;
+                const btn = document.getElementById('edit-mode-btn');
+                const aBtn = document.getElementById('auto-fetch-genre-btn');
+                
+                if(this.isEditMode) { 
+                    btn?.classList.add('bg-primary/20', 'text-primary'); 
+                    aBtn?.classList.remove('hidden'); 
+                } else { 
+                    btn?.classList.remove('bg-primary/20', 'text-primary'); 
+                    aBtn?.classList.add('hidden'); 
+                }
+                
+                ['modal-title', 'modal-artist', 'modal-date', 'modal-label', 'modal-country'].forEach(id => {
+                    const el = document.getElementById(id); 
+                    if(el) {
+                        el.contentEditable = this.isEditMode;
+                        if(this.isEditMode) el.classList.add('border-b', 'border-dashed', 'border-primary', 'bg-lightHighlight', 'dark:bg-darker');
+                        else el.classList.remove('border-b', 'border-dashed', 'border-primary', 'bg-lightHighlight', 'dark:bg-darker');
+                    }
+                });
+                
+                const artistEl = document.getElementById('modal-artist');
+                if (artistEl) {
+                    if (this.isEditMode) {
+                        artistEl.classList.remove('cursor-pointer', 'hover:underline', 'hover:text-primary');
+                        artistEl.onclick = null;
+                    } else {
+                        artistEl.classList.add('cursor-pointer', 'hover:underline', 'hover:text-primary');
+                        artistEl.onclick = () => app.searchFromLink(artistEl.textContent);
+                    }
+                }
+
+                this.renderDateAdded();
+                this.renderTracklist(); 
+                this.renderGenres();
+            },
+
+            updateAlbumField(field, val) { if(AppState.currentModalAlbum) { AppState.currentModalAlbum[field] = val.trim(); this.updateModalButtons(); } },
+            updateTrackField(idx, fld, val) { if(AppState.currentModalAlbum) { AppState.currentModalAlbum.tracks[idx][fld] = val.trim(); this.updateModalButtons(); } },
+            
+            toggleCoverEdit() { 
+                const sec = document.getElementById('cover-edit-section');
+                if(sec) sec.classList.toggle('hidden'); 
+                const curl = document.getElementById('custom-cover-url');
+                if(curl) curl.value = AppState.currentModalAlbum.customCoverUrl || AppState.currentModalAlbum.coverUrl; 
+            },
+            
+            applyCustomCover() { 
+                const input = document.getElementById('custom-cover-url');
+                if(!input) return;
+                const u = input.value.trim(); 
+                if(u && AppState.currentModalAlbum) { 
+                    AppState.currentModalAlbum.customCoverUrl = u; 
+                    this.updateModalUI(); 
+                    document.getElementById('cover-edit-section')?.classList.add('hidden'); 
+                } 
+            },
+            
+            async searchiTunesCover() {
+                const al = AppState.currentModalAlbum, btn = document.getElementById('itunes-search-btn'); 
+                if(!al || !btn) return;
+                const oH = btn.innerHTML; btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin"></i>`;
+                try {
+                    const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(al.artist+' '+al.title)}&entity=album&limit=1`);
+                    const data = await res.json();
+                    if(data.results?.length > 0) { 
+                        AppState.currentModalAlbum.customCoverUrl = data.results[0].artworkUrl100.replace('100x100bb','600x600bb'); 
+                        this.updateModalUI(); 
+                        document.getElementById('cover-edit-section')?.classList.add('hidden'); 
+                        showToast(t("toast_cover_found"), "success"); 
+                    } else {
+                        showToast(t("toast_cover_not_found"), "error");
+                    }
+                } catch(e) { showToast(t("toast_search_error"), "error"); } finally { btn.innerHTML = oH; }
+            },
+
+            renderGenres() {
+                const con = document.getElementById('modal-genres'); 
+                if(!con) return;
+                con.innerHTML = '';
+                const al = AppState.currentModalAlbum; 
+                if(!al) return;
+                if(!al.genres) al.genres = [];
+                
+                al.genres.forEach((g, i) => {
+                    const displayG = tGenre(g);
+                    const tag = document.createElement('span');
+                    tag.className = `px-2 py-1 bg-lightBorder dark:bg-darker rounded-lg text-[10px] font-bold flex items-center gap-1 ${!this.isEditMode ? 'active:scale-95 cursor-pointer hover:bg-primary/20 hover:text-primary transition-colors' : 'cursor-grab active:cursor-grabbing'}`;
+                    if(!this.isEditMode) { 
+                        tag.innerHTML = Utils.escapeHTML(displayG); 
+                        tag.onclick = (e) => { e.stopPropagation(); this.filterByGenre(g); }; 
+                    }
+                    else { 
+                        tag.innerHTML = `<i class="ph-bold ph-dots-six-vertical text-gray-400 mr-0.5"></i> ${Utils.escapeHTML(displayG)} <i class="ph-bold ph-x ml-1 cursor-pointer hover:text-red-500 p-0.5" onclick="app.removeGenre(${i})"></i>`; 
+                        
+                        tag.draggable = true;
+                        tag.dataset.index = i;
+                        tag.ondragstart = (e) => { app.draggedGenreIndex = i; e.dataTransfer.effectAllowed = 'move'; setTimeout(() => tag.classList.add('opacity-50'), 0); };
+                        tag.ondragend = (e) => { tag.classList.remove('opacity-50'); app.draggedGenreIndex = null; };
+                        tag.ondragover = (e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; };
+                        tag.ondragenter = (e) => { e.preventDefault(); tag.classList.add('scale-105', 'bg-primary/20'); };
+                        tag.ondragleave = (e) => { tag.classList.remove('scale-105', 'bg-primary/20'); };
+                        tag.ondrop = (e) => {
+                            e.preventDefault();
+                            tag.classList.remove('scale-105', 'bg-primary/20');
+                            if (app.draggedGenreIndex !== null && app.draggedGenreIndex !== i) {
+                                const draggedItem = AppState.currentModalAlbum.genres.splice(app.draggedGenreIndex, 1)[0];
+                                AppState.currentModalAlbum.genres.splice(i, 0, draggedItem);
+                                app.renderGenres();
+                                app.updateModalButtons();
+                            }
+                        };
+                    }
+                    con.appendChild(tag);
+                });
+                if(this.isEditMode && al.genres.length < 3) {
+                    const add = document.createElement('button'); add.className = 'px-2 py-1 bg-primary/20 text-primary rounded-lg text-[10px] font-bold flex items-center hover:bg-primary/30 transition-colors cursor-pointer';
+                    add.innerHTML = `<i class="ph-bold ph-plus"></i>`; add.onclick = () => this.promptAddGenre(); con.appendChild(add);
+                }
+            },
+            
+            async autoFetchGenres(fromModal = false) { 
+                const al = AppState.currentModalAlbum;
+                if (!al) return;
+                
+                const btn = document.getElementById('auto-fetch-genre-btn');
+                const originalIcon = btn ? btn.innerHTML : '';
+                if (btn) btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin"></i>`;
+                
+                const modalBtnIcon = fromModal ? document.querySelector('#genre-selection-modal .ph-magic-wand') : null;
+                if (modalBtnIcon) { modalBtnIcon.classList.remove('ph-magic-wand'); modalBtnIcon.classList.add('ph-spinner', 'animate-spin'); }
+                
+                try {
+                    let foundGenres = [];
+                    const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(al.artist + ' ' + al.title)}&entity=album&limit=1`);
+                    const data = await res.json();
+                    
+                    if (data.results?.length > 0 && data.results[0].primaryGenreName) {
+                        foundGenres.push(data.results[0].primaryGenreName);
+                    }
+
+                    if (foundGenres.length > 0) {
+                        if(!al.genres) al.genres = [];
+                        let added = 0;
+                        
+                        foundGenres.forEach(g => {
+                            const formatted = g.charAt(0).toUpperCase() + g.slice(1);
+                            if (!al.genres.includes(formatted) && al.genres.length < 3) {
+                                al.genres.push(formatted);
+                                added++;
+                            }
+                        });
+
+                        if (added > 0) {
+                            this.renderGenres();
+                            this.updateModalButtons();
+                            showToast(`${added} ${t("toast_auto_genre_success")}`, "success");
+                            if (fromModal) this.closeGenreModal();
+                        } else {
+                            showToast(t("toast_auto_genre_info"), "info");
+                        }
+                    } else {
+                        showToast(t("toast_auto_genre_fail"), "error");
+                    }
+                } catch(e) { 
+                    showToast(t("toast_search_error"), "error"); 
+                } finally {
+                    if (btn) btn.innerHTML = originalIcon;
+                    if (modalBtnIcon) { modalBtnIcon.classList.add('ph-magic-wand'); modalBtnIcon.classList.remove('ph-spinner', 'animate-spin'); }
+                }
+            },
+            
+            promptAddGenre() {
+                const inp = document.getElementById('custom-genre-input');
+                if(inp) inp.value = '';
+                const mod = document.getElementById('genre-selection-modal');
+                if(mod) {
+                    mod.classList.remove('hidden');
+                    mod.classList.add('flex');
+                    setTimeout(() => inp?.focus(), 100);
+                }
+            },
+            
+            confirmAddGenre() {
+                const inp = document.getElementById('custom-genre-input');
+                if(!inp) return;
+                const input = inp.value.trim();
+                if(!input || !AppState.currentModalAlbum) return;
+                
+                let newGenres = input.split(',').map(g => g.trim()).filter(g => g !== '');
+                if(!AppState.currentModalAlbum.genres) AppState.currentModalAlbum.genres = [];
+                
+                for(let g of newGenres) {
+                    let formatted = g.charAt(0).toUpperCase() + g.slice(1);
+                    if(!AppState.currentModalAlbum.genres.includes(formatted) && AppState.currentModalAlbum.genres.length < 3) {
+                        AppState.currentModalAlbum.genres.push(formatted);
+                    }
+                }
+                
+                this.renderGenres(); 
+                this.updateModalButtons(); 
+                this.closeGenreModal();
+            },
+
+            closeGenreModal() { 
+                const mod = document.getElementById('genre-selection-modal');
+                if(mod) { mod.classList.add('hidden'); mod.classList.remove('flex'); }
+            },
+            
+            removeGenre(i) { 
+                if(AppState.currentModalAlbum?.genres) {
+                    AppState.currentModalAlbum.genres.splice(i, 1); 
+                    this.renderGenres(); 
+                    this.updateModalButtons(); 
+                }
+            },
+            
+            filterByGenre(g) {
+                this.closeModal(); this.showView('library');
+                this.setFilter('Genre', g);
+                window.scrollTo(0,0);
+            },
+
+            openNotePanel(type, index = null) {
+                this.currentNoteTarget = { type, index };
+                const modal = document.getElementById('note-modal');
+                const textarea = document.getElementById('note-textarea');
+                const display = document.getElementById('note-display');
+                const titleSpan = document.querySelector('#note-modal-title span');
+                const subtitle = document.getElementById('note-modal-subtitle');
+                
+                if(!modal || !textarea || !AppState.currentModalAlbum) return;
+                
+                let currentText = '';
+                let titleKey = 'note';
+                let subText = '';
+                
+                if (type === 'album') {
+                    currentText = AppState.currentModalAlbum.note || '';
+                    titleKey = 'album_note';
+                    subText = `${AppState.currentModalAlbum.artist} • ${AppState.currentModalAlbum.title}`;
+                } else if (type === 'track' && index !== null) {
+                    const track = AppState.currentModalAlbum.tracks.find(t => t.originalIndex === index) || AppState.currentModalAlbum.tracks[index];
+                    currentText = track.note || '';
+                    titleKey = 'track_note';
+                    subText = `${track.number}. ${track.title}`;
+                }
+                
+                textarea.value = currentText;
+                if(display) display.textContent = currentText;
+                
+                if(titleSpan) titleSpan.textContent = t(titleKey);
+                if(subtitle) subtitle.textContent = subText;
+                
+                if (!currentText || currentText.trim() === '') {
+                    this.setNoteEditMode(true);
+                    textarea.value = '• ';
+                } else {
+                    this.setNoteEditMode(false);
+                }
+                
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                requestAnimationFrame(() => {
+                    modal.classList.remove('opacity-0');
+                    modal.querySelector('div').classList.remove('scale-95');
+                    if (this.isNoteEditMode) textarea.focus();
+                });
+            },
+
+            setNoteEditMode(isEdit) {
+                this.isNoteEditMode = isEdit;
+                const display = document.getElementById('note-display');
+                const textarea = document.getElementById('note-textarea');
+                const footer = document.getElementById('note-modal-footer');
+                const editBtn = document.getElementById('note-edit-btn');
+
+                if (!display || !textarea || !footer || !editBtn) return;
+
+                if (isEdit) {
+                    display.classList.add('hidden');
+                    textarea.classList.remove('hidden');
+                    footer.classList.remove('hidden');
+                    footer.classList.add('flex');
+                    editBtn.classList.add('bg-primary/20', 'text-primary');
+                    textarea.focus();
+                    textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+                } else {
+                    display.classList.remove('hidden');
+                    textarea.classList.add('hidden');
+                    footer.classList.add('hidden');
+                    footer.classList.remove('flex');
+                    editBtn.classList.remove('bg-primary/20', 'text-primary');
+                }
+            },
+
+            toggleNoteEditMode() {
+                if (this.isNoteEditMode) {
+                    this.saveNote(false); 
+                } else {
+                    this.setNoteEditMode(true);
+                    const textarea = document.getElementById('note-textarea');
+                    if (textarea && textarea.value.trim() === '') {
+                        textarea.value = '• ';
+                    }
+                }
+            },
+
+            handleNoteKeydown(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const ta = e.target;
+                    const start = ta.selectionStart;
+                    const end = ta.selectionEnd;
+                    const val = ta.value;
+                    ta.value = val.substring(0, start) + '\n• ' + val.substring(end);
+                    ta.selectionStart = ta.selectionEnd = start + 3;
+                }
+            },
+
+            closeNotePanel() {
+                const modal = document.getElementById('note-modal');
+                if(!modal) return;
+                modal.classList.add('opacity-0');
+                modal.querySelector('div').classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                    this.currentNoteTarget = null;
+                }, 200);
+            },
+
+            saveNote(close = true) {
+                if(!this.currentNoteTarget || !AppState.currentModalAlbum) return;
+                const textarea = document.getElementById('note-textarea');
+                const display = document.getElementById('note-display');
+                
+                let rawText = textarea.value;
+                let lines = rawText.split('\n');
+                let bulleted = lines.map(line => {
+                    let t = line.trim();
+                    if (t === '' || t === '•') return null;
+                    if (!t.startsWith('•')) return '• ' + t;
+                    return line;
+                }).filter(l => l !== null);
+                let text = bulleted.join('\n');
+                
+                const { type, index } = this.currentNoteTarget;
+                
+                if (type === 'album') {
+                    AppState.currentModalAlbum.note = text;
+                    this.updateAlbumNoteIcon();
+                } else if (type === 'track' && index !== null) {
+                    const actualTrackIndex = AppState.currentModalAlbum.tracks.findIndex(t => t.originalIndex === index || t === AppState.currentModalAlbum.tracks[index]);
+                    if (actualTrackIndex !== -1) {
+                        AppState.currentModalAlbum.tracks[actualTrackIndex].note = text;
+                    }
+                }
+                
+                this.updateModalButtons();
+                if (type === 'track') this.renderTracklist();
+                
+                textarea.value = text;
+                if(display) display.textContent = text;
+                
+                if (close) {
+                    this.closeNotePanel();
+                } else {
+                    this.setNoteEditMode(false);
+                }
+            },
+            
+            showAllNotes(albumId) {
+                const album = AppState.library.find(a => a.id === albumId);
+                if (!album) return;
+
+                let html = '';
+                let rawTextForCopy = '';
+
+                html += `<div class="flex items-center gap-4 mb-5 pb-4 border-b border-lightBorder dark:border-gray-800">
+                    <img src="${Utils.escapeHTML(album.customCoverUrl || album.coverUrl)}" onerror="this.src='https://placehold.co/100x100/ebe4dc/594636?text=${t('no_cover').replace(/ /g, '+')}'; this.onerror=null;" class="w-16 h-16 rounded-xl shadow-md object-cover border border-lightBorder dark:border-gray-800 flex-shrink-0">
+                    <div class="min-w-0">
+                        <h2 class="text-xl md:text-2xl font-black text-gray-900 dark:text-white italic leading-tight truncate">${Utils.escapeHTML(album.title)}</h2>
+                        <p class="text-sm md:text-base font-semibold text-gray-500 dark:text-gray-400 truncate mt-0.5">${Utils.escapeHTML(album.artist)}</p>
+                    </div>
+                </div>`;
+
+                rawTextForCopy += `${album.artist.toUpperCase()} - ${album.title.toUpperCase()}\n`;
+                rawTextForCopy += `=========================================\n\n`;
+
+                if (album.note && album.note.trim() !== '') {
+                    html += `<div class="mb-6">
+                        <div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-xs font-bold mb-3 uppercase tracking-widest shadow-sm">
+                            <i class="ph-bold ph-vinyl-record text-base"></i> ${t("album_note")}
+                        </div>
+                        <div class="bg-lightBg dark:bg-darker rounded-xl p-5 border border-lightBorder dark:border-gray-800 text-base italic leading-relaxed text-gray-800 dark:text-gray-200 whitespace-pre-wrap shadow-inner font-medium">${Utils.escapeHTML(album.note)}</div>
+                    </div>`;
+                    
+                    rawTextForCopy += `[${t("album_note").toUpperCase()}]\n${album.note.trim()}\n\n`;
+                }
+
+                const tracksWithNotes = album.tracks ? album.tracks.filter(t => t.note && t.note.trim() !== '') : [];
+                if (tracksWithNotes.length > 0) {
+                    html += `<div class="space-y-4">
+                        <div class="flex items-center gap-2 mb-3 pb-2 border-b border-lightBorder/50 dark:border-gray-800/50">
+                            <i class="ph-bold ph-music-notes text-gray-400 text-lg"></i>
+                            <h3 class="text-sm font-bold text-gray-500 uppercase tracking-widest">${t("track_notes")}</h3>
+                        </div>`;
+                    
+                    rawTextForCopy += `[${t("track_notes").toUpperCase()}]\n`;
+
+                    tracksWithNotes.forEach(track => {
+                        html += `<div class="bg-white dark:bg-surfaceHover rounded-xl p-4 border border-lightBorder dark:border-gray-800 shadow-sm relative overflow-hidden group hover:shadow-md transition-shadow">
+                            <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-primary/40 group-hover:bg-primary transition-colors"></div>
+                            <h4 class="font-bold text-gray-900 dark:text-white mb-2 flex items-start gap-2 pl-2">
+                                <span class="text-sm text-primary font-black mt-0.5">${track.number}.</span>
+                                <span class="italic text-lg leading-snug">${Utils.escapeHTML(track.title)}</span>
+                            </h4>
+                            <div class="text-base italic leading-relaxed text-gray-600 dark:text-gray-300 whitespace-pre-wrap pl-6 ml-0.5 border-l-2 border-lightBorder/60 dark:border-gray-700/60">${Utils.escapeHTML(track.note)}</div>
+                        </div>`;
+
+                        rawTextForCopy += `${track.number}. ${track.title.toUpperCase()}:\n${track.note.trim()}\n\n`;
+                    });
+                    html += `</div>`;
+                }
+
+                AppState.currentAllNotesRawText = rawTextForCopy.trim();
+
+                const contentEl = document.getElementById('all-notes-content');
+                if (contentEl) {
+                    contentEl.innerHTML = html;
+                }
+
+                const modal = document.getElementById('all-notes-modal');
+                if (modal) {
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                    requestAnimationFrame(() => {
+                        modal.classList.remove('opacity-0');
+                        modal.querySelector('div').classList.remove('scale-95');
+                    });
+                }
+            },
+
+            closeAllNotesModal() {
+                const modal = document.getElementById('all-notes-modal');
+                if (!modal) return;
+                modal.classList.add('opacity-0');
+                modal.querySelector('div').classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                }, 200);
+            },
+
+            copyAllNotes() {
+                if (!AppState.currentAllNotesRawText) return;
+                const text = AppState.currentAllNotesRawText;
+                
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        showToast(t("toast_notes_copied"), "success");
+                    }).catch(() => this.fallbackCopyText(text));
+                } else {
+                    this.fallbackCopyText(text);
+                }
+            },
+
+            fallbackCopyText(text) {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                try {
+                    document.execCommand('copy');
+                    showToast(t("toast_notes_copied"), "success");
+                } catch(err) {
+                    showToast(t("toast_copy_fail"), "error");
+                }
+                document.body.removeChild(ta);
+            },
+
+            updateAlbumNoteIcon() {
+                const btn = document.getElementById('album-note-btn');
+                if(!btn || !AppState.currentModalAlbum) return;
+                const hasNote = !!AppState.currentModalAlbum.note;
+                if(hasNote) {
+                    btn.classList.add('text-primary');
+                    btn.classList.remove('text-gray-500');
+                    btn.innerHTML = '<i class="ph-fill ph-paperclip text-lg"></i>';
+                } else {
+                    btn.classList.remove('text-primary');
+                    btn.classList.add('text-gray-500');
+                    btn.innerHTML = '<i class="ph-bold ph-paperclip text-lg"></i>';
+                }
+            },
+
+            toggleModalTrackSort(mode) {
+                AppState.modalTrackSort = mode;
+                localStorage.setItem('albumDiaryModalTrackSort', mode);
+                this.updateModalTrackSortButtons();
+                this.renderTracklist();
+            },
+
+            updateModalTrackSortButtons() {
+                const mode = AppState.modalTrackSort;
+                const btnDef = document.getElementById('btn-track-sort-default');
+                const btnRat = document.getElementById('btn-track-sort-rating');
+                if (btnDef && btnRat) {
+                    if (mode === 'default') {
+                        btnDef.className = "px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full font-semibold text-primary bg-white dark:bg-surfaceHover shadow-sm";
+                        btnRat.className = "px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full font-semibold text-gray-500 dark:text-gray-400 hover:text-primary";
+                    } else {
+                        btnDef.className = "px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full font-semibold text-gray-500 dark:text-gray-400 hover:text-primary";
+                        btnRat.className = "px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full font-semibold text-primary bg-white dark:bg-surfaceHover shadow-sm";
+                    }
+                }
+            },
+
+            getStarColorClass(rating) {
+                switch(rating) {
+                    case 1: return 'text-red-700 dark:text-red-600';      
+                    case 2: return 'text-orange-700 dark:text-orange-600';    
+                    case 3: return 'text-amber-600 dark:text-amber-500';     
+                    case 4: return 'text-green-700 dark:text-green-600';      
+                    case 5: return 'text-blue-800 dark:text-blue-600';       
+                    default: return 'text-gray-300 dark:text-gray-600';
+                }
+            },
+
+            renderTracklist() {
+                const con = document.getElementById('modal-tracklist'), al = AppState.currentModalAlbum;
+                if(!con || !al) return;
+                
+                if (!al.tracks || al.tracks.length === 0) { con.innerHTML = `<p class="text-sm text-gray-500 p-4">${t('no_tracks')}</p>`; return; }
+                con.innerHTML = ''; 
+                const frag = document.createDocumentFragment();
+
+                let tracksWithIndex = al.tracks.map((tr, idx) => ({ ...tr, originalIndex: idx }));
+
+                if (AppState.modalTrackSort === 'rating') {
+                    tracksWithIndex.sort((a, b) => {
+                        if (b.rating !== a.rating) {
+                            return b.rating - a.rating;
+                        }
+                        return parseInt(a.number || 0) - parseInt(b.number || 0);
+                    });
+                }
+
+                tracksWithIndex.forEach((tr) => {
+                    const i = tr.originalIndex;
+                    const row = document.createElement('div');
+                    row.className = 'flex items-center justify-start py-1.5 gap-2 group w-full';
+
+                    const starColorClass = tr.rating > 0 ? this.getStarColorClass(tr.rating) : 'text-gray-300 dark:text-gray-600';
+
+                    let stars = `<div class="flex items-center star-container flex-shrink-0 bg-lightBg dark:bg-surface border border-lightBorder dark:border-surface shadow-sm rounded-full px-2 h-11" role="radiogroup" aria-label="Track rating">`;
+                    for(let s=1; s<=5; s++) {
+                        const isActive = tr.rating >= s;
+                        const starColor = isActive ? starColorClass : 'text-gray-300 dark:text-gray-600';
+                        const isChecked = tr.rating === s;
+                        stars += `<button role="radio" aria-checked="${isChecked}" aria-label="${s} star${s>1?'s':''}" class="star-btn p-0.5 sm:p-1 transition-transform hover:scale-110 active:scale-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 rounded-full" onclick="app.rateTrack(${i}, ${s})">
+                            <i class="ph-fill ph-star ${starColor} text-base sm:text-lg" aria-hidden="true"></i>
+                        </button>`;
+                    }
+                    stars += '</div>';
+
+                    let info = this.isEditMode ? 
+                        `<div class="flex items-center flex-grow min-w-0 bg-lightBg dark:bg-surface border border-lightBorder dark:border-surface shadow-sm rounded-full px-2 h-11">
+                            <input type="text" value="${Utils.escapeHTML(tr.number)}" onblur="app.updateTrackField(${i},'number',this.value)" class="w-7 text-xs text-center font-bold bg-white dark:bg-darker border border-lightBorder dark:border-gray-800 rounded-full py-1 flex-shrink-0 outline-none focus:border-primary transition-colors text-gray-800 dark:text-gray-200">
+                            <input type="text" value="${Utils.escapeHTML(tr.title)}" onblur="app.updateTrackField(${i},'title',this.value)" class="flex-grow text-xs sm:text-sm font-bold bg-white dark:bg-darker border border-lightBorder dark:border-gray-800 rounded-full px-3 py-1 mx-1.5 min-w-0 outline-none focus:border-primary transition-colors text-gray-800 dark:text-gray-200 italic">
+                            <button onclick="app.openNotePanel('track', ${i})" class="p-1.5 rounded-full flex-shrink-0 transition-colors active:scale-90 ${tr.note ? 'text-primary' : 'text-gray-400 hover:text-gray-600'}"><i class="ph-${tr.note ? 'fill' : 'bold'} ph-paperclip text-lg"></i></button>
+                            <button onclick="app.deleteTrack(${i})" class="bg-red-100 dark:bg-red-900/30 text-red-500 rounded-full p-1.5 flex-shrink-0 transition-transform active:scale-95 cursor-pointer ml-1"><i class="ph-bold ph-trash"></i></button>
+                         </div>` : 
+                        `<div class="flex items-center flex-grow min-w-0 bg-lightBg dark:bg-surface border border-lightBorder dark:border-surface shadow-sm rounded-full px-4 h-11">
+                            <span class="text-gray-400 dark:text-gray-500 text-xs sm:text-sm w-5 text-left font-black flex-shrink-0 mr-1">${tr.number}</span>
+                            <span class="text-sm sm:text-base md:text-lg font-bold text-gray-900 dark:text-white truncate min-w-0 flex-grow italic" style="line-height: 1.2;">${Utils.escapeHTML(tr.title)}</span>
+                            <button onclick="app.openNotePanel('track', ${i})" class="ml-2 p-1.5 rounded-full transition-colors flex-shrink-0 active:scale-90 ${tr.note ? 'text-primary hover:bg-primary/10' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-lightHighlight dark:hover:bg-darker'}">
+                                <i class="ph-${tr.note ? 'fill' : 'bold'} ph-paperclip text-lg"></i>
+                            </button>
+                         </div>`;
+                    
+                    row.innerHTML = `${info}${stars}`;
+                    frag.appendChild(row);
+                });
+                
+                if (this.isEditMode) {
+                    const addBtn = document.createElement('button');
+                    addBtn.className = 'w-full py-2.5 mt-2 border-2 border-dashed border-lightBorder dark:border-gray-800 rounded-xl text-gray-500 font-bold flex items-center justify-center gap-2 hover:bg-lightHighlight dark:hover:bg-surface transition-colors active:scale-[0.98] cursor-pointer';
+                    addBtn.innerHTML = `<i class="ph-bold ph-plus text-lg"></i> ${t('add_new_track')}`;
+                    addBtn.onclick = () => this.addNewTrack();
+                    frag.appendChild(addBtn);
+                }
+
+                con.appendChild(frag);
+                this.updateModalTrackSortButtons();
+            },
+
+            rateTrack(idx, r) { 
+                if(!AppState.currentModalAlbum?.tracks?.[idx]) return;
+                AppState.currentModalAlbum.tracks[idx].rating = AppState.currentModalAlbum.tracks[idx].rating === r ? 0 : r; 
+                this.renderTracklist(); 
+                this.calculateAverageScore(); 
+                
+                const isSaved = AppState.library.some(a => a.id === AppState.currentModalAlbum.id);
+                if (isSaved) {
+                    const libIdx = AppState.library.findIndex(a => a.id === AppState.currentModalAlbum.id);
+                    if (libIdx > -1) {
+                        AppState.currentModalAlbum.dateAdded = new Date().toISOString();
+                        AppState.library[libIdx] = JSON.parse(JSON.stringify(AppState.currentModalAlbum));
+                        this.saveData();
+                        this.renderDateAdded();
+                        if(AppState.currentView === 'library') { this.renderLibrary(); }
+                        if(AppState.currentView === 'stats') { this.renderStats(); }
+                    }
+                }
+                
+                this.updateModalButtons(); 
+            },
+            
+            calculateAverageScore() {
+                const al = AppState.currentModalAlbum;
+                if(!al) return;
+                
+                const totalTracks = al.tracks ? al.tracks.length : 0;
+                const ratedTracks = al.tracks ? al.tracks.filter(t => t.rating > 0) : [];
+                
+                let runningAvg = "0.0";
+                let finalAvg = 0;
+                
+                if (ratedTracks.length > 0) {
+                    runningAvg = (ratedTracks.reduce((a,t)=>a+t.rating,0)/ratedTracks.length).toFixed(1);
+                }
+                
+                if (totalTracks > 0 && ratedTracks.length === totalTracks) {
+                    finalAvg = parseFloat(runningAvg);
+                }
+                
+                const avgEl = document.getElementById('modal-avg-score');
+                if(avgEl) avgEl.textContent = runningAvg > 0 ? runningAvg : "-"; 
+                al.averageScore = finalAvg;
+            },
+            
+            addNewTrack() { 
+                if (!AppState.currentModalAlbum) return;
+                if (!AppState.currentModalAlbum.tracks) AppState.currentModalAlbum.tracks = [];
+                const tracks = AppState.currentModalAlbum.tracks;
+                const newNum = tracks.length > 0 ? (tracks.length + 1).toString() : "1";
+                tracks.push({ id: 'manual_' + Date.now(), title: t('add_new_track'), number: newNum, rating: 0 });
+                this.renderTracklist();
+                this.updateModalButtons();
+            }, 
+            
+            deleteTrack(idx) { 
+                if (!AppState.currentModalAlbum || !AppState.currentModalAlbum.tracks) return;
+                AppState.currentModalAlbum.tracks.splice(idx, 1);
+                this.renderTracklist();
+                this.calculateAverageScore();
+                this.updateModalButtons();
+            },
+
+            updateModalButtons() {
+                const con = document.getElementById('modal-save-btn-container'), al = AppState.currentModalAlbum;
+                if(!con || !al) return;
+                const orig = AppState.library.find(a => a.id === al.id);
+                const isMod = orig ? JSON.stringify(orig) !== JSON.stringify(al) : true;
+
+                if(orig) {
+                    if(isMod) con.innerHTML = `<button onclick="app.saveAlbumToLibrary()" class="bg-primary text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-md cursor-pointer hover:scale-105 transition-transform">${t("update")}</button>`;
+                    else con.innerHTML = `<button onclick="app.removeAlbumFromLibrary('${al.id}')" class="bg-red-100 text-red-600 px-4 py-1.5 rounded-full text-xs font-bold cursor-pointer hover:bg-red-200 transition-colors">${t("remove")}</button>`;
+                } else con.innerHTML = `<button onclick="app.saveAlbumToLibrary()" class="bg-primary text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-md cursor-pointer hover:scale-105 transition-transform">${t("add")}</button>`;
+            },
+            
+            saveAlbumToLibrary() {
+                if(!AppState.currentModalAlbum) return;
+                
+                AppState.currentModalAlbum.dateAdded = new Date().toISOString();
+                
+                const idx = AppState.library.findIndex(a => a.id === AppState.currentModalAlbum.id);
+                if (idx > -1) { AppState.library[idx] = AppState.currentModalAlbum; showToast(t("toast_changes_saved"), "success"); } 
+                else { AppState.library.unshift(AppState.currentModalAlbum); showToast(t("toast_album_added"), "success"); }
+                
+                this.saveData(); 
+                this.updateModalButtons(); 
+                this.renderDateAdded();
+                
+                if(AppState.currentView === 'library') { this.renderLibrary(); }
+            },
+            
+            removeAlbumFromLibrary(id) {
+                AppState.library = AppState.library.filter(a => a.id !== id); this.saveData(); showToast(t("toast_album_removed"), "info"); this.closeModal();
+                if(AppState.currentView === 'library') { this.renderLibrary(); }
+            },
+
+            toggleArtistStatsSort(t) { 
+                if (AppState.statsArtistSortBy === t) {
+                    AppState.statsArtistSortDirection = AppState.statsArtistSortDirection === 'desc' ? 'asc' : 'desc';
+                } else {
+                    AppState.statsArtistSortBy = t;
+                    AppState.statsArtistSortDirection = 'desc';
+                }
+                localStorage.setItem('albumDiaryStatsSortBy', AppState.statsArtistSortBy);
+                localStorage.setItem('albumDiaryStatsSortDirection', AppState.statsArtistSortDirection);
+                this.renderStats(); 
+            },
+            
+            renderStats() {
+                const lib = AppState.library;
+                const setEl = (id, txt) => { const el = document.getElementById(id); if(el) el.textContent = txt; };
+                
+                setEl('stat-total-albums', lib.length);
+                
+                const uniqueArtists = new Set(lib.map(a => a.artist)).size;
+                setEl('stat-unique-artists', uniqueArtists);
+
+                const rated = lib.filter(a=>a.averageScore>0);
+                const gAvg = rated.length ? (rated.reduce((s,a)=>s+a.averageScore,0)/rated.length).toFixed(1) : "0.0";
+                setEl('stat-avg-rating', gAvg);
+
+                const aStats = {}, gStats = {};
+                lib.forEach(a => {
+                    if(!aStats[a.artist]) aStats[a.artist] = { c:0, s:0, rc:0 };
+                    aStats[a.artist].c++; if(a.averageScore>0) { aStats[a.artist].s+=a.averageScore; aStats[a.artist].rc++; }
+                    if(a.genres) a.genres.forEach(g => { const ng = g.trim().toLowerCase(); if(!gStats[ng]) gStats[ng]={n:g.trim(),c:0, raw: g.trim()}; gStats[ng].c++; });
+                });
+
+                const tl = document.getElementById('top-albums-list'); 
+                if(tl) {
+                    tl.innerHTML = '';
+                    [...rated].sort((a,b)=>b.averageScore-a.averageScore).slice(0,5).forEach((al, i) => {
+                        const el = document.createElement('div'); el.className = 'flex items-center gap-3 p-2 bg-lightBg dark:bg-surface rounded-xl cursor-pointer active:scale-95 transition-transform hover:bg-lightHighlight dark:hover:bg-surfaceHover'; el.onclick = () => this.openAlbumModal(al.id, al.title, al.artist, al.year);
+                        el.innerHTML = `
+                            <span class="font-bold text-gray-400 w-4 text-center">${i+1}</span>
+                            <img src="${Utils.escapeHTML(al.coverUrl)}" onerror="this.onerror=null;this.src='https://placehold.co/80x80/ebe4dc/594636?text=?';" class="w-10 h-10 rounded shadow-sm object-cover">
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-bold truncate italic">${Utils.escapeHTML(al.title)}</p>
+                                <p class="text-[10px] text-gray-500 truncate">${Utils.escapeHTML(al.artist)}</p>
+                            </div>
+                            <span class="text-xs font-bold text-yellow-500 bg-yellow-50 dark:bg-yellow-500/10 px-2 py-1 rounded-lg">${al.averageScore}</span>
+                        `;
+                        tl.appendChild(el);
+                    });
+                }
+
+                ['rating', 'count'].forEach(type => {
+                    const btn = document.getElementById(`btn-stats-sort-${type}`); 
+                    const iconDir = document.getElementById(`icon-stats-sort-${type}-dir`);
+                    if (!btn || !iconDir) return;
+                    if (AppState.statsArtistSortBy === type) {
+                        btn.classList.add('text-primary', 'bg-primary/10'); btn.classList.remove('text-gray-500');
+                        iconDir.className = `ph-bold ph-arrow-${AppState.statsArtistSortDirection === 'desc' ? 'down' : 'up'} text-[10px]`;
+                        iconDir.classList.remove('hidden');
+                    } else {
+                        btn.classList.remove('text-primary', 'bg-primary/10'); btn.classList.add('text-gray-500');
+                        iconDir.classList.add('hidden');
+                    }
+                });
+
+                const dir = AppState.statsArtistSortDirection === 'desc' ? 1 : -1;
+                const alEl = document.getElementById('artist-list'); 
+                if(alEl) {
+                    alEl.innerHTML = '';
+                    Object.keys(aStats).sort((a,b) => {
+                        if (AppState.statsArtistSortBy === 'rating') {
+                            const avgA = aStats[a].rc ? aStats[a].s/aStats[a].rc : 0;
+                            const avgB = aStats[b].rc ? aStats[b].s/aStats[b].rc : 0;
+                            return (avgB - avgA) * dir;
+                        } else {
+                            return (aStats[b].c - aStats[a].c) * dir;
+                        }
+                    }).slice(0,10).forEach(art => {
+                        const st = aStats[art], avg = st.rc ? (st.s/st.rc).toFixed(1) : '-';
+                        const li = document.createElement('li'); li.className = 'p-3 flex justify-between items-center text-sm cursor-pointer hover:bg-lightBg dark:hover:bg-surfaceHover transition-colors active:bg-lightHighlight dark:active:bg-darker';
+                        li.onclick = () => {
+                            app.showView('library');
+                            app.setFilter('Group', art);
+                            window.scrollTo(0,0);
+                            showToast(`${t('toast_filtered_genre')} ${Utils.escapeHTML(art)}`, "info");
+                        };
+                        li.innerHTML = `<div><p class="font-bold">${Utils.escapeHTML(art)}</p><p class="text-[10px] text-gray-500">${st.c} ${t('albums')}</p></div><span class="text-yellow-500 font-bold flex items-center gap-1"><i class="ph-fill ph-star"></i> ${avg}</span>`;
+                        alEl.appendChild(li);
+                    });
+                }
+
+                const glEl = document.getElementById('genre-list'); 
+                if(glEl) {
+                    glEl.innerHTML = '';
+                    Object.values(gStats).sort((a,b)=>b.c-a.c).slice(0,8).forEach(g => {
+                        const displayG = tGenre(g.n);
+                        const li = document.createElement('li'); li.className = 'p-2 bg-lightBg dark:bg-surface rounded-lg flex justify-between items-center text-sm cursor-pointer hover:bg-lightHighlight dark:hover:bg-surfaceHover transition-colors active:scale-95';
+                        li.onclick = () => {
+                            app.showView('library');
+                            app.setFilter('Genre', g.raw);
+                            window.scrollTo(0,0);
+                            showToast(`${t('toast_filtered_genre')} ${Utils.escapeHTML(displayG)}`, "info");
+                        };
+                        li.innerHTML = `<span class="font-medium">${Utils.escapeHTML(displayG)}</span><span class="text-xs bg-white dark:bg-darker px-2 py-0.5 rounded-full text-gray-500 font-bold">${g.c}</span>`;
+                        glEl.appendChild(li);
+                    });
+                }
+            }
+        };
+
+        window.app = app;
+        document.addEventListener('DOMContentLoaded', () => app.init());
+    </script>
+</body>
+</html>
