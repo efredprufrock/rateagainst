@@ -96,6 +96,111 @@
         .modal-enter-active { opacity: 1; transform: scale(1); transition: all 0.2s ease-out; }
         .slide-up { transition: transform 0.3s cubic-bezier(0.33, 1, 0.68, 1); }
     </style>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4hvGHICo3hQGiXtGJJ1fOAHW3Jk4k0jU",
+            authDomain: "rateagainst-122ed.firebaseapp.com",
+            databaseURL: "https://rateagainst-122ed-default-rtdb.firebaseio.com",
+            projectId: "rateagainst-122ed",
+            storageBucket: "rateagainst-122ed.firebasestorage.app",
+            messagingSenderId: "931900902839",
+            appId: "1:931900902839:web:d90953cf23e4620066ec32"
+        };
+
+        const fbApp = initializeApp(firebaseConfig);
+        const auth = getAuth(fbApp);
+        const db = getFirestore(fbApp);
+
+        // Save library to Firestore
+        window.saveToCloud = async (library) => {
+            const user = auth.currentUser;
+            if (!user) return;
+            try {
+                await setDoc(doc(db, "users", user.uid, "data", "library"), { library });
+            } catch(e) {
+                console.warn("Cloud save failed:", e);
+            }
+        };
+
+        // Load library from Firestore
+        window.loadFromCloud = async () => {
+            const user = auth.currentUser;
+            if (!user) return null;
+            try {
+                const snap = await getDoc(doc(db, "users", user.uid, "data", "library"));
+                return snap.exists() ? snap.data().library : null;
+            } catch(e) {
+                console.warn("Cloud load failed:", e);
+                return null;
+            }
+        };
+
+        // Login with Google
+        window.loginWithGoogle = async () => {
+            try {
+                await signInWithPopup(auth, new GoogleAuthProvider());
+            } catch(e) {
+                console.warn("Login failed:", e);
+                const label = document.getElementById('firebase-user-label');
+                if (label) label.textContent = 'Login failed. Try again.';
+            }
+        };
+
+        // Logout
+        window.logoutFirebase = async () => {
+            await signOut(auth);
+            const label = document.getElementById('firebase-user-label');
+            if (label) label.textContent = '';
+        };
+
+        // Watch auth state — fires on every page load
+        onAuthStateChanged(auth, async (user) => {
+            const loginBtn   = document.getElementById('firebase-login-btn');
+            const logoutBtn  = document.getElementById('firebase-logout-btn');
+            const userLabel  = document.getElementById('firebase-user-label');
+            const syncIcon   = document.getElementById('firebase-sync-icon');
+
+            if (user) {
+                if (loginBtn)  loginBtn.classList.add('hidden');
+                if (logoutBtn) logoutBtn.classList.remove('hidden');
+                if (userLabel) userLabel.textContent = user.displayName || user.email;
+                if (syncIcon)  syncIcon.classList.remove('hidden');
+
+                // Show loading indicator
+                if (syncIcon) syncIcon.classList.add('animate-spin');
+
+                // Load cloud data and merge with local
+                const cloudLibrary = await window.loadFromCloud();
+
+                if (syncIcon) syncIcon.classList.remove('animate-spin');
+
+                if (cloudLibrary && cloudLibrary.length > 0) {
+                    // Merge: cloud is source of truth, but keep any local-only items
+                    const cloudIds = new Set(cloudLibrary.map(a => a.id));
+                    const localOnly = AppState.library.filter(a => !cloudIds.has(a.id));
+                    AppState.library = [...cloudLibrary, ...localOnly];
+                    localStorage.setItem('albumDiaryData', JSON.stringify(AppState.library));
+                    if (window.app) {
+                        app.renderLibrary();
+                        app.renderStats();
+                    }
+                } else if (AppState.library.length > 0) {
+                    // No cloud data yet — push local data up
+                    await window.saveToCloud(AppState.library);
+                }
+            } else {
+                if (loginBtn)  loginBtn.classList.remove('hidden');
+                if (logoutBtn) logoutBtn.classList.add('hidden');
+                if (syncIcon)  syncIcon.classList.add('hidden');
+                if (userLabel) userLabel.textContent = '';
+            }
+        });
+    </script>
 </head>
 <body class="bg-lightBg text-gray-800 dark:bg-dark dark:text-gray-200 flex flex-col transition-colors duration-300">
     <noscript>
@@ -127,6 +232,24 @@
         </div>
 
         <div class="flex-grow overflow-y-auto">
+
+            <div class="p-4 border-b border-lightBorder dark:border-gray-800 space-y-3">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-bold text-gray-500 uppercase flex items-center gap-2">
+                        <i class="ph-fill ph-cloud text-primary"></i> Account
+                    </h3>
+                    <i id="firebase-sync-icon" class="ph-bold ph-arrows-clockwise text-primary text-sm hidden"></i>
+                </div>
+                <p id="firebase-user-label" class="text-xs font-medium text-gray-500 dark:text-gray-400 truncate"></p>
+                <button id="firebase-login-btn" onclick="loginWithGoogle()"
+                    class="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg bg-white dark:bg-surfaceHover border border-lightBorder dark:border-gray-700 text-sm font-bold text-gray-700 dark:text-gray-200 hover:bg-lightHighlight dark:hover:bg-gray-700 transition-colors active:scale-95">
+                    <i class="ph-fill ph-google-logo text-lg text-blue-500"></i> Sign in with Google
+                </button>
+                <button id="firebase-logout-btn" onclick="logoutFirebase()"
+                    class="hidden w-full flex items-center gap-2 px-3 py-2.5 rounded-lg bg-lightBg dark:bg-surfaceHover border border-lightBorder dark:border-gray-700 text-sm font-bold text-gray-500 hover:bg-lightHighlight dark:hover:bg-gray-700 transition-colors active:scale-95">
+                    <i class="ph ph-sign-out text-lg"></i> Sign out
+                </button>
+            </div>
             <div class="p-4 border-b border-lightBorder dark:border-gray-800 space-y-4">
                 <div class="flex justify-between items-center">
                     <span class="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2"><i class="ph ph-globe text-lg"></i> <span data-i18n="language_label">Dil / Language</span></span>
@@ -1063,7 +1186,10 @@
                 const saved = localStorage.getItem('albumDiaryData');
                 if (saved) { try { AppState.library = JSON.parse(saved); } catch (e) { AppState.library = []; } }
             },
-            saveData() { localStorage.setItem('albumDiaryData', JSON.stringify(AppState.library)); },
+            saveData() {
+                localStorage.setItem('albumDiaryData', JSON.stringify(AppState.library));
+                if (window.saveToCloud) window.saveToCloud(AppState.library);
+            },
 
             exportData() {
                 if (AppState.library.length === 0) { showToast(t("toast_no_export"), "error"); return; }
