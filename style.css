@@ -1,0 +1,37 @@
+* { 
+    -webkit-tap-highlight-color: transparent; 
+}
+
+body { 
+    font-family: 'Merriweather', serif; 
+    transition: background-color 0.3s, color 0.3s; 
+    min-height: 100vh;
+    min-height: 100dvh; 
+    overflow-x: hidden;
+    overscroll-behavior-y: none;
+}
+
+@supports (padding-top: env(safe-area-inset-top)) {
+    body {
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+    }
+    .safe-pt { padding-top: max(1rem, env(safe-area-inset-top)); }
+    .safe-pb { padding-bottom: max(5rem, env(safe-area-inset-bottom)); }
+}
+
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #dcd1c6; border-radius: 4px; }
+.dark ::-webkit-scrollbar-thumb { background: #3b2b20; }
+
+.star-btn:hover ~ .star-btn i { color: #9ca3af !important; } 
+.star-container:hover .star-btn i { color: #d17b38 !important; }
+.star-container .star-btn:hover ~ .star-btn i { color: #9ca3af !important; }
+
+.modal-enter { opacity: 0; transform: scale(0.95); }
+.modal-enter-active { opacity: 1; transform: scale(1); transition: all 0.2s ease-out; }
+.slide-up { transition: transform 0.3s cubic-bezier(0.33, 1, 0.68, 1); }
