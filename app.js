@@ -1,4 +1,4 @@
-// 1. Firebase Kütüphanelerini İçe Aktar (v10 ESM - Tarayıcı CDN Formatı)
+// 1. Firebase Imports (v10 ESM - Browser CDN)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { 
     getAuth, 
@@ -11,6 +11,7 @@ import {
     getFirestore, 
     collection, 
     doc, 
+    getDoc,
     getDocs, 
     setDoc, 
     deleteDoc, 
@@ -18,7 +19,7 @@ import {
     where 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// 2. Firebase Yapılandırması ve Başlatma
+// 2. Firebase Configuration
 const firebaseConfig = {
     apiKey: "AIzaSyDtIzWbtArIE2sY9OuQcdZajc8d3DyslWE",
     authDomain: "rateagainst1.firebaseapp.com",
@@ -32,6 +33,9 @@ const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
 const googleProvider = new GoogleAuthProvider();
+
+// Add this line to force the account selection screen:
+googleProvider.setCustomParameters({ prompt: 'select_account' });
 
 const GenreTranslations = {
     "Rock": { tr: "Rock", en: "Rock" },
@@ -82,11 +86,13 @@ const Translations = {
     en: {
         app_title: "RateAgainst",
         nav_library: "Library",
+        nav_community: "Community",
         nav_search: "Search",
         nav_stats: "Stats",
         menu_settings: "Menu & Settings",
         language_label: "Dil / Language",
         theme_label: "Tema / Theme",
+        privacy_label: "Account Privacy",
         nav_data: "Data",
         export_json: "Export JSON",
         import_json: "Import JSON",
@@ -202,16 +208,23 @@ const Translations = {
         listening_trends: "Average Rating Trends Over Time",
         login_prompt: "Sign in to backup and sync your library.",
         sign_in_google: "Sign in with Google",
-        sign_out: "Sign Out"
+        sign_out: "Sign Out",
+        community_title: "Community & Aggregated Scores",
+        tab_aggregated: "Aggregated Scores",
+        tab_users: "Public Feed",
+        public_account: "Public",
+        private_account: "Private"
     },
     tr: {
         app_title: "RateAgainst",
         nav_library: "Kitaplığım",
+        nav_community: "Topluluk",
         nav_search: "Ara",
         nav_stats: "İstatistik",
         menu_settings: "Menü & Ayarlar",
         language_label: "Dil / Language",
         theme_label: "Tema / Theme",
+        privacy_label: "Hesap Gizliliği",
         nav_data: "Veri",
         export_json: "Yedek Al (JSON)",
         import_json: "Yedek Yükle",
@@ -324,7 +337,12 @@ const Translations = {
         listening_trends: "Aylara Göre Puanlama Eğilimi",
         login_prompt: "Arşivinizi yedeklemek ve senkronize etmek için giriş yapın.",
         sign_in_google: "Google ile Giriş Yap",
-        sign_out: "Çıkış Yap"
+        sign_out: "Çıkış Yap",
+        community_title: "Topluluk & Puanlar",
+        tab_aggregated: "Genel Ortalamalar",
+        tab_users: "Kamuoyu Akışı",
+        public_account: "Açık",
+        private_account: "Gizli"
     }
 };
 
@@ -337,9 +355,10 @@ const AppState = {
     statsArtistSortDirection: localStorage.getItem('albumDiaryStatsSortDirection') || 'desc',
     language: localStorage.getItem('albumDiaryLang') || 'tr',
     modalTrackSort: localStorage.getItem('albumDiaryModalTrackSort') || 'default', 
-    
+    isPrivate: false,
     filterGroup: '', filterGenre: '', filterYear: '', filterLabel: '',
-    currentAllNotesRawText: ''
+    currentAllNotesRawText: '',
+    communityTab: 'aggregated'
 };
 
 function t(key) { return Translations[AppState.language][key] || key; }
@@ -399,7 +418,7 @@ const app = {
         this.updateModalTrackSortButtons();
 
         // Firebase Auth Listener
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             const loggedOutView = document.getElementById('auth-logged-out');
             const loggedInView = document.getElementById('auth-logged-in');
             const avatarImg = document.getElementById('user-avatar');
@@ -408,7 +427,6 @@ const app = {
             const headerAvatarContainer = document.getElementById('header-user-avatar-container');
 
             if (user) {
-                // UI Changes when Logged In
                 if(loggedOutView) loggedOutView.classList.add('hidden');
                 if(loggedInView) {
                     loggedInView.classList.remove('hidden');
@@ -423,9 +441,11 @@ const app = {
                     headerAvatarContainer.innerHTML = `<img src="${user.photoURL || 'https://placehold.co/100x100/d17b38/ffffff?text=U'}" class="w-full h-full object-cover">`;
                 }
 
+                // Load user profile setting (privacy)
+                await this.loadUserProfile(user);
+
                 this.loadData();
             } else {
-                // UI Changes when Logged Out
                 AppState.library = [];
                 this.renderLibrary();
                 this.renderStats();
@@ -448,6 +468,69 @@ const app = {
                 this.closeDropdown();
             }
         });
+    },
+
+    async loadUserProfile(user) {
+        try {
+            const userDocRef = doc(db, 'users', user.uid);
+            const userSnap = await getDoc(userDocRef);
+            if (userSnap.exists()) {
+                AppState.isPrivate = userSnap.data().isPrivate || false;
+            } else {
+                AppState.isPrivate = false;
+                await setDoc(userDocRef, {
+                    displayName: user.displayName || 'User',
+                    photoURL: user.photoURL || '',
+                    email: user.email || '',
+                    isPrivate: false
+                });
+            }
+            this.updatePrivacyUI();
+        } catch (e) {
+            console.error("Profil yüklenirken hata:", e);
+        }
+    },
+
+    async togglePrivacy() {
+        const user = auth.currentUser;
+        if (!user) {
+            showToast("Giriş yapmalısınız.", "error");
+            return;
+        }
+
+        AppState.isPrivate = !AppState.isPrivate;
+        this.updatePrivacyUI();
+
+        try {
+            await setDoc(doc(db, 'users', user.uid), {
+                isPrivate: AppState.isPrivate
+            }, { merge: true });
+
+            // Update all local library items privacy status in Firestore
+            const q = query(collection(db, 'kitaplik'), where('user_id', '==', user.uid));
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach(async (docSnap) => {
+                await setDoc(doc(db, 'kitaplik', docSnap.id), { isPrivate: AppState.isPrivate }, { merge: true });
+            });
+
+            showToast(`Hesap ${AppState.isPrivate ? t('private_account') : t('public_account')} olarak ayarlandı.`, "info");
+        } catch (e) {
+            console.error("Gizlilik güncellenirken hata:", e);
+        }
+    },
+
+    updatePrivacyUI() {
+        const btn = document.getElementById('privacy-btn');
+        const icon = document.getElementById('privacy-icon');
+        if (btn) {
+            btn.textContent = AppState.isPrivate ? t('private_account') : t('public_account');
+            btn.className = AppState.isPrivate 
+                ? "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-3 py-1 rounded-full text-xs font-bold transition-colors"
+                : "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 px-3 py-1 rounded-full text-xs font-bold transition-colors";
+        }
+        if (icon) {
+            icon.className = AppState.isPrivate ? "ph ph-lock-key text-lg text-red-500" : "ph ph-globe text-lg text-green-500";
+        }
     },
 
     toggleSidebar(forceState) {
@@ -482,7 +565,7 @@ const app = {
         const exportModal = document.getElementById('export-playlist-modal');
         if(exportModal) exportModal.classList.add('hidden');
         
-        ['library', 'search', 'stats'].forEach(v => {
+        ['library', 'community', 'search', 'stats'].forEach(v => {
             const btn = document.getElementById(`nav-${v}`);
             const icon = document.getElementById(`nav-icon-${v}`);
             if (v === viewName) {
@@ -508,9 +591,163 @@ const app = {
         if (viewName === 'library') { 
             this.renderLibrary(); 
         } 
+        else if (viewName === 'community') {
+            this.loadCommunityData();
+        }
         else if (viewName === 'stats') { this.renderStats(); }
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+
+    switchCommunityTab(tab) {
+        AppState.communityTab = tab;
+        const btnAgg = document.getElementById('tab-btn-aggregated');
+        const btnFeed = document.getElementById('tab-btn-feed');
+        const viewAgg = document.getElementById('community-tab-aggregated');
+        const viewFeed = document.getElementById('community-tab-feed');
+
+        if (tab === 'aggregated') {
+            btnAgg.className = "px-4 py-2 rounded-lg text-xs font-bold bg-primary text-white transition-colors";
+            btnFeed.className = "px-4 py-2 rounded-lg text-xs font-bold text-gray-500 dark:text-gray-400 transition-colors";
+            viewAgg.classList.remove('hidden');
+            viewFeed.classList.add('hidden');
+        } else {
+            btnFeed.className = "px-4 py-2 rounded-lg text-xs font-bold bg-primary text-white transition-colors";
+            btnAgg.className = "px-4 py-2 rounded-lg text-xs font-bold text-gray-500 dark:text-gray-400 transition-colors";
+            viewFeed.classList.remove('hidden');
+            viewAgg.classList.add('hidden');
+        }
+    },
+
+    async loadCommunityData() {
+        const aggregatedGrid = document.getElementById('aggregated-albums-grid');
+        const publicGrid = document.getElementById('public-ratings-grid');
+
+        if(aggregatedGrid) aggregatedGrid.innerHTML = `<div class="col-span-full flex justify-center p-8"><i class="ph-bold ph-spinner-gap animate-spin text-3xl text-primary"></i></div>`;
+        if(publicGrid) publicGrid.innerHTML = `<div class="col-span-full flex justify-center p-8"><i class="ph-bold ph-spinner-gap animate-spin text-3xl text-primary"></i></div>`;
+
+        try {
+            // Fetch all public ratings
+            const q = query(collection(db, 'kitaplik'), where('isPrivate', '==', false));
+            const querySnapshot = await getDocs(q);
+
+            const allPublicEntries = [];
+            const albumAggregates = {}; // mbid -> { title, artist, coverUrl, scores: [], tracks: { title: scores[] } }
+
+            querySnapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                if (data && data.album_data) {
+                    const album = data.album_data;
+                    allPublicEntries.push({ ...album, user_id: data.user_id, userName: data.userName || 'Kullanıcı' });
+
+                    // Aggregate album & track scores
+                    if (!albumAggregates[album.id]) {
+                        albumAggregates[album.id] = {
+                            id: album.id,
+                            title: album.title,
+                            artist: album.artist,
+                            coverUrl: album.customCoverUrl || album.coverUrl,
+                            year: album.year,
+                            scores: [],
+                            tracks: {}
+                        };
+                    }
+
+                    if (album.averageScore > 0) {
+                        albumAggregates[album.id].scores.push(album.averageScore);
+                    }
+
+                    if (album.tracks) {
+                        album.tracks.forEach(tr => {
+                            if (tr.rating > 0) {
+                                if (!albumAggregates[album.id].tracks[tr.title]) {
+                                    albumAggregates[album.id].tracks[tr.title] = [];
+                                }
+                                albumAggregates[album.id].tracks[tr.title].push(tr.rating);
+                            }
+                        });
+                    }
+                }
+            });
+
+            // 1. Render Aggregated Scores Grid
+            if (aggregatedGrid) {
+                aggregatedGrid.innerHTML = '';
+                const albumKeys = Object.keys(albumAggregates);
+
+                if (albumKeys.length === 0) {
+                    aggregatedGrid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-500">Henüz açık topluluk verisi yok.</div>`;
+                } else {
+                    albumKeys.forEach(id => {
+                        const agg = albumAggregates[id];
+                        const avgAlbumScore = agg.scores.length > 0 
+                            ? (agg.scores.reduce((a, b) => a + b, 0) / agg.scores.length).toFixed(1) 
+                            : '-';
+
+                        let tracksHtml = '';
+                        Object.keys(agg.tracks).forEach(trackTitle => {
+                            const trScores = agg.tracks[trackTitle];
+                            const trAvg = (trScores.reduce((a, b) => a + b, 0) / trScores.length).toFixed(1);
+                            tracksHtml += `<div class="flex justify-between items-center text-xs py-1 border-b border-lightBorder/30 dark:border-gray-800/40">
+                                <span class="truncate pr-2 font-medium italic text-gray-700 dark:text-gray-300">${Utils.escapeHTML(trackTitle)}</span>
+                                <span class="font-bold text-primary flex-shrink-0">${trAvg} ★</span>
+                            </div>`;
+                        });
+
+                        const card = document.createElement('div');
+                        card.className = "bg-white dark:bg-surface rounded-2xl p-4 border border-lightBorder dark:border-gray-800 shadow-sm flex flex-col gap-3";
+                        card.innerHTML = `
+                            <div class="flex gap-3 items-center">
+                                <img src="${Utils.escapeHTML(agg.coverUrl)}" class="w-16 h-16 rounded-xl object-cover border border-lightBorder dark:border-gray-800 shadow-sm flex-shrink-0">
+                                <div class="min-w-0 flex-1">
+                                    <h3 class="font-bold text-gray-900 dark:text-white truncate text-base italic">${Utils.escapeHTML(agg.title)}</h3>
+                                    <p class="text-xs text-gray-500 truncate">${Utils.escapeHTML(agg.artist)} • ${Utils.escapeHTML(agg.year)}</p>
+                                    <div class="flex items-center gap-1 mt-1">
+                                        <span class="text-xs font-black bg-primary/10 text-primary px-2 py-0.5 rounded-full">${avgAlbumScore} Ort.</span>
+                                        <span class="text-[10px] text-gray-400 font-semibold">(${agg.scores.length} oy)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-2 bg-lightBg/50 dark:bg-darker/50 rounded-xl p-3 border border-lightBorder/50 dark:border-gray-800/50 max-h-48 overflow-y-auto hide-scrollbar">
+                                <p class="text-[10px] font-bold text-gray-400 uppercase mb-2">Şarkı Ortalamaları</p>
+                                ${tracksHtml || '<p class="text-xs text-gray-500">Henüz oylanan şarkı yok.</p>'}
+                            </div>
+                        `;
+                        aggregatedGrid.appendChild(card);
+                    });
+                }
+            }
+
+            // 2. Render Public Feed Grid
+            if (publicGrid) {
+                publicGrid.innerHTML = '';
+                if (allPublicEntries.length === 0) {
+                    publicGrid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-500">Henüz açık kullanıcı puanı yok.</div>`;
+                } else {
+                    allPublicEntries.forEach(album => {
+                        const card = document.createElement('div');
+                        card.className = "bg-white dark:bg-surface rounded-2xl p-3 border border-lightBorder dark:border-gray-800 shadow-sm flex gap-3 items-center cursor-pointer hover:bg-lightHighlight dark:hover:bg-surfaceHover active:scale-95 transition-transform";
+                        card.onclick = () => this.openAlbumModal(album.id, album.title, album.artist, album.year);
+                        card.innerHTML = `
+                            <img src="${Utils.escapeHTML(album.customCoverUrl || album.coverUrl)}" class="w-16 h-16 rounded-xl object-cover border border-lightBorder dark:border-gray-800 shadow-sm flex-shrink-0">
+                            <div class="min-w-0 flex-1">
+                                <h4 class="font-bold text-gray-900 dark:text-white truncate text-sm italic">${Utils.escapeHTML(album.title)}</h4>
+                                <p class="text-xs text-gray-500 truncate">${Utils.escapeHTML(album.artist)}</p>
+                                <div class="flex justify-between items-center mt-1.5">
+                                    <span class="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-md font-bold">${album.averageScore || '-'} ★</span>
+                                    <span class="text-[10px] text-gray-400 font-semibold truncate">${Utils.escapeHTML(album.userName)}</span>
+                                </div>
+                            </div>
+                        `;
+                        publicGrid.appendChild(card);
+                    });
+                }
+            }
+
+        } catch (e) {
+            console.error("Topluluk verisi çekilirken hata:", e);
+            if(aggregatedGrid) aggregatedGrid.innerHTML = `<div class="col-span-full text-center p-4 text-red-500">Yüklenemedi.</div>`;
+        }
     },
 
     toggleLanguage() {
@@ -518,19 +755,14 @@ const app = {
         localStorage.setItem('albumDiaryLang', AppState.language);
         this.updateLanguageUI();
         this.updateSearchPlaceholder();
+        this.updatePrivacyUI();
         
         if (AppState.currentModalAlbum && !document.getElementById('album-modal').classList.contains('hidden')) {
             this.updateModalUI();
-            
-            if (this.currentNoteTarget) {
-                const titleSpan = document.querySelector('#note-modal-title span');
-                if (titleSpan) {
-                    titleSpan.textContent = t(this.currentNoteTarget.type === 'album' ? 'album_note' : 'track_note');
-                }
-            }
         }
         
         if (AppState.currentView === 'library') this.renderLibrary();
+        else if (AppState.currentView === 'community') this.loadCommunityData();
         else if (AppState.currentView === 'stats') this.renderStats();
     },
 
@@ -616,7 +848,9 @@ const app = {
             await setDoc(doc(db, 'kitaplik', docId), {
                 id: album.id.toString(),
                 album_data: album,
-                user_id: user.uid
+                user_id: user.uid,
+                userName: user.displayName || 'Kullanıcı',
+                isPrivate: AppState.isPrivate
             });
         } catch (e) {
             console.error("Buluta kaydederken hata: ", e.message);
@@ -909,7 +1143,6 @@ const app = {
 
         let filtered = AppState.library.filter(a => {
             if (fGroup && a.artist !== fGroup) return false;
-            
             if (fYear) {
                 if (fYear.endsWith('s')) {
                     const targetDecade = parseInt(fYear);
@@ -919,10 +1152,8 @@ const app = {
                     return false;
                 }
             }
-            
             if (fGenre && (!a.genres || !a.genres.some(g => g.toLowerCase() === fGenre.toLowerCase()))) return false;
             if (fLabel && a.label !== fLabel) return false;
-
             return true;
         });
         
