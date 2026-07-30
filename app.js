@@ -1,16 +1,37 @@
-// 1. Firebase Kütüphanelerini İçe Aktar
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+// 1. Firebase Kütüphanelerini İçe Aktar (v10 ESM - Tarayıcı CDN Formatı)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { 
+    getAuth, 
+    signInWithPopup, 
+    GoogleAuthProvider, 
+    signOut, 
+    onAuthStateChanged 
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { 
+    getFirestore, 
+    collection, 
+    doc, 
+    getDocs, 
+    setDoc, 
+    deleteDoc, 
+    query, 
+    where 
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+// 2. Firebase Yapılandırması ve Başlatma
+const firebaseConfig = {
+    apiKey: "AIzaSyDtIzWbtArIE2sY9OuQcdZajc8d3DyslWE",
+    authDomain: "rateagainst1.firebaseapp.com",
+    projectId: "rateagainst1",
+    storageBucket: "rateagainst1.firebasestorage.app",
+    messagingSenderId: "535921706800",
+    appId: "1:535921706800:web:fb1d7603a7c3782abf2af5"
+};
 
-
-// 3. Firebase'i Başlat
-// Paste your URL and ANON KEY here
-const supabaseUrl = 'https://sshcukoficvqleukxdis.supabase.co';
-const supabaseKey = 'sb_publishable__2wMkK-PhXYHQrbIcR-Qmw_cT4dhkcn';
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-window.supabase = supabase;
-
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth(firebaseApp);
+const db = getFirestore(firebaseApp);
+const googleProvider = new GoogleAuthProvider();
 
 const GenreTranslations = {
     "Rock": { tr: "Rock", en: "Rock" },
@@ -49,7 +70,7 @@ const GenreTranslations = {
     "World": { tr: "Dünya Müziği", en: "World" },
     "Acoustic": { tr: "Akustik", en: "Acoustic" },
     "Soundtrack": { tr: "Film Müziği", en: "Soundtrack" },
-    "Vocal": { tr: "Vokal", en: "Vocal" },
+    "Vocal": { tr: "Vokal", en: "Vokal" },
     "Turkish Pop": { tr: "Türkçe Pop", en: "Turkish Pop" },
     "Turkish Rock": { tr: "Türkçe Rock", en: "Turkish Rock" },
     "Turkish Rap": { tr: "Türkçe Rap", en: "Turkish Rap" },
@@ -179,6 +200,9 @@ const Translations = {
         rating_dist: "Rating Distribution (Tracks)",
         decade_breakdown: "Average Score by Decade",
         listening_trends: "Average Rating Trends Over Time",
+        login_prompt: "Sign in to backup and sync your library.",
+        sign_in_google: "Sign in with Google",
+        sign_out: "Sign Out"
     },
     tr: {
         app_title: "RateAgainst",
@@ -298,6 +322,9 @@ const Translations = {
         rating_dist: "Puan Dağılımı (Parçalar)",
         decade_breakdown: "Dönemlere Göre Ortalama Puan",
         listening_trends: "Aylara Göre Puanlama Eğilimi",
+        login_prompt: "Arşivinizi yedeklemek ve senkronize etmek için giriş yapın.",
+        sign_in_google: "Google ile Giriş Yap",
+        sign_out: "Çıkış Yap"
     }
 };
 
@@ -371,20 +398,47 @@ const app = {
         this.updateSearchPlaceholder();
         this.updateModalTrackSortButtons();
 
-        // Listen for Authentication State Changes in Supabase
-        window.supabase.auth.onAuthStateChange((event, session) => {
-            const loginBtn = document.getElementById('header-login-btn');
-            
-            if (session?.user) {
-                // Logged In: Hide the header button and fetch data
-                if(loginBtn) loginBtn.classList.add('hidden');
-                this.loadData(); 
+        // Firebase Auth Listener
+        onAuthStateChanged(auth, (user) => {
+            const loggedOutView = document.getElementById('auth-logged-out');
+            const loggedInView = document.getElementById('auth-logged-in');
+            const avatarImg = document.getElementById('user-avatar');
+            const nameEl = document.getElementById('user-name');
+            const emailEl = document.getElementById('user-email');
+            const headerAvatarContainer = document.getElementById('header-user-avatar-container');
+
+            if (user) {
+                // UI Changes when Logged In
+                if(loggedOutView) loggedOutView.classList.add('hidden');
+                if(loggedInView) {
+                    loggedInView.classList.remove('hidden');
+                    loggedInView.classList.add('flex');
+                }
+                
+                if(avatarImg) avatarImg.src = user.photoURL || 'https://placehold.co/100x100/d17b38/ffffff?text=' + (user.displayName ? user.displayName.charAt(0) : 'U');
+                if(nameEl) nameEl.textContent = user.displayName || 'User';
+                if(emailEl) emailEl.textContent = user.email || '';
+                
+                if(headerAvatarContainer) {
+                    headerAvatarContainer.innerHTML = `<img src="${user.photoURL || 'https://placehold.co/100x100/d17b38/ffffff?text=U'}" class="w-full h-full object-cover">`;
+                }
+
+                this.loadData();
             } else {
-                // Logged Out: Show the header button and clear screen
+                // UI Changes when Logged Out
                 AppState.library = [];
                 this.renderLibrary();
                 this.renderStats();
-                if(loginBtn) loginBtn.classList.remove('hidden');
+                
+                if(loggedOutView) loggedOutView.classList.remove('hidden');
+                if(loggedInView) {
+                    loggedInView.classList.add('hidden');
+                    loggedInView.classList.remove('flex');
+                }
+                
+                if(headerAvatarContainer) {
+                    headerAvatarContainer.innerHTML = `<i class="ph-bold ph-list text-xl text-primary"></i>`;
+                }
             }
         });
 
@@ -513,37 +567,36 @@ const app = {
     },
 
     async signIn() {
-        // Note: For Google Auth, Supabase requires you to put your Google Cloud credentials in the Supabase Dashboard.
-        // If you haven't done that yet, you can change 'google' to 'github' or 'discord' for instant testing.
-        const { error } = await window.supabase.auth.signInWithOAuth({
-            provider: 'google',
-        });
-        if (error) {
+        try {
+            await signInWithPopup(auth, googleProvider);
+        } catch (error) {
             console.error("Giriş hatası:", error.message);
             showToast("Giriş yapılamadı.", "error");
         }
     },
 
     async signOut() {
-        await window.supabase.auth.signOut();
+        await signOut(auth);
         this.toggleSidebar(false);
-        showToast("Çıkış yapıldı.", "info");
+        showToast(t("sign_out"), "info");
     },
 
     async loadData() {
-        const { data: { session } } = await window.supabase.auth.getSession();
-        if (!session) return; // Stop if not logged in
+        const user = auth.currentUser;
+        if (!user) return;
 
         try {
-            const { data, error } = await window.supabase
-                .from('kitaplik')
-                .select('album_data')
-                .eq('user_id', session.user.id); // Securely fetch only this user's rows
-                
-            if (error) throw error;
-
-            AppState.library = data ? data.map(row => row.album_data) : [];
+            const q = query(collection(db, 'kitaplik'), where('user_id', '==', user.uid));
+            const querySnapshot = await getDocs(q);
             
+            AppState.library = [];
+            querySnapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                if (data && data.album_data) {
+                    AppState.library.push(data.album_data);
+                }
+            });
+
             if (AppState.currentView === 'library') this.renderLibrary();
             if (AppState.currentView === 'stats') this.renderStats();
             
@@ -556,18 +609,15 @@ const app = {
     
     async saveAlbumData(album) { 
         try {
-            const { data: { session } } = await window.supabase.auth.getSession();
-            if (!session) return;
+            const user = auth.currentUser;
+            if (!user) return;
 
-            const { error } = await window.supabase
-                .from('kitaplik')
-                .upsert({ 
-                    id: album.id.toString(), 
-                    album_data: album,
-                    user_id: session.user.id // This links the album to the user
-                });
-                
-            if (error) throw error;
+            const docId = `${user.uid}_${album.id}`;
+            await setDoc(doc(db, 'kitaplik', docId), {
+                id: album.id.toString(),
+                album_data: album,
+                user_id: user.uid
+            });
         } catch (e) {
             console.error("Buluta kaydederken hata: ", e.message);
         }
@@ -575,12 +625,11 @@ const app = {
 
     async deleteAlbumData(id) {
         try {
-            const { error } = await window.supabase
-                .from('kitaplik')
-                .delete()
-                .eq('id', id.toString());
-                
-            if (error) throw error;
+            const user = auth.currentUser;
+            if (!user) return;
+
+            const docId = `${user.uid}_${id}`;
+            await deleteDoc(doc(db, 'kitaplik', docId));
         } catch (e) {
             console.error("Buluttan silerken hata: ", e.message);
         }
@@ -603,17 +652,17 @@ const app = {
             try {
                 const importedData = JSON.parse(e.target.result);
                 if (Array.isArray(importedData)) {
-                            const currentIds = new Set(AppState.library.map(a => a.id)); let added = 0;
-                            importedData.forEach(album => { 
-                                if(album.id && !currentIds.has(album.id)) { 
-                                    AppState.library.push(album); 
-                                    this.saveAlbumData(album); // Save directly to collection
-                                    added++; 
-                                } 
-                            });
-                            this.renderLibrary(); this.renderStats();
-                            showToast(`${added} ${t("toast_import_success")}`, "success");
-                        }
+                    const currentIds = new Set(AppState.library.map(a => a.id)); let added = 0;
+                    importedData.forEach(album => { 
+                        if(album.id && !currentIds.has(album.id)) { 
+                            AppState.library.push(album); 
+                            this.saveAlbumData(album); 
+                            added++; 
+                        } 
+                    });
+                    this.renderLibrary(); this.renderStats();
+                    showToast(`${added} ${t("toast_import_success")}`, "success");
+                }
             } catch (err) { showToast(t("toast_import_error"), "error"); }
             event.target.value = ''; 
         };
@@ -1616,7 +1665,6 @@ const app = {
         textarea.value = text;
         if(display) display.textContent = text;
         
-        // Auto-save the note to Firebase if the album is in your library
         const isSaved = AppState.library.some(a => a.id === AppState.currentModalAlbum.id);
         if (isSaved) {
             const libIdx = AppState.library.findIndex(a => a.id === AppState.currentModalAlbum.id);
@@ -1870,7 +1918,7 @@ const app = {
             if (libIdx > -1) {
                 AppState.currentModalAlbum.dateAdded = new Date().toISOString();
                 AppState.library[libIdx] = JSON.parse(JSON.stringify(AppState.currentModalAlbum));
-                this.saveAlbumData(AppState.library[libIdx]); // Save single album
+                this.saveAlbumData(AppState.library[libIdx]);
                 this.renderDateAdded();
                 if(AppState.currentView === 'library') { this.renderLibrary(); }
                 if(AppState.currentView === 'stats') { this.renderStats(); }
@@ -1981,7 +2029,6 @@ const app = {
         const gAvg = rated.length ? (rated.reduce((s,a) => s + a.averageScore, 0) / rated.length).toFixed(1) : "0.0";
         setEl('stat-avg-rating', gAvg);
 
-        // --- CORE LIST DATA ---
         const aStats = {}, gStats = {};
         lib.forEach(a => {
             if(!aStats[a.artist]) aStats[a.artist] = { c:0, s:0, rc:0 };
@@ -1989,9 +2036,6 @@ const app = {
             if(a.genres) a.genres.forEach(g => { const ng = g.trim().toLowerCase(); if(!gStats[ng]) gStats[ng]={n:g.trim(),c:0, raw: g.trim()}; gStats[ng].c++; });
         });
 
-        // --- NEW: ADVANCED CHART DATA CALCULATIONS ---
-        
-        // 1. Rating Distribution (Count of 1, 2, 3, 4, 5 star tracks)
         const distribution = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
         lib.forEach(a => {
             if(a.tracks) {
@@ -1999,7 +2043,6 @@ const app = {
             }
         });
 
-        // 2. Decade Breakdown (Average Album Score per Decade)
         const decades = {};
         rated.forEach(a => {
             const year = parseInt(a.year);
@@ -2014,7 +2057,6 @@ const app = {
         const decadeLabels = sortedDecades.map(d => `${d}s`);
         const decadeData = sortedDecades.map(d => (decades[d].sum / decades[d].count).toFixed(2));
 
-        // 3. Listening Trends (Average Album Score by Month Added)
         const trends = {};
         rated.forEach(a => {
             if(a.dateAdded) {
@@ -2030,16 +2072,14 @@ const app = {
         const sortedMonths = Object.keys(trends).sort();
         const trendData = sortedMonths.map(m => (trends[m].sum / trends[m].count).toFixed(2));
 
-        // --- CHART RENDERING ENGINE ---
         const isDark = document.documentElement.classList.contains('dark');
-        const tColor = isDark ? '#d1d5db' : '#374151'; // Text Color
-        const gColor = isDark ? '#374151' : '#e5e7eb'; // Grid Color
+        const tColor = isDark ? '#d1d5db' : '#374151';
+        const gColor = isDark ? '#374151' : '#e5e7eb';
         
         const buildChart = (canvasId, type, labels, dataPoints, hexColor, forceZero = true) => {
             const ctx = document.getElementById(canvasId);
             if(!ctx) return;
             
-            // Destroy existing chart to prevent hover overlapping issues
             if(this.chartInstances[canvasId]) this.chartInstances[canvasId].destroy();
             
             this.chartInstances[canvasId] = new Chart(ctx, {
@@ -2068,13 +2108,10 @@ const app = {
             });
         };
 
-        // Execute Chart Renders
         buildChart('chart-distribution', 'bar', ['1 ★', '2 ★', '3 ★', '4 ★', '5 ★'], Object.values(distribution), '#d17b38');
         buildChart('chart-decade', 'bar', decadeLabels, decadeData, '#3b82f6', false);
         buildChart('chart-trends', 'line', sortedMonths, trendData, '#22c55e', false);
 
-
-        // --- EXISTING LIST RENDERING ---
         const tl = document.getElementById('top-albums-list'); 
         if(tl) {
             tl.innerHTML = '';

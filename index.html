@@ -80,12 +80,11 @@
         </div>
 
         <div class="flex items-center gap-2">
-            <button id="header-login-btn" onclick="app.signIn()" aria-label="Sign In" title="Sign In" class="p-2 rounded-full hover:bg-lightHighlight dark:hover:bg-gray-800 text-primary transition-colors active:scale-95">
-                <i class="ph-bold ph-user text-2xl"></i>
-            </button>
-
-            <button onclick="app.toggleSidebar(true)" aria-label="Open Menu" class="p-2 -mr-2 rounded-full hover:bg-lightHighlight dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors active:scale-95">
-                <i class="ph ph-list text-2xl"></i>
+            <!-- Combined Profile and Menu Button -->
+            <button id="header-user-btn" onclick="app.toggleSidebar(true)" aria-label="Profile Menu" title="Profile Menu" class="p-1 rounded-full hover:bg-lightHighlight dark:hover:bg-gray-800 transition-colors active:scale-95 flex items-center justify-center border border-transparent">
+                <div id="header-user-avatar-container" class="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shadow-sm overflow-hidden">
+                    <i class="ph-bold ph-list text-xl"></i>
+                </div>
             </button>
         </div>
         
@@ -101,6 +100,36 @@
             <button onclick="app.toggleSidebar(false)" aria-label="Close Menu" class="p-2 -mr-2 rounded-full hover:bg-lightBorder dark:hover:bg-gray-700 text-gray-500 transition-colors">
                 <i class="ph ph-x text-xl"></i>
             </button>
+        </div>
+
+        <!-- NEW: Unified Auth & Profile Section -->
+        <div class="p-4 border-b border-lightBorder dark:border-gray-800 bg-white dark:bg-surface">
+            <!-- Logged Out View -->
+            <div id="auth-logged-out" class="flex flex-col gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                        <i class="ph-fill ph-cloud-arrow-up text-xl"></i>
+                    </div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 font-medium leading-tight" data-i18n="login_prompt">Bulut senkronizasyonu için giriş yapın.</p>
+                </div>
+                <button onclick="app.signIn()" class="w-full bg-primary hover:bg-primary/90 text-white py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-transform active:scale-[0.98] shadow-md">
+                    <i class="ph-bold ph-google-logo text-lg"></i> <span data-i18n="sign_in_google">Google ile Giriş Yap</span>
+                </button>
+            </div>
+
+            <!-- Logged In View -->
+            <div id="auth-logged-in" class="hidden flex-col gap-3">
+                <div class="flex items-center gap-3 bg-lightBg dark:bg-darker p-2.5 rounded-xl border border-lightBorder dark:border-gray-800 shadow-inner">
+                    <img id="user-avatar" src="" alt="User" class="w-10 h-10 rounded-full object-cover border border-lightBorder dark:border-gray-700 shadow-sm flex-shrink-0">
+                    <div class="flex flex-col min-w-0 flex-grow">
+                        <span id="user-name" class="text-sm font-bold text-gray-900 dark:text-white truncate">User Name</span>
+                        <span id="user-email" class="text-[10px] text-gray-500 truncate">user@example.com</span>
+                    </div>
+                </div>
+                <button onclick="app.signOut()" class="w-full bg-white dark:bg-surfaceHover text-gray-600 dark:text-gray-400 hover:text-red-500 border border-lightBorder dark:border-gray-700 hover:border-red-200 dark:hover:border-red-900/50 py-2 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-colors active:scale-[0.98]">
+                    <i class="ph-bold ph-sign-out text-lg"></i> <span data-i18n="sign_out">Çıkış Yap</span>
+                </button>
+            </div>
         </div>
 
         <div class="flex-grow overflow-y-auto">
@@ -119,9 +148,6 @@
 
             <div class="p-4 border-b border-lightBorder dark:border-gray-800 space-y-2">
                 <h3 class="text-xs font-bold text-gray-500 uppercase mb-3" data-i18n="nav_data">Data</h3>
-               <button onclick="app.signOut()" class="w-full text-left px-3 py-2.5 rounded-lg bg-red-100 dark:bg-red-900/20 text-sm flex items-center gap-3 text-red-600 dark:text-red-400 active:scale-95 transition-transform mt-2 border border-red-200 dark:border-red-900/30">
-                    <i class="ph-bold ph-sign-out text-lg"></i> <span>Çıkış Yap / Sign Out</span>
-                </button>
                 <label class="w-full block text-left px-3 py-2.5 rounded-lg bg-lightBg dark:bg-surfaceHover text-sm flex items-center gap-3 text-gray-700 dark:text-gray-300 active:scale-95 transition-transform cursor-pointer">
                     <i class="ph ph-upload-simple text-lg text-green-500"></i> <span data-i18n="import_json">Import JSON</span>
                     <input type="file" id="import-file" class="hidden" accept=".json" onchange="app.importData(event); app.toggleSidebar(false);">
