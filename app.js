@@ -349,7 +349,7 @@ const Translations = {
 };
 
 const AppState = {
-    library: [], currentView: 'library', currentModalAlbum: null, isSearching: false,
+    library: [], currentView: 'community', currentModalAlbum: null, isSearching: false, // <-- currentView 'community' oldu
     gridSize: localStorage.getItem('albumDiaryGridSize') || 'normal',
     sortBy: localStorage.getItem('albumDiarySortBy') || 'dateAdded',
     sortDirection: localStorage.getItem('albumDiarySortDirection') || 'desc',
@@ -359,7 +359,8 @@ const AppState = {
     modalTrackSort: localStorage.getItem('albumDiaryModalTrackSort') || 'default', 
     isPrivate: false,
     filterGroup: '', filterGenre: '', filterYear: '', filterLabel: '',
-    currentAllNotesRawText: ''
+    currentAllNotesRawText: '',
+    communityTab: 'aggregated'
 };
 
 function t(key) { return Translations[AppState.language][key] || key; }
@@ -414,7 +415,7 @@ const app = {
         this.debouncedSidebarSearch = Utils.debounce((e) => this.filterSidebarArtists(e.target.value), 300);
         this.setGridSize(AppState.gridSize);
         this.updateSortClasses();
-        this.showView('library');
+        this.showView('community');
         this.updateSearchPlaceholder();
         this.updateModalTrackSortButtons();
         this.initEmailAuth();
@@ -580,7 +581,7 @@ const app = {
         const exportModal = document.getElementById('export-playlist-modal');
         if(exportModal) exportModal.classList.add('hidden');
         
-        ['library', 'search', 'stats'].forEach(v => {
+        ['library', 'community', 'search', 'stats'].forEach(v => {
             const btn = document.getElementById(`nav-${v}`);
             const icon = document.getElementById(`nav-icon-${v}`);
             if (v === viewName) {
@@ -606,9 +607,239 @@ const app = {
         if (viewName === 'library') { 
             this.renderLibrary(); 
         } 
+        else if (viewName === 'community') {
+            this.loadCommunityData();
+        }
         else if (viewName === 'stats') { this.renderStats(); }
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+
+    switchCommunityTab(tab) {
+        AppState.communityTab = tab;
+        const btnAgg = document.getElementById('tab-btn-aggregated');
+        const btnFeed = document.getElementById('tab-btn-feed');
+        const viewAgg = document.getElementById('community-tab-aggregated');
+        const viewFeed = document.getElementById('community-tab-feed');
+
+        if (tab === 'aggregated') {
+            btnAgg.className = "px-4 py-2 rounded-lg text-xs font-bold bg-primary text-white transition-colors";
+            btnFeed.className = "px-4 py-2 rounded-lg text-xs font-bold text-gray-500 dark:text-gray-400 transition-colors";
+            viewAgg.classList.remove('hidden');
+            viewFeed.classList.add('hidden');
+        } else {
+            btnFeed.className = "px-4 py-2 rounded-lg text-xs font-bold bg-primary text-white transition-colors";
+            btnAgg.className = "px-4 py-2 rounded-lg text-xs font-bold text-gray-500 dark:text-gray-400 transition-colors";
+            viewFeed.classList.remove('hidden');
+            viewAgg.classList.add('hidden');
+        }
+    },
+
+    async loadCommunityData() {
+        const aggregatedGrid = document.getElementById('aggregated-albums-grid');
+        const publicGrid = document.getElementById('public-ratings-grid');
+
+        if(aggregatedGrid) aggregatedGrid.innerHTML = `<div class="col-span-full flex justify-center p-8"><i class="ph-bold ph-spinner-gap animate-spin text-3xl text-primary"></i></div>`;
+        if(publicGrid) publicGrid.innerHTML = `<div class="col-span-full flex justify-center p-8"><i class="ph-bold ph-spinner-gap animate-spin text-3xl text-primary"></i></div>`;
+
+        try {
+            // Fetch all public ratings
+            const q = query(collection(db, 'kitaplik'), where('isPrivate', '==', false));
+            const querySnapshot = await getDocs(q);
+
+            const allPublicEntries = [];
+            const albumAggregates = {}; // mbid -> { title, artist, coverUrl, scores: [], tracks: { title: scores[] } }
+
+            querySnapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                if (data && data.album_data) {
+                    const album = data.album_data;
+                    allPublicEntries.push({ ...album, user_id: data.user_id, userName: data.userName || 'Kullanıcı' });
+
+                    // Aggregate album & track scores
+                    if (!albumAggregates[album.id]) {
+                        albumAggregates[album.id] = {
+                            id: album.id,
+                            title: album.title,
+                            artist: album.artist,
+                            coverUrl: album.customCoverUrl || album.coverUrl,
+                            year: album.year,
+                            scores: [],
+                            tracks: {}
+                        };
+                    }
+
+                    if (album.averageScore > 0) {
+                        albumAggregates[album.id].scores.push(album.averageScore);
+                    }
+
+                    if (album.tracks) {
+                        album.tracks.forEach(tr => {
+                            if (tr.rating > 0) {
+                                if (!albumAggregates[album.id].tracks[tr.title]) {
+                                    albumAggregates[album.id].tracks[tr.title] = [];
+                                }
+                                albumAggregates[album.id].tracks[tr.title].push(tr.rating);
+                            }
+                        });
+                    }
+                }
+            });
+
+            // --- RENKLENDİRME YARDIMCI FONKSİYONLARI ---
+            const getScoreTextColor = (val) => {
+                const n = Math.round(parseFloat(val));
+                if(n === 5) return 'text-blue-600 dark:text-blue-400'; // Dark Blue
+                if(n === 4) return 'text-green-600 dark:text-green-400'; // Green
+                if(n === 3) return 'text-yellow-500 dark:text-yellow-400'; // Yellow
+                if(n === 2) return 'text-orange-500 dark:text-orange-400'; // Orange
+                if(n === 1) return 'text-red-500 dark:text-red-400'; // Red
+                return 'text-gray-500';
+            };
+
+            const getScoreBadgeColor = (val) => {
+                const n = Math.round(parseFloat(val));
+                if(n === 5) return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400';
+                if(n === 4) return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400';
+                if(n === 3) return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400';
+                if(n === 2) return 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400';
+                if(n === 1) return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400';
+                return 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400';
+            };
+
+
+            // 1. Render Aggregated Scores Grid
+            if (aggregatedGrid) {
+                aggregatedGrid.innerHTML = '';
+                const albumKeys = Object.keys(albumAggregates);
+
+                if (albumKeys.length === 0) {
+                    aggregatedGrid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-500">Henüz açık topluluk verisi yok.</div>`;
+                } else {
+                    albumKeys.forEach(id => {
+                        const agg = albumAggregates[id];
+                        const avgAlbumScore = agg.scores.length > 0 
+                            ? (agg.scores.reduce((a, b) => a + b, 0) / agg.scores.length).toFixed(1) 
+                            : '-';
+                        
+                        const albumTextColor = avgAlbumScore !== '-' ? getScoreTextColor(avgAlbumScore) : 'text-white';
+                        const albumBadgeColor = avgAlbumScore !== '-' ? getScoreBadgeColor(avgAlbumScore) : 'bg-gray-100 text-gray-500';
+
+                        // YENİ: Puan veren kullanıcıların isimlerini listeleme
+                        // Aggregation mantığınızda isimleri 'usernames' veya 'nicknames' dizisinde tuttuğunuz varsayılmıştır.
+                        const ratersList = agg.usernames || agg.nicknames; 
+                        const ratersText = ratersList && ratersList.length > 0 
+                            ? ratersList.join(', ') 
+                            : `${agg.scores.length} oy`; // Veri yoksa yedek olarak oy sayısını gösterir
+
+                        let tracksHtml = '';
+                        Object.keys(agg.tracks).forEach(trackTitle => {
+                            const trScores = agg.tracks[trackTitle];
+                            const trAvg = (trScores.reduce((a, b) => a + b, 0) / trScores.length).toFixed(1);
+                            const trackColor = getScoreTextColor(trAvg);
+                            
+                            tracksHtml += `<div class="flex justify-between items-center text-xs py-1.5 border-b border-lightBorder/30 dark:border-gray-800/40 last:border-0">
+                                <span class="truncate pr-2 font-medium italic text-gray-700 dark:text-gray-300">${Utils.escapeHTML(trackTitle)}</span>
+                                <span class="font-bold flex-shrink-0 ${trackColor}">${trAvg} ★</span>
+                            </div>`;
+                        });
+
+                        const card = document.createElement('div');
+                        card.className = "bg-white dark:bg-surface rounded-2xl border border-lightBorder dark:border-gray-800 shadow-sm flex flex-col relative overflow-hidden group min-h-[320px]";
+                        
+                        card.innerHTML = `
+                            <!-- Kapak Görseli ve Puan Katmanı -->
+                            <div class="absolute inset-0 z-20 transition-opacity duration-500 ease-in-out group-hover:opacity-0 pointer-events-none bg-lightHighlight dark:bg-surface">
+                                <img src="${Utils.escapeHTML(agg.coverUrl)}" onerror="this.src='https://placehold.co/400x400/ebe4dc/594636?text=${t('no_cover').replace(/ /g, '+')}'; this.onerror=null;" class="w-full h-full object-cover" alt="Cover">
+                                
+                                <!-- Sağ Alt Köşe Puan Rozeti (Renkli) -->
+                                <div class="absolute bottom-3 right-3 bg-black/70 backdrop-blur-md ${albumTextColor} px-3 py-1.5 rounded-xl text-sm font-black shadow-2xl border border-white/10 flex items-center gap-1.5">
+                                    ${avgAlbumScore} <i class="ph-fill ph-star"></i>
+                                </div>
+                            </div>
+
+                            <!-- Mevcut Detaylar Katmanı -->
+                            <div class="relative z-10 flex flex-col gap-3 p-4 h-full pointer-events-auto">
+                                <div class="flex gap-3 items-center">
+                                    <img src="${Utils.escapeHTML(agg.coverUrl)}" class="w-16 h-16 rounded-xl object-cover border border-lightBorder dark:border-gray-800 shadow-sm flex-shrink-0" onerror="this.src='https://placehold.co/100x100/ebe4dc/594636?text=${t('no_cover').replace(/ /g, '+')}'; this.onerror=null;">
+                                    <div class="min-w-0 flex-1">
+                                        <h3 class="font-bold text-gray-900 dark:text-white truncate text-base italic">${Utils.escapeHTML(agg.title)}</h3>
+                                        <p class="text-xs text-gray-500 truncate">${Utils.escapeHTML(agg.artist)}</p>
+                                        <p class="text-[10px] text-gray-400 font-semibold mb-1">${Utils.escapeHTML(agg.year)}</p>
+                                        
+                                        <!-- YENİ: Ortalamanın Yanında Kullanıcı İsimleri -->
+                                        <div class="flex items-center gap-1.5 mt-1 overflow-hidden">
+                                            <span class="text-xs font-black ${albumBadgeColor} px-2 py-0.5 rounded-full flex-shrink-0">${avgAlbumScore} Ort.</span>
+                                            <span class="text-[10px] text-gray-400 font-semibold truncate cursor-help" title="${Utils.escapeHTML(ratersText)}">(${Utils.escapeHTML(ratersText)})</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Liste Taşıyıcısı ve Dinamik Fade Efekti -->
+                                <div class="relative mt-2 flex-grow">
+                                    <div class="track-scroll-container bg-lightBg/50 dark:bg-darker/50 rounded-xl px-3 py-2 border border-lightBorder/50 dark:border-gray-800/50 max-h-48 overflow-y-auto hide-scrollbar h-full">
+                                        ${tracksHtml || '<p class="text-xs text-gray-500 text-center py-2">Henüz oylanan şarkı yok.</p>'}
+                                    </div>
+                                    <!-- Dinamik olarak gizlenip açılacak fade katmanı -->
+                                    <div class="track-fade-overlay absolute bottom-[1px] left-[1px] right-[1px] h-16 bg-gradient-to-t from-lightBg dark:from-darker to-transparent pointer-events-none rounded-b-xl transition-opacity duration-300"></div>
+                                </div>
+                            </div>
+                        `;
+                        
+                        aggregatedGrid.appendChild(card);
+
+                        // --- Scroll Durumunu Kontrol Eden Dinamik Yapı ---
+                        const scrollContainer = card.querySelector('.track-scroll-container');
+                        const fadeOverlay = card.querySelector('.track-fade-overlay');
+
+                        if (scrollContainer && fadeOverlay) {
+                            const updateFade = () => {
+                                const isAtBottom = Math.abs(scrollContainer.scrollHeight - scrollContainer.clientHeight - scrollContainer.scrollTop) <= 2;
+                                if (scrollContainer.scrollHeight <= scrollContainer.clientHeight || isAtBottom) {
+                                    fadeOverlay.style.opacity = '0';
+                                } else {
+                                    fadeOverlay.style.opacity = '1';
+                                }
+                            };
+                            scrollContainer.addEventListener('scroll', updateFade);
+                            setTimeout(updateFade, 10);
+                        }
+                    });
+                }
+            }
+
+            // 2. Render Public Feed Grid
+            if (publicGrid) {
+                publicGrid.innerHTML = '';
+                if (allPublicEntries.length === 0) {
+                    publicGrid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-500">Henüz açık kullanıcı puanı yok.</div>`;
+                } else {
+                    allPublicEntries.forEach(album => {
+                        const albumBadgeColor = album.averageScore > 0 ? getScoreBadgeColor(album.averageScore) : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400';
+                        
+                        const card = document.createElement('div');
+                        card.className = "bg-white dark:bg-surface rounded-2xl p-3 border border-lightBorder dark:border-gray-800 shadow-sm flex gap-3 items-center cursor-pointer hover:bg-lightHighlight dark:hover:bg-surfaceHover active:scale-95 transition-transform";
+                        card.onclick = () => this.openAlbumModal(album.id, album.title, album.artist, album.year);
+                        card.innerHTML = `
+                            <img src="${Utils.escapeHTML(album.customCoverUrl || album.coverUrl)}" class="w-16 h-16 rounded-xl object-cover border border-lightBorder dark:border-gray-800 shadow-sm flex-shrink-0">
+                            <div class="min-w-0 flex-1">
+                                <h4 class="font-bold text-gray-900 dark:text-white truncate text-sm italic">${Utils.escapeHTML(album.title)}</h4>
+                                <p class="text-xs text-gray-500 truncate">${Utils.escapeHTML(album.artist)}</p>
+                                <div class="flex justify-between items-center mt-1.5">
+                                    <span class="text-[10px] ${albumBadgeColor} px-2 py-0.5 rounded-md font-bold">${album.averageScore || '-'} ★</span>
+                                    <span class="text-[10px] text-gray-400 font-semibold truncate">${Utils.escapeHTML(album.userName)}</span>
+                                </div>
+                            </div>
+                        `;
+                        publicGrid.appendChild(card);
+                    });
+                }
+            }
+
+        } catch (e) {
+            console.error("Topluluk verisi çekilirken hata:", e);
+            if(aggregatedGrid) aggregatedGrid.innerHTML = `<div class="col-span-full text-center p-4 text-red-500">Yüklenemedi.</div>`;
+        }
     },
 
     toggleLanguage() {
@@ -623,6 +854,7 @@ const app = {
         }
         
         if (AppState.currentView === 'library') this.renderLibrary();
+        else if (AppState.currentView === 'community') this.loadCommunityData();
         else if (AppState.currentView === 'stats') this.renderStats();
     },
 
@@ -701,6 +933,9 @@ const app = {
             querySnapshot.forEach(async (docSnap) => {
                 await setDoc(doc(db, 'kitaplik', docSnap.id), { userName: newName }, { merge: true });
             });
+            
+            // Topluluk sekmesi açıksa yeniden yükle
+            if (AppState.currentView === 'community') this.loadCommunityData();
 
         } catch (e) {
             console.error("Kullanıcı adı güncellenirken hata:", e);

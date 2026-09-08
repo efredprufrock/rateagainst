@@ -9,17 +9,16 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>RateAgainst</title>
     
-    <!-- Disc icon favicon matching the primary theme color -->
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cpath d='M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,168a64,64,0,1,1,64-64A64.07,64.07,0,0,1,128,192Zm0-80a16,16,0,1,0,16,16A16,16,0,0,0,128,112Z' fill='%23d17b38'/%3E%3C/svg%3E">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
-            theme: { 
+            theme: {
                 extend: {
-                    colors: { 
+                    colors: {
                         dark: '#1c140f',
                         darker: '#140e0a',
                         surface: '#241a13',
@@ -267,8 +266,8 @@
             </div>
         </section>
 
-        <section id="view-search" class="view-section hidden animate-fade-in w-full flex flex-col p-4 pt-6 md:pt-10">
-
+        <!-- NEW: Social & Aggregated Community Section -->
+        <section id="view-community" class="view-section hidden animate-fade-in w-full p-4 pt-6 md:pt-10">
             <div class="max-w-7xl mx-auto flex flex-col gap-6">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
@@ -433,11 +432,14 @@
     <div id="custom-dropdown" class="fixed z-[150] hidden flex-col bg-white/95 dark:bg-surface/95 backdrop-blur-xl border border-lightBorder dark:border-gray-800 rounded-2xl shadow-2xl py-1 min-w-[180px] max-h-64 overflow-y-auto hide-scrollbar transition-opacity opacity-0 duration-200 pointer-events-auto">
     </div>
 
-    <!-- Bottom Nav Bar -->
+    <!-- Updated Bottom Nav Bar with Community Tab -->
     <div class="fixed bottom-4 left-0 right-0 z-[50] flex justify-center px-4 pointer-events-none" style="padding-bottom: env(safe-area-inset-bottom);">
         <nav class="pointer-events-auto w-full max-w-[22rem] bg-white/90 dark:bg-surface/90 backdrop-blur-xl border border-lightBorder/50 dark:border-gray-700/50 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] flex justify-between items-center p-1.5 gap-2">
             <button onclick="app.showView('library')" id="nav-library" class="nav-btn flex-1 flex items-center justify-center h-12 rounded-full text-primary bg-primary/10 transition-all active:scale-95">
                 <i id="nav-icon-library" class="ph-fill ph-books text-2xl"></i>
+            </button>
+            <button onclick="app.showView('community')" id="nav-community" class="nav-btn flex-1 flex items-center justify-center h-12 rounded-full text-gray-400 dark:text-gray-500 hover:bg-lightHighlight dark:hover:bg-gray-800 transition-all active:scale-95">
+                <i id="nav-icon-community" class="ph ph-globe-hemisphere-west text-2xl"></i>
             </button>
             <button onclick="app.showView('search')" id="nav-search" class="nav-btn flex-1 flex items-center justify-center h-12 rounded-full text-gray-400 dark:text-gray-500 hover:bg-lightHighlight dark:hover:bg-gray-800 transition-all active:scale-95">
                 <i id="nav-icon-search" class="ph ph-magnifying-glass text-2xl"></i>
