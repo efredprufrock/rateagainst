@@ -349,7 +349,7 @@ const Translations = {
 };
 
 const AppState = {
-    library: [], currentView: 'community', currentModalAlbum: null, isSearching: false, // <-- currentView 'community' oldu
+    library: [], currentView: 'library', currentModalAlbum: null, isSearching: false,
     gridSize: localStorage.getItem('albumDiaryGridSize') || 'normal',
     sortBy: localStorage.getItem('albumDiarySortBy') || 'dateAdded',
     sortDirection: localStorage.getItem('albumDiarySortDirection') || 'desc',
@@ -415,7 +415,7 @@ const app = {
         this.debouncedSidebarSearch = Utils.debounce((e) => this.filterSidebarArtists(e.target.value), 300);
         this.setGridSize(AppState.gridSize);
         this.updateSortClasses();
-        this.showView('community');
+        this.showView('library');
         this.updateSearchPlaceholder();
         this.updateModalTrackSortButtons();
         this.initEmailAuth();
