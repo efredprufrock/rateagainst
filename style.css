@@ -28,10 +28,205 @@ body {
 ::-webkit-scrollbar-thumb { background: #dcd1c6; border-radius: 4px; }
 .dark ::-webkit-scrollbar-thumb { background: #3b2b20; }
 
-.star-btn:hover ~ .star-btn i { color: #9ca3af !important; } 
-.star-container:hover .star-btn i { color: #d17b38 !important; }
-.star-container .star-btn:hover ~ .star-btn i { color: #9ca3af !important; }
-
 .modal-enter { opacity: 0; transform: scale(0.95); }
 .modal-enter-active { opacity: 1; transform: scale(1); transition: all 0.2s ease-out; }
 .slide-up { transition: transform 0.3s cubic-bezier(0.33, 1, 0.68, 1); }
+
+/* Klavye odağı görünür olsun */
+:focus-visible { outline: 2px solid #d17b38; outline-offset: 2px; }
+
+/* iOS'ta input'a dokununca otomatik zoom olmasın */
+@media (max-width: 640px) {
+    input, textarea, select { font-size: 16px !important; }
+}
+
+/* İskelet yükleyiciler */
+.skeleton {
+    background: linear-gradient(90deg, #ebe4dc 0%, #f5f0eb 50%, #ebe4dc 100%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.4s ease-in-out infinite;
+}
+.dark .skeleton {
+    background: linear-gradient(90deg, #2e2219 0%, #3b2b20 50%, #2e2219 100%);
+    background-size: 200% 100%;
+}
+.skeleton-row {
+    display: flex; gap: 0.75rem; padding: 0.625rem;
+    border-radius: 1rem; border: 1px solid #dcd1c6; background: #fff;
+}
+.dark .skeleton-row { border-color: #3b2b20; background: #241a13; }
+@keyframes skeleton-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* İnceleme görünümü açıkken arka plan kaymasın */
+body:has(#review-view:not(.hidden)) { overflow: hidden; }
+
+/* Hareket hassasiyeti olan kullanıcılar için */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+
+/* Araç çubuğu: geniş ekranda gruplar açık, dar ekranda üst butondan sola doğru açılır */
+.tool-group { position: relative; display: flex; align-items: center; }
+.tool-trigger { display: flex; }
+.tool-items { display: flex; }
+
+@media (max-width: 1023px) {
+    .tool-items {
+        position: absolute;
+        right: calc(100% + 6px);
+        top: 50%;
+        z-index: 30;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-50%) scaleX(0.6);
+        transform-origin: right center;
+        transition: opacity 0.18s ease, transform 0.22s cubic-bezier(0.33, 1, 0.68, 1);
+        box-shadow: 0 10px 28px rgba(36, 26, 19, 0.18);
+    }
+    .dark .tool-items { box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55); }
+    .tool-group.is-open .tool-items {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(-50%) scaleX(1);
+    }
+    .tool-group.is-open .tool-trigger {
+        color: #a85a1a;
+        background: rgba(209, 123, 56, 0.14);
+        border-color: rgba(209, 123, 56, 0.45);
+    }
+    .dark .tool-group.is-open .tool-trigger { color: #e8955a; }
+
+    /* Durum çipleri sığmazsa sağ kenar yumuşakça kaybolsun */
+    .chip-scroll {
+        -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+        mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+        padding-right: 24px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .tool-trigger { display: none; }
+}
+
+
+/* Albüm paneli: puan rozeti (içi puan renginin saydam tonuyla dolu) */
+.score-badge {
+    background: color-mix(in srgb, currentColor 14%, transparent);
+    border: 2px solid color-mix(in srgb, currentColor 38%, transparent);
+}
+.score-badge.is-partial { border-style: dashed; }
+
+
+/* Albüm paneli: puan kaydırıcı (seçili şarkının puanı) */
+.score-scrub {
+    position: relative;
+    flex-shrink: 0;
+    width: 52px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    cursor: ns-resize;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    background: color-mix(in srgb, currentColor 12%, transparent);
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, currentColor 30%, transparent);
+    transition: background-color .15s ease, box-shadow .15s ease;
+}
+@media (min-width: 768px) { .score-scrub { height: 36px; } }
+.score-scrub:hover, .score-scrub.is-scrubbing {
+    background: color-mix(in srgb, currentColor 20%, transparent);
+}
+.score-scrub:focus-visible { outline: 2px solid #d17b38; outline-offset: 2px; }
+.scrub-caret { font-size: 9px; line-height: 1; opacity: .55; }
+.score-scrub.is-scrubbing .scrub-caret { opacity: 0; }
+
+/* Sürüklerken üstte/altta bir sonraki ve önceki puan görünür */
+.scrub-ghost {
+    position: absolute;
+    left: 50%;
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1;
+    padding: 2px 6px;
+    border-radius: 999px;
+    background: #f7f4f0;
+    color: #75604d;
+    box-shadow: 0 2px 8px rgba(36, 26, 19, 0.15);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .15s ease, transform .15s ease;
+    z-index: 5;
+}
+.dark .scrub-ghost { background: #1c140f; color: #b5a18c; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5); }
+.scrub-ghost:empty { display: none; }
+.scrub-ghost-up { bottom: 100%; transform: translate(-50%, 6px); }
+.scrub-ghost-down { top: 100%; transform: translate(-50%, -6px); }
+.score-scrub.is-scrubbing .scrub-ghost-up { opacity: 1; transform: translate(-50%, -3px); }
+.score-scrub.is-scrubbing .scrub-ghost-down { opacity: 1; transform: translate(-50%, 3px); }
+
+
+/* Puan kaydırıcının yanındaki kaydet (✓) düğmesi */
+.scrub-save {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #75604d;
+    border: 1.5px solid #c9b8a6;
+    transition: background-color .15s ease, color .15s ease, border-color .15s ease, transform .1s ease;
+}
+@media (min-width: 768px) { .scrub-save { width: 32px; height: 32px; font-size: 14px; } }
+.dark .scrub-save { color: #b5a18c; border-color: #4a3829; }
+.scrub-save:hover { background: rgba(209, 123, 56, 0.12); }
+.scrub-save:active { transform: scale(0.92); }
+.scrub-save.is-dirty, .dark .scrub-save.is-dirty { background: #d17b38; border-color: #d17b38; color: #140e0a; }
+
+
+/* Kitaplık (dergi görünümü): araç düğmeleri sade çerçeveli */
+#filter-bar .tool-trigger,
+#filter-bar .tool-items { background: transparent; border-color: #c9b8a6; box-shadow: none; }
+.dark #filter-bar .tool-trigger,
+.dark #filter-bar .tool-items { border-color: #4a3829; }
+@media (max-width: 1023px) {
+    #filter-bar .tool-items { background: #f7f4f0; box-shadow: 0 10px 28px rgba(36, 26, 19, 0.18); }
+    .dark #filter-bar .tool-items { background: #1c140f; box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55); }
+}
+
+
+/* Kitaplık kartları: yazılar ve puan rozeti kart genişliğiyle aynı oranda ölçeklenir */
+.album-card { container-type: inline-size; }
+.album-card .ac-body { margin-top: 6cqw; gap: 4cqw; }
+.album-card .ac-title { font-size: clamp(9px, 8.6cqw, 20px); }
+.album-card .ac-meta { margin-top: 1.5cqw; font-size: clamp(8px, 6.4cqw, 14px); }
+
+.album-card .ac-sub { margin-top: 1cqw; font-size: clamp(6px, 4.8cqw, 10.5px); }
+.album-card .ac-badge {
+    width: clamp(24px, 30cqw, 64px);
+    height: clamp(24px, 30cqw, 64px);
+    font-size: clamp(9px, 10.5cqw, 22px);
+}
+.album-card .ac-status {
+    top: 4cqw; left: 4cqw;
+    padding: 1.5cqw 3.5cqw;
+    font-size: clamp(6px, 5cqw, 11px);
+    letter-spacing: 0.15em;
+}

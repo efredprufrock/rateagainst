@@ -2,23 +2,20 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { 
     getAuth, 
-    createUserWithEmailAndPassword, 
-    signInWithEmailAndPassword, 
     signInWithPopup, 
     GoogleAuthProvider, 
     signOut, 
     onAuthStateChanged 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { 
-    getFirestore, 
-    collection, 
-    doc, 
-    getDoc,
-    getDocs, 
-    setDoc, 
-    deleteDoc, 
-    query, 
-    where 
+import {
+    getFirestore,
+    collection,
+    doc,
+    getDocs,
+    setDoc,
+    deleteDoc,
+    query,
+    where
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // 2. Firebase Configuration
@@ -35,6 +32,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
 const googleProvider = new GoogleAuthProvider();
+const OWNER_UID = "2i3wrGcLPfMDZNDNGpY4QTYiudb2";
 
 // Add this line to force the account selection screen:
 googleProvider.setCustomParameters({ prompt: 'select_account' });
@@ -76,7 +74,7 @@ const GenreTranslations = {
     "World": { tr: "Dünya Müziği", en: "World" },
     "Acoustic": { tr: "Akustik", en: "Acoustic" },
     "Soundtrack": { tr: "Film Müziği", en: "Soundtrack" },
-    "Vocal": { tr: "Vokal", en: "Vokal" },
+    "Vocal": { tr: "Vokal", en: "Vocal" },
     "Turkish Pop": { tr: "Türkçe Pop", en: "Turkish Pop" },
     "Turkish Rock": { tr: "Türkçe Rock", en: "Turkish Rock" },
     "Turkish Rap": { tr: "Türkçe Rap", en: "Turkish Rap" },
@@ -88,13 +86,11 @@ const Translations = {
     en: {
         app_title: "RateAgainst",
         nav_library: "Library",
-        nav_community: "Community",
         nav_search: "Search",
-        nav_stats: "Stats",
+        nav_stats: "Summary",
         menu_settings: "Menu & Settings",
         language_label: "Dil / Language",
         theme_label: "Tema / Theme",
-        privacy_label: "Account Privacy",
         nav_data: "Data",
         export_json: "Export JSON",
         import_json: "Import JSON",
@@ -122,7 +118,7 @@ const Translations = {
         music_genres: "Genres",
         image_link: "Image URL",
         apply_url: "Apply",
-        search_itunes: "Search iTunes",
+        search_itunes: "Find cover",
         album_avg: "Album Average",
         tracklist: "Tracklist",
         default_sort: "Default",
@@ -211,22 +207,94 @@ const Translations = {
         login_prompt: "Sign in to backup and sync your library.",
         sign_in_google: "Sign in with Google",
         sign_out: "Sign Out",
-        community_title: "Community & Aggregated Scores",
-        tab_aggregated: "Aggregated Scores",
-        tab_users: "Public Feed",
-        public_account: "Public",
-        private_account: "Private"
+        nav_queue: "Up Next",
+        close: "Close",
+        edit: "Edit",
+        status_filter: "Listening status",
+        listen_status: "Listening status",
+        status_all: "All",
+        status_planned: "To listen",
+        status_listening: "Listening",
+        status_done: "Done",
+        badge_planned: "UP NEXT",
+        badge_listening: "LISTENING",
+        now_listening: "NOW LISTENING",
+        tracks_rated: "tracks rated",
+        so_far_avg: "Average so far",
+        albums_count_suffix: "albums",
+        sort_recent: "recently updated",
+        login_empty_title: "Your diary is waiting",
+        login_empty_desc: "Sign in to reach your archive.",
+        queue_title: "Up Next",
+        queue_random: "Pick one at random",
+        queue_hint_title: "Add from search results",
+        queue_hint_desc: "Every album in Search has a \"Listen later\" button; one tap drops it here.",
+        queue_empty: "Nothing in the queue. Add albums with \"Listen later\" in Search.",
+        queue_subtitle: "albums in the queue",
+        queue_oldest: "oldest added",
+        queue_sort_oldest: "Oldest",
+        queue_sort_newest: "Newest",
+        start_listening: "Start listening",
+        listen_later: "Listen later",
+        added_to_queue: "Added to the queue",
+        in_queue: "In queue",
+        started_listening: "Moved to Listening",
+        tags_add: "+ tag",
+        tag_prompt: "New tag (e.g. night, road trip):",
+        listen_log: "Listening log",
+        listened_today: "+ Listened today",
+        times: "times",
+        no_listens: "No listens logged yet. Each log saves your current average.",
+        listen_logged: "Listen logged",
+        listen_log_hint: "Shows how your score changes with each listen.",
+        delete_listen: "Delete this listen",
+        open_review: "Open review",
+        back_to_album: "Back to album",
+        copy_markdown: "Copy Markdown",
+        review_label: "REVIEW",
+        nth_listen: "LISTEN",
+        review_empty: "No review written yet. Tap \"Edit\" to write it as paragraphs.",
+        export_markdown: "Export reviews to Markdown",
+        toast_md_none: "No reviews to export yet.",
+        summary_title: "Summary",
+        prev_period: "Previous period",
+        next_period: "Next period",
+        year_summary: "Year summary",
+        month_summary: "Month summary",
+        summary_listened: "You listened to",
+        summary_avg: "your average is",
+        summary_empty: "No albums logged in this period.",
+        summary_albums: "albums",
+        summary_track_ratings: "track ratings",
+        summary_reviews: "reviews",
+        summary_album_of: "Album of the period",
+        summary_top_artist: "Most listened artist",
+        summary_top_genre: "Top genre",
+        fav_tracks_title: "Your Favorite Tracks",
+        see_all: "See all →",
+        no_fav_tracks: "5-star tracks will appear here.",
+        issue_label: "Listening Notes",
+        tracks_header: "Tracks",
+        quote_placeholder: "Add an album note…",
+        decrease_half: "lower by half a point",
+        increase_half: "raise by half a point",
+        tap_to_rate: "tap to rate",
+        scrub_hint: "Drag up/down, scroll, or use the arrow keys · Enter to save",
+        save_rating: "Save rating",
+        perfect_score: "Perfect score",
+        confirm_remove: "Remove this album from your library?",
+        tools_filter: "Filter",
+        tools_sort: "Sort",
+        tools_view: "View size"
     },
     tr: {
         app_title: "RateAgainst",
-        nav_library: "Kitaplığım",
-        nav_community: "Topluluk",
+        nav_library: "Kitaplık",
         nav_search: "Ara",
-        nav_stats: "İstatistik",
+        nav_stats: "Özet",
         menu_settings: "Menü & Ayarlar",
         language_label: "Dil / Language",
         theme_label: "Tema / Theme",
-        privacy_label: "Hesap Gizliliği",
         nav_data: "Veri",
         export_json: "Yedek Al (JSON)",
         import_json: "Yedek Yükle",
@@ -254,7 +322,7 @@ const Translations = {
         music_genres: "Türler",
         image_link: "Görsel URL",
         apply_url: "Uygula",
-        search_itunes: "iTunes Ara",
+        search_itunes: "Kapak bul",
         album_avg: "Albüm Ortalaması",
         tracklist: "Şarkı Listesi",
         default_sort: "Varsayılan",
@@ -340,11 +408,85 @@ const Translations = {
         login_prompt: "Arşivinizi yedeklemek ve senkronize etmek için giriş yapın.",
         sign_in_google: "Google ile Giriş Yap",
         sign_out: "Çıkış Yap",
-        community_title: "Topluluk & Puanlar",
-        tab_aggregated: "Genel Ortalamalar",
-        tab_users: "Kamuoyu Akışı",
-        public_account: "Açık",
-        private_account: "Gizli"
+        nav_queue: "Sırada",
+        close: "Kapat",
+        edit: "Düzenle",
+        status_filter: "Dinleme durumu",
+        listen_status: "Dinleme durumu",
+        status_all: "Tümü",
+        status_planned: "Dinlenecek",
+        status_listening: "Dinliyorum",
+        status_done: "Bitti",
+        badge_planned: "SIRADA",
+        badge_listening: "DİNLİYORUM",
+        now_listening: "ŞU AN DİNLİYORUM",
+        tracks_rated: "parça puanlandı",
+        so_far_avg: "Şimdilik ortalama",
+        albums_count_suffix: "albüm",
+        sort_recent: "son güncellenen",
+        login_empty_title: "Günlüğün seni bekliyor",
+        login_empty_desc: "Arşivine ulaşmak için giriş yap.",
+        queue_title: "Dinlenecekler",
+        queue_random: "Rastgele birini seç",
+        queue_hint_title: "Arama sonuçlarından ekle",
+        queue_hint_desc: "Ara sekmesindeki her albümün yanında \"Sonra dinle\" butonu var; tek dokunuşla buraya düşer.",
+        queue_empty: "Sırada albüm yok. Ara sekmesinden \"Sonra dinle\" ile ekleyebilirsin.",
+        queue_subtitle: "albüm sırada",
+        queue_oldest: "en eskisi eklendi:",
+        queue_sort_oldest: "En eski",
+        queue_sort_newest: "En yeni",
+        start_listening: "Dinlemeye başla",
+        listen_later: "Sonra dinle",
+        added_to_queue: "Dinleneceklere eklendi",
+        in_queue: "Sırada",
+        started_listening: "Dinliyorum'a taşındı",
+        tags_add: "+ etiket",
+        tag_prompt: "Yeni etiket (örn. gece, yolculuk):",
+        listen_log: "Dinleme kaydı",
+        listened_today: "+ Bugün dinledim",
+        times: "kez",
+        no_listens: "Henüz kayıt yok. Her kayıt o anki ortalamanı saklar.",
+        listen_logged: "Dinleme kaydedildi",
+        listen_log_hint: "Her dinleyişte puanının nasıl değiştiğini gösterir.",
+        delete_listen: "Bu kaydı sil",
+        open_review: "İncelemeyi aç",
+        back_to_album: "Albüme dön",
+        copy_markdown: "Markdown kopyala",
+        review_label: "İNCELEME",
+        nth_listen: "DİNLEYİŞ",
+        review_empty: "Henüz inceleme yazılmadı. \"Düzenle\"ye dokunup paragraflar halinde yazabilirsin.",
+        export_markdown: "İncelemeleri Markdown'a aktar",
+        toast_md_none: "Aktarılacak inceleme yok.",
+        summary_title: "Özet",
+        prev_period: "Önceki dönem",
+        next_period: "Sonraki dönem",
+        year_summary: "Yıl özeti",
+        month_summary: "Ay özeti",
+        summary_listened: "Bu dönemde",
+        summary_avg: "dinledin, ortalaman",
+        summary_empty: "Bu dönemde kayıtlı albüm yok.",
+        summary_albums: "albüm",
+        summary_track_ratings: "parça puanı",
+        summary_reviews: "inceleme",
+        summary_album_of: "Dönemin albümü",
+        summary_top_artist: "En çok dinlenen sanatçı",
+        summary_top_genre: "Baskın tür",
+        fav_tracks_title: "Favori Parçaların",
+        see_all: "Tümü →",
+        no_fav_tracks: "5 yıldız verdiğin parçalar burada görünür.",
+        issue_label: "Dinleme Notları",
+        tracks_header: "Parçalar",
+        quote_placeholder: "Albüm notu ekle…",
+        decrease_half: "yarım puan azalt",
+        increase_half: "yarım puan artır",
+        tap_to_rate: "puanlamak için dokun",
+        scrub_hint: "Yukarı/aşağı sürükle, tekerleği çevir ya da ok tuşlarını kullan · Enter ile kaydet",
+        save_rating: "Puanı kaydet",
+        perfect_score: "Tam puan",
+        confirm_remove: "Bu albüm kitaplığından kaldırılsın mı?",
+        tools_filter: "Filtrele",
+        tools_sort: "Sırala",
+        tools_view: "Görünüm boyutu"
     }
 };
 
@@ -357,10 +499,11 @@ const AppState = {
     statsArtistSortDirection: localStorage.getItem('albumDiaryStatsSortDirection') || 'desc',
     language: localStorage.getItem('albumDiaryLang') || 'tr',
     modalTrackSort: localStorage.getItem('albumDiaryModalTrackSort') || 'default', 
-    isPrivate: false,
-    filterGroup: '', filterGenre: '', filterYear: '', filterLabel: '',
-    currentAllNotesRawText: '',
-    communityTab: 'aggregated'
+    queueSort: localStorage.getItem('albumDiaryQueueSort') || 'oldest',
+    filterGroup: '', filterGenre: '', filterYear: '', filterLabel: '', filterStatus: '',
+    isLoading: true, isLoggedIn: false,
+    summaryPeriod: 'month', summaryOffset: 0,
+    currentAllNotesRawText: ''
 };
 
 function t(key) { return Translations[AppState.language][key] || key; }
@@ -384,7 +527,368 @@ const Utils = {
     debounce(func, wait) {
         let timeout; return function(...args) { clearTimeout(timeout); timeout = setTimeout(() => func(...args), wait); };
     },
-    formatDateEN(dateStr) { return dateStr; }
+    formatDate(iso, opts = { day: 'numeric', month: 'long', year: 'numeric' }) {
+        const d = new Date(iso);
+        if (isNaN(d.getTime())) return '-';
+        return d.toLocaleDateString(AppState.language === 'en' ? 'en-US' : 'tr-TR', opts);
+    },
+    todayISO() {
+        const d = new Date();
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    },
+    download(filename, content, type) {
+        const blob = new Blob([content], { type });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = filename;
+        document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+    }
+};
+
+// --- Albüm yardımcıları: durum, kısmi ortalama, renk kademesi ---
+const AlbumUtils = {
+    ratedTracks(album) { return (album.tracks || []).filter(tr => tr.rating > 0); },
+    // Puanlanmış parçaların ortalaması (tüm parçalar puanlanmasa da)
+    runningAvg(album) {
+        const rated = this.ratedTracks(album);
+        if (!rated.length) return 0;
+        return Math.round((rated.reduce((s, tr) => s + tr.rating, 0) / rated.length) * 10) / 10;
+    },
+    progress(album) {
+        const total = (album.tracks || []).length;
+        const rated = this.ratedTracks(album).length;
+        return { total, rated, pct: total ? Math.round((rated / total) * 100) : 0 };
+    },
+    // Eski kayıtlarda durum alanı yoksa puanlamadan tahmin et
+    status(album) {
+        if (album.status) return album.status;
+        if (album.averageScore > 0) return 'done';
+        return this.ratedTracks(album).length > 0 ? 'listening' : 'done';
+    },
+    lastActivity(album) { return album.updatedAt || album.dateAdded || 0; },
+    // Tek bir renk sistemi: kartlar, rozetler ve özet aynı eşikleri kullanır
+    tier(score) {
+        if (score >= 4.5) return { text: 'text-blue-700 dark:text-blue-400', badge: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300' };
+        if (score >= 3.5) return { text: 'text-green-700 dark:text-green-400', badge: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300' };
+        if (score >= 3.0) return { text: 'text-yellow-700 dark:text-yellow-400', badge: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300' };
+        if (score >= 2.5) return { text: 'text-orange-700 dark:text-orange-400', badge: 'bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-300' };
+        if (score > 0) return { text: 'text-red-700 dark:text-red-400', badge: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300' };
+        return { text: 'text-gray-600 dark:text-gray-400', badge: 'bg-lightHighlight text-gray-700 dark:bg-surfaceHover dark:text-gray-300' };
+    },
+    // Not metnini (madde imli) paragraflara çevir
+    noteParagraphs(note) {
+        return (note || '').split('\n').map(l => l.replace(/^\s*•\s?/, '').trim()).filter(Boolean);
+    }
+};
+
+// --- Kapak yardımcıları: kaynak seçimi ve kapak açılmazsa yedek zinciri ---
+Object.assign(AlbumUtils, {
+    // Yerel yedek görsel (dış siteye bağlı değil, her yerde açılır)
+    NO_COVER: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23ebe4dc'/><circle cx='50' cy='50' r='27' fill='none' stroke='%23c9b8a6' stroke-width='3'/><circle cx='50' cy='50' r='6' fill='%23c9b8a6'/></svg>",
+    coverSrc(al) {
+        return (al && (al.customCoverUrl || al.coverUrl)) || (al && CoverCache.isFresh(al) ? al.coverData : '') || this.NO_COVER;
+    },
+    // <img> için src + yedek zinciri: orijinal → kayıtlı kopya → görsel vekili → yerel yedek
+    coverAttrs(al) {
+        return `src="${Utils.escapeHTML(this.coverSrc(al))}" data-cover-id="${Utils.escapeHTML(al?.id || '')}" onerror="app.coverFallback(this)"`;
+    }
+});
+
+// --- Ağ yardımcıları: zaman aşımı, MusicBrainz hız sınırı, Deezer (JSONP), iTunes (son yedek) ---
+const Net = {
+    _mbNext: 0,
+    async fetch(url, timeout = 12000) {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), timeout);
+        try { return await fetch(url, { signal: ctrl.signal }); }
+        finally { clearTimeout(timer); }
+    },
+    async json(url, timeout) {
+        const res = await this.fetch(url, timeout);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+    },
+    // MusicBrainz saniyede 1 isteğe izin verir: istekleri sıraya koy
+    async mb(path) {
+        const now = Date.now();
+        const wait = Math.max(0, this._mbNext - now);
+        this._mbNext = now + wait + 1100;
+        if (wait) await new Promise(r => setTimeout(r, wait));
+        return this.json(`https://musicbrainz.org/ws/2/${path}${path.includes('?') ? '&' : '?'}fmt=json`);
+    },
+    // Deezer tarayıcıdan doğrudan çağrılamaz (CORS), JSONP ile okunur
+    jsonp(url, timeout = 10000) {
+        return new Promise((resolve, reject) => {
+            const cb = `__ra_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 7)}`;
+            const script = document.createElement('script');
+            const done = (fn, val) => { clearTimeout(timer); delete window[cb]; script.remove(); fn(val); };
+            const timer = setTimeout(() => done(reject, new Error('timeout')), timeout);
+            window[cb] = (data) => done(resolve, data);
+            script.onerror = () => done(reject, new Error('jsonp'));
+            script.src = `${url}${url.includes('?') ? '&' : '?'}output=jsonp&callback=${cb}`;
+            document.head.appendChild(script);
+        });
+    },
+    async deezer(path) {
+        const data = await this.jsonp(`https://api.deezer.com/${path}`);
+        if (data && data.error) throw new Error(data.error.message || 'deezer');
+        return data;
+    },
+    async itunes(term) {
+        const data = await this.json(`https://itunes.apple.com/search?term=${encodeURIComponent(term)}&entity=album&limit=5`, 6000);
+        return data.results || [];
+    },
+    // Bir görselin bu ağda açılıp açılmadığını dener
+    imageOk(url, timeout = 8000) {
+        return new Promise(resolve => {
+            const img = new Image();
+            const timer = setTimeout(() => { img.src = ''; resolve(false); }, timeout);
+            img.onload = () => { clearTimeout(timer); resolve(img.naturalWidth > 1); };
+            img.onerror = () => { clearTimeout(timer); resolve(false); };
+            img.src = url;
+        });
+    }
+};
+
+// --- Müzik verisi: MusicBrainz (ana kaynak) + Deezer (kapak, eksik albümler, parça süreleri) ---
+const MusicSource = {
+    isMbid(id) { return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(id)); },
+    // Karşılaştırma için sadeleştir: "In Rainbows (Deluxe Edition)" → "in rainbows"
+    norm(s) {
+        return String(s || '').toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '')
+            .replace(/\s*[\(\[][^\)\]]*[\)\]]/g, '')
+            .replace(/\s+-\s+.*(remaster|deluxe|edition|version|anniversary).*$/i, '')
+            .replace(/&/g, 'and').replace(/[^a-z0-9ğüşöçı]+/g, ' ').trim();
+    },
+    cap(s) { return String(s).replace(/(^|[\s-])(\p{L})/gu, (m, p, c) => p + c.toLocaleUpperCase()); },
+    lucene(s) { return String(s).replace(/([+\-&|!(){}\[\]^"~*?:\\/])/g, '\\$1'); },
+    pickGenres(list, min = 1) {
+        return (list || []).filter(g => (g.count || 0) >= min).sort((a, b) => b.count - a.count).slice(0, 3).map(g => this.cap(g.name));
+    },
+    creditName(credit) { return (credit || []).map(c => (c.name || c.artist?.name || '') + (c.joinphrase || '')).join('').trim(); },
+
+    fromMB(rg, fallbackArtist) {
+        return {
+            id: rg.id, source: 'mb',
+            title: rg.title,
+            artist: this.creditName(rg['artist-credit']) || fallbackArtist || '',
+            year: (rg['first-release-date'] || '').slice(0, 4),
+            type: rg['primary-type'] === 'EP' ? 'EP' : 'Album',
+            cover: `https://coverartarchive.org/release-group/${rg.id}/front-250`,
+            coverBig: `https://coverartarchive.org/release-group/${rg.id}/front-500`
+        };
+    },
+    fromDeezer(al, fallbackArtist) {
+        return {
+            id: `dz_${al.id}`, source: 'deezer', deezerId: String(al.id),
+            title: al.title,
+            artist: al.artist?.name || fallbackArtist || '',
+            year: (al.release_date || '').slice(0, 4),
+            type: al.record_type === 'ep' ? 'EP' : 'Album',
+            cover: al.cover_medium || al.cover_big || '',
+            coverBig: al.cover_xl || al.cover_big || ''
+        };
+    },
+    dzIsAlbum(al) { return !al.record_type || al.record_type === 'album' || al.record_type === 'ep'; },
+    mbIsAlbum(rg) {
+        return (rg['primary-type'] === 'Album' || rg['primary-type'] === 'EP') && (!rg['secondary-types'] || rg['secondary-types'].length === 0);
+    },
+
+    // MusicBrainz listesine Deezer'ı ekle: aynı albümse Deezer kapağını kullan, yoksa yeni sonuç olarak ekle
+    merge(mbItems, dzItems, byTitleOnly = false) {
+        const key = (it) => byTitleOnly ? this.norm(it.title) : `${this.norm(it.artist)}|${this.norm(it.title)}`;
+        const map = new Map();
+        const out = [];
+        mbItems.forEach(it => { const k = key(it); if (!map.has(k)) { map.set(k, it); out.push(it); } });
+        dzItems.forEach(dz => {
+            const k = key(dz);
+            const hit = map.get(k);
+            if (hit) {
+                if (hit.source === 'mb' && !hit.deezerId) {
+                    hit.deezerId = dz.deezerId;
+                    if (dz.cover) { hit.cover = dz.cover; hit.coverBig = dz.coverBig; }
+                    if (!hit.year && dz.year) hit.year = dz.year;
+                }
+            } else { map.set(k, dz); out.push(dz); }
+        });
+        return out;
+    },
+
+    async searchAlbums(q) {
+        const [mb, dz] = await Promise.allSettled([
+            Net.mb(`release-group/?query=${encodeURIComponent(`${this.lucene(q)} AND (primarytype:album OR primarytype:ep)`)}&limit=50`),
+            Net.deezer(`search/album?q=${encodeURIComponent(q)}&limit=40`)
+        ]);
+        if (mb.status === 'rejected' && dz.status === 'rejected') throw new Error('search');
+        const mbItems = mb.status === 'fulfilled' ? (mb.value['release-groups'] || []).filter(rg => this.mbIsAlbum(rg)).slice(0, 25).map(rg => this.fromMB(rg)) : [];
+        const dzItems = dz.status === 'fulfilled' ? (dz.value.data || []).filter(al => this.dzIsAlbum(al)).map(al => this.fromDeezer(al)) : [];
+        return this.merge(mbItems, dzItems).slice(0, 40);
+    },
+
+    bestArtist(list, q, nameOf) {
+        const nq = this.norm(q);
+        return (list || []).find(a => this.norm(nameOf(a)) === nq) || (list || [])[0] || null;
+    },
+
+    async searchArtist(q) {
+        const [mbA, dzA] = await Promise.allSettled([
+            Net.mb(`artist/?query=${encodeURIComponent(this.lucene(q))}&limit=5`),
+            Net.deezer(`search/artist?q=${encodeURIComponent(q)}&limit=5`)
+        ]);
+        const mbArtist = mbA.status === 'fulfilled' ? this.bestArtist(mbA.value.artists, q, a => a.name) : null;
+        let dzArtist = dzA.status === 'fulfilled' ? this.bestArtist(dzA.value.data, mbArtist?.name || q, a => a.name) : null;
+        // Deezer başka bir sanatçı bulduysa (isim tutmuyorsa) kullanma
+        if (mbArtist && dzArtist && this.norm(dzArtist.name) !== this.norm(mbArtist.name)) dzArtist = null;
+        if (!mbArtist && !dzArtist) return { name: null, albums: [] };
+        const name = mbArtist?.name || dzArtist.name;
+
+        const [mbR, dzR] = await Promise.allSettled([
+            mbArtist ? Net.mb(`release-group?artist=${mbArtist.id}&type=album|ep&limit=100`) : Promise.reject(),
+            dzArtist ? Net.deezer(`artist/${dzArtist.id}/albums?limit=200`) : Promise.reject()
+        ]);
+        const mbItems = mbR.status === 'fulfilled' ? (mbR.value['release-groups'] || []).filter(rg => this.mbIsAlbum(rg)).map(rg => this.fromMB(rg, name)) : [];
+        const dzItems = dzR.status === 'fulfilled' ? (dzR.value.data || []).filter(al => this.dzIsAlbum(al)).map(al => this.fromDeezer(al, name)) : [];
+        const albums = this.merge(mbItems, dzItems, true)
+            .sort((a, b) => (b.year || '0000').localeCompare(a.year || '0000'));
+        return { name, albums };
+    },
+
+    // Deezer'da aynı albümü bul (kapak ve eksik bilgiler için)
+    async dzMatch(artist, title) {
+        const na = this.norm(artist), nt = this.norm(title);
+        const pick = (list) => (list || []).find(al => this.norm(al.title) === nt && this.norm(al.artist?.name) === na)
+            || (list || []).find(al => this.norm(al.title) === nt && (this.norm(al.artist?.name).includes(na) || na.includes(this.norm(al.artist?.name))));
+        let res = await Net.deezer(`search/album?q=${encodeURIComponent(`artist:"${artist}" album:"${title}"`)}&limit=10`);
+        let hit = pick(res.data);
+        if (!hit) { res = await Net.deezer(`search/album?q=${encodeURIComponent(`${artist} ${title}`)}&limit=15`); hit = pick(res.data); }
+        return hit || null;
+    },
+
+    async dzDetails(dzId) {
+        const al = await Net.deezer(`album/${dzId}`);
+        let tracks = al.tracks?.data || [];
+        if ((al.nb_tracks || 0) > tracks.length) {
+            try { const more = await Net.deezer(`album/${dzId}/tracks?limit=300`); if (more.data?.length) tracks = more.data; } catch (e) {}
+        }
+        return {
+            source: 'deezer', deezerId: String(dzId),
+            title: al.title || '', artist: al.artist?.name || '',
+            year: (al.release_date || '').slice(0, 4),
+            label: al.label || '',
+            genres: (al.genres?.data || []).map(g => g.name).slice(0, 3),
+            cover: al.cover_xl || al.cover_big || '',
+            tracks: tracks.map((tr, i) => ({ id: String(tr.id), title: tr.title, number: String(i + 1), rating: 0, ...(tr.duration > 0 ? { duration: tr.duration } : {}) }))
+        };
+    },
+
+    async mbDetails(id) {
+        const [rg, rels] = await Promise.all([
+            Net.mb(`release-group/${id}?inc=genres+tags+artist-credits`).catch(() => null),
+            Net.mb(`release?release-group=${id}&inc=recordings+labels+genres+media&limit=25`)
+        ]);
+        const all = rels.releases || [];
+        const official = all.filter(r => r.status === 'Official');
+        const pool = (official.length ? official : all).filter(r => r.media?.some(m => m.tracks?.length));
+        // Standart baskıyı seç: en çok rastlanan parça sayısı, onların içinden en eski tarih
+        const count = r => r.media.reduce((s, m) => s + (m.tracks?.length || 0), 0);
+        const freq = {};
+        pool.forEach(r => { const c = count(r); freq[c] = (freq[c] || 0) + 1; });
+        const common = Number(Object.keys(freq).sort((a, b) => freq[b] - freq[a] || a - b)[0]);
+        const rel = pool.filter(r => count(r) === common).sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999'))[0] || all[0];
+
+        let n = 1;
+        const tracks = (rel?.media || []).flatMap(m => (m.tracks || []).map(tr => {
+            const ms = tr.length || tr.recording?.length || 0;
+            return { id: tr.id, title: tr.title || tr.recording?.title || '', number: String(n++), rating: 0, ...(ms > 0 ? { duration: Math.round(ms / 1000) } : {}) };
+        }));
+        let genres = this.pickGenres(rg?.genres);
+        if (!genres.length) genres = this.pickGenres(rel?.genres);
+        if (!genres.length) genres = this.pickGenres(rg?.tags, 2);
+        const li = rel?.['label-info'] || [];
+        return {
+            source: 'mb',
+            title: rg?.title || rel?.title || '',
+            artist: this.creditName(rg?.['artist-credit'] || rel?.['artist-credit']),
+            year: (rg?.['first-release-date'] || rel?.date || '').slice(0, 4),
+            label: li.length ? (li[0].label?.name || t('independent')) : '',
+            genres, tracks, cover: ''
+        };
+    },
+
+    // Albümün tüm bilgisi: MusicBrainz + Deezer birleşik
+    async details(id, hint = {}) {
+        if (String(id).startsWith('dz_')) return this.dzDetails(String(id).slice(3));
+        let out;
+        try { out = await this.mbDetails(id); }
+        catch (e) { out = { source: 'mb', title: hint.title || '', artist: hint.artist || '', year: '', label: '', genres: [], tracks: [], cover: '' }; }
+        let dzId = hint.deezerId;
+        if (!dzId) {
+            try { dzId = (await this.dzMatch(out.artist || hint.artist, out.title || hint.title))?.id; } catch (e) {}
+        }
+        if (dzId) {
+            try {
+                const dz = await this.dzDetails(dzId);
+                out.deezerId = String(dzId);
+                if (dz.cover) out.cover = dz.cover;
+                if (!out.tracks.length) out.tracks = dz.tracks;
+                else if (dz.tracks.length === out.tracks.length) {
+                    // MusicBrainz'de süre yoksa Deezer'dan al
+                    out.tracks.forEach((tr, i) => { if (!tr.duration && dz.tracks[i].duration) tr.duration = dz.tracks[i].duration; });
+                }
+                if (!out.genres.length) out.genres = dz.genres;
+                if (!out.label) out.label = dz.label;
+                if (!out.year) out.year = dz.year;
+            } catch (e) {}
+        }
+        return out;
+    }
+};
+
+// --- Kapak kopyası: her albümün küçük bir kopyası Firestore'a kaydedilir, kapak sitesi engelli olsa da görünür ---
+const CoverCache = {
+    SIZE: 320,
+    failed: new Set(),
+    pending: new Map(),
+    source(al) { return (al && (al.customCoverUrl || al.coverUrl)) || ''; },
+    isFresh(al) { return !!(al && al.coverData && al.coverDataSrc === this.source(al)); },
+    // Görsel vekili: kapak sitesi bu ağda engelliyse görseli başka bir sunucu üzerinden getirir
+    proxy(url, size = 600) {
+        return `https://images.weserv.nl/?url=${encodeURIComponent(url)}&w=${size}&h=${size}&fit=cover&output=jpg&q=85`;
+    },
+    async toDataURL(blob) {
+        const bmp = await createImageBitmap(blob);
+        const S = this.SIZE, side = Math.min(bmp.width, bmp.height);
+        const canvas = document.createElement('canvas');
+        canvas.width = canvas.height = S;
+        canvas.getContext('2d').drawImage(bmp, (bmp.width - side) / 2, (bmp.height - side) / 2, side, side, 0, 0, S, S);
+        bmp.close?.();
+        return canvas.toDataURL('image/jpeg', 0.8);
+    },
+    async make(url) {
+        for (const src of [url, this.proxy(url, this.SIZE * 2)]) {
+            try {
+                const res = await Net.fetch(src, 12000);
+                if (!res.ok) continue;
+                const blob = await res.blob();
+                if (!blob.type.startsWith('image/')) continue;
+                return await this.toDataURL(blob);
+            } catch (e) {}
+        }
+        return null;
+    },
+    // Kopya yoksa ya da kapak değiştiyse yeni kopya üretir; üretildiyse true
+    async ensure(al) {
+        const src = this.source(al);
+        if (!src || src.startsWith('data:') || this.isFresh(al)) return false;
+        const key = `${al.id}|${src}`;
+        if (this.failed.has(key)) return false;
+        let job = this.pending.get(key);
+        if (!job) { job = this.make(src); this.pending.set(key, job); job.finally(() => this.pending.delete(key)); }
+        const data = await job;
+        if (!data) { this.failed.add(key); return false; }
+        al.coverData = data;
+        al.coverDataSrc = src;
+        return true;
+    }
 };
 
 function showToast(message, type = 'info') {
@@ -418,7 +922,7 @@ const app = {
         this.showView('library');
         this.updateSearchPlaceholder();
         this.updateModalTrackSortButtons();
-        this.initEmailAuth();
+         
 
         // Firebase Auth Listener
         onAuthStateChanged(auth, async (user) => {
@@ -428,35 +932,43 @@ const app = {
             const nameEl = document.getElementById('user-name');
             const emailEl = document.getElementById('user-email');
             const headerAvatarContainer = document.getElementById('header-user-avatar-container');
-            const authContainer = document.getElementById('auth-container'); // <-- BURA EKLENDİ
 
+            if (user && user.uid !== OWNER_UID) {
+                showToast("Bu hesabın erişim yetkisi yok.", "error");
+                await signOut(auth);
+                return;
+            }
             if (user) {
+                AppState.isLoggedIn = true;
+                AppState.isLoading = true;
+                this.renderLibrary(); // iskelet kartlar
+
                 if(loggedOutView) loggedOutView.classList.add('hidden');
-                if(authContainer) authContainer.classList.add('hidden'); // <-- BURA EKLENDİ
                 if(loggedInView) {
                     loggedInView.classList.remove('hidden');
                     loggedInView.classList.add('flex');
                 }
-                                
-                if(avatarImg) avatarImg.src = user.photoURL || 'https://placehold.co/100x100/d17b38/ffffff?text=' + (user.displayName ? user.displayName.charAt(0) : 'U');
+
+                const initial = encodeURIComponent((user.displayName || 'U').charAt(0));
+                const photo = user.photoURL || `https://placehold.co/100x100/d17b38/140e0a?text=${initial}`;
+                if(avatarImg) { avatarImg.src = photo; avatarImg.alt = ''; }
                 if(nameEl) nameEl.textContent = user.displayName || 'User';
                 if(emailEl) emailEl.textContent = user.email || '';
-                
-                if(headerAvatarContainer) {
-                    headerAvatarContainer.innerHTML = `<img src="${user.photoURL || 'https://placehold.co/100x100/d17b38/ffffff?text=U'}" class="w-full h-full object-cover">`;
-                }
 
-                // Load user profile setting (privacy)
-                await this.loadUserProfile(user);
+                if(headerAvatarContainer) {
+                    headerAvatarContainer.innerHTML = `<img src="${Utils.escapeHTML(photo)}" alt="" class="w-full h-full object-cover">`;
+                }
 
                 this.loadData();
             } else {
+                AppState.isLoggedIn = false;
+                AppState.isLoading = false;
                 AppState.library = [];
                 this.renderLibrary();
                 this.renderStats();
-                
+                this.renderQueue();
+
                 if(loggedOutView) loggedOutView.classList.remove('hidden');
-                if(authContainer) authContainer.classList.remove('hidden'); // <-- BURA EKLENDİ
                 if(loggedInView) {
                     loggedInView.classList.add('hidden');
                     loggedInView.classList.remove('flex');
@@ -468,86 +980,30 @@ const app = {
             }
         });
 
+        document.addEventListener('keydown', (e) => {
+            if (e.key !== 'Escape') return;
+            const isOpen = id => !document.getElementById(id)?.classList.contains('hidden');
+            if (isOpen('all-notes-modal')) return this.closeAllNotesModal();
+            if (isOpen('note-modal')) return this.closeNotePanel();
+            if (isOpen('review-view')) return this.closeReview();
+            if (isOpen('genre-selection-modal')) return this.closeGenreModal();
+            if (isOpen('album-modal')) return this.closeModal();
+            this.closeToolGroups();
+            this.closeDropdown();
+            this.toggleSidebar(false);
+        });
+
         document.addEventListener('click', (e) => {
             const dd = document.getElementById('custom-dropdown');
+            if (!e.target.closest('.tool-group') && !e.target.closest('#custom-dropdown')) this.closeToolGroups();
             if(dd && !dd.contains(e.target) && !e.target.closest('[onclick^="app.openDropdown"]')) {
                 this.closeDropdown();
             }
         });
     },
 
-    async loadUserProfile(user) {
-        try {
-            const userDocRef = doc(db, 'users', user.uid);
-            const userSnap = await getDoc(userDocRef);
-            const nameEl = document.getElementById('user-name');
-            const nickInput = document.getElementById('profile-nickname-input');
+        
 
-            if (userSnap.exists()) {
-                const data = userSnap.data();
-                AppState.isPrivate = data.isPrivate || false;
-                if(nameEl) nameEl.textContent = data.displayName || user.displayName || 'User';
-                if(nickInput) nickInput.value = data.displayName || user.displayName || '';
-            } else {
-                AppState.isPrivate = false;
-                const defaultName = user.displayName || 'User';
-                await setDoc(userDocRef, {
-                    displayName: defaultName,
-                    photoURL: user.photoURL || '',
-                    email: user.email || '',
-                    isPrivate: false,
-                    createdAt: new Date().toISOString()
-                });
-                if(nameEl) nameEl.textContent = defaultName;
-                if(nickInput) nickInput.value = defaultName;
-            }
-            this.updatePrivacyUI();
-        } catch (e) {
-            console.error("Profil yüklenirken hata:", e);
-        }
-    },
-
-    async togglePrivacy() {
-        const user = auth.currentUser;
-        if (!user) {
-            showToast("Giriş yapmalısınız.", "error");
-            return;
-        }
-
-        AppState.isPrivate = !AppState.isPrivate;
-        this.updatePrivacyUI();
-
-        try {
-            await setDoc(doc(db, 'users', user.uid), {
-                isPrivate: AppState.isPrivate
-            }, { merge: true });
-
-            // Update all local library items privacy status in Firestore
-            const q = query(collection(db, 'kitaplik'), where('user_id', '==', user.uid));
-            const querySnapshot = await getDocs(q);
-            querySnapshot.forEach(async (docSnap) => {
-                await setDoc(doc(db, 'kitaplik', docSnap.id), { isPrivate: AppState.isPrivate }, { merge: true });
-            });
-
-            showToast(`Hesap ${AppState.isPrivate ? t('private_account') : t('public_account')} olarak ayarlandı.`, "info");
-        } catch (e) {
-            console.error("Gizlilik güncellenirken hata:", e);
-        }
-    },
-
-    updatePrivacyUI() {
-        const btn = document.getElementById('privacy-btn');
-        const icon = document.getElementById('privacy-icon');
-        if (btn) {
-            btn.textContent = AppState.isPrivate ? t('private_account') : t('public_account');
-            btn.className = AppState.isPrivate 
-                ? "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-3 py-1 rounded-full text-xs font-bold transition-colors"
-                : "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 px-3 py-1 rounded-full text-xs font-bold transition-colors";
-        }
-        if (icon) {
-            icon.className = AppState.isPrivate ? "ph ph-lock-key text-lg text-red-500" : "ph ph-globe text-lg text-green-500";
-        }
-    },
 
     toggleSidebar(forceState) {
         const sidebar = document.getElementById('right-sidebar');
@@ -581,18 +1037,21 @@ const app = {
         const exportModal = document.getElementById('export-playlist-modal');
         if(exportModal) exportModal.classList.add('hidden');
         
-        ['library', 'community', 'search', 'stats'].forEach(v => {
+        ['library', 'queue', 'search', 'stats'].forEach(v => {
             const btn = document.getElementById(`nav-${v}`);
             const icon = document.getElementById(`nav-icon-${v}`);
+            const inactive = ['text-gray-600', 'dark:text-gray-400', 'hover:bg-lightHighlight', 'dark:hover:bg-gray-800'];
             if (v === viewName) {
-                btn?.classList.add('text-primary', 'bg-primary/10'); 
-                btn?.classList.remove('text-gray-400', 'dark:text-gray-500', 'hover:bg-lightHighlight', 'dark:hover:bg-gray-800');
-                icon?.classList.add('ph-fill'); 
+                btn?.classList.add('text-[#a85a1a]', 'dark:text-primary', 'bg-primary/15');
+                btn?.classList.remove(...inactive);
+                btn?.setAttribute('aria-current', 'page');
+                icon?.classList.add('ph-fill');
                 icon?.classList.remove('ph');
             } else {
-                btn?.classList.remove('text-primary', 'bg-primary/10'); 
-                btn?.classList.add('text-gray-400', 'dark:text-gray-500', 'hover:bg-lightHighlight', 'dark:hover:bg-gray-800');
-                icon?.classList.remove('ph-fill'); 
+                btn?.classList.remove('text-[#a85a1a]', 'dark:text-primary', 'bg-primary/15');
+                btn?.classList.add(...inactive);
+                btn?.removeAttribute('aria-current');
+                icon?.classList.remove('ph-fill');
                 icon?.classList.add('ph');
             }
         });
@@ -604,263 +1063,36 @@ const app = {
         
         AppState.currentView = viewName;
 
-        if (viewName === 'library') { 
-            this.renderLibrary(); 
-        } 
-        else if (viewName === 'community') {
-            this.loadCommunityData();
-        }
-        else if (viewName === 'stats') { this.renderStats(); }
+        if (viewName === 'library') this.renderLibrary();
+        else if (viewName === 'queue') this.renderQueue();
+        else if (viewName === 'stats') this.renderStats();
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
     },
 
-    switchCommunityTab(tab) {
-        AppState.communityTab = tab;
-        const btnAgg = document.getElementById('tab-btn-aggregated');
-        const btnFeed = document.getElementById('tab-btn-feed');
-        const viewAgg = document.getElementById('community-tab-aggregated');
-        const viewFeed = document.getElementById('community-tab-feed');
-
-        if (tab === 'aggregated') {
-            btnAgg.className = "px-4 py-2 rounded-lg text-xs font-bold bg-primary text-white transition-colors";
-            btnFeed.className = "px-4 py-2 rounded-lg text-xs font-bold text-gray-500 dark:text-gray-400 transition-colors";
-            viewAgg.classList.remove('hidden');
-            viewFeed.classList.add('hidden');
-        } else {
-            btnFeed.className = "px-4 py-2 rounded-lg text-xs font-bold bg-primary text-white transition-colors";
-            btnAgg.className = "px-4 py-2 rounded-lg text-xs font-bold text-gray-500 dark:text-gray-400 transition-colors";
-            viewFeed.classList.remove('hidden');
-            viewAgg.classList.add('hidden');
-        }
-    },
-
-    async loadCommunityData() {
-        const aggregatedGrid = document.getElementById('aggregated-albums-grid');
-        const publicGrid = document.getElementById('public-ratings-grid');
-
-        if(aggregatedGrid) aggregatedGrid.innerHTML = `<div class="col-span-full flex justify-center p-8"><i class="ph-bold ph-spinner-gap animate-spin text-3xl text-primary"></i></div>`;
-        if(publicGrid) publicGrid.innerHTML = `<div class="col-span-full flex justify-center p-8"><i class="ph-bold ph-spinner-gap animate-spin text-3xl text-primary"></i></div>`;
-
-        try {
-            // Fetch all public ratings
-            const q = query(collection(db, 'kitaplik'), where('isPrivate', '==', false));
-            const querySnapshot = await getDocs(q);
-
-            const allPublicEntries = [];
-            const albumAggregates = {}; // mbid -> { title, artist, coverUrl, scores: [], tracks: { title: scores[] } }
-
-            querySnapshot.forEach(docSnap => {
-                const data = docSnap.data();
-                if (data && data.album_data) {
-                    const album = data.album_data;
-                    allPublicEntries.push({ ...album, user_id: data.user_id, userName: data.userName || 'Kullanıcı' });
-
-                    // Aggregate album & track scores
-                    if (!albumAggregates[album.id]) {
-                        albumAggregates[album.id] = {
-                            id: album.id,
-                            title: album.title,
-                            artist: album.artist,
-                            coverUrl: album.customCoverUrl || album.coverUrl,
-                            year: album.year,
-                            scores: [],
-                            tracks: {}
-                        };
-                    }
-
-                    if (album.averageScore > 0) {
-                        albumAggregates[album.id].scores.push(album.averageScore);
-                    }
-
-                    if (album.tracks) {
-                        album.tracks.forEach(tr => {
-                            if (tr.rating > 0) {
-                                if (!albumAggregates[album.id].tracks[tr.title]) {
-                                    albumAggregates[album.id].tracks[tr.title] = [];
-                                }
-                                albumAggregates[album.id].tracks[tr.title].push(tr.rating);
-                            }
-                        });
-                    }
-                }
-            });
-
-            // --- RENKLENDİRME YARDIMCI FONKSİYONLARI ---
-            const getScoreTextColor = (val) => {
-                const n = Math.round(parseFloat(val));
-                if(n === 5) return 'text-blue-600 dark:text-blue-400'; // Dark Blue
-                if(n === 4) return 'text-green-600 dark:text-green-400'; // Green
-                if(n === 3) return 'text-yellow-500 dark:text-yellow-400'; // Yellow
-                if(n === 2) return 'text-orange-500 dark:text-orange-400'; // Orange
-                if(n === 1) return 'text-red-500 dark:text-red-400'; // Red
-                return 'text-gray-500';
-            };
-
-            const getScoreBadgeColor = (val) => {
-                const n = Math.round(parseFloat(val));
-                if(n === 5) return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400';
-                if(n === 4) return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400';
-                if(n === 3) return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400';
-                if(n === 2) return 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400';
-                if(n === 1) return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400';
-                return 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400';
-            };
-
-
-            // 1. Render Aggregated Scores Grid
-            if (aggregatedGrid) {
-                aggregatedGrid.innerHTML = '';
-                const albumKeys = Object.keys(albumAggregates);
-
-                if (albumKeys.length === 0) {
-                    aggregatedGrid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-500">Henüz açık topluluk verisi yok.</div>`;
-                } else {
-                    albumKeys.forEach(id => {
-                        const agg = albumAggregates[id];
-                        const avgAlbumScore = agg.scores.length > 0 
-                            ? (agg.scores.reduce((a, b) => a + b, 0) / agg.scores.length).toFixed(1) 
-                            : '-';
-                        
-                        const albumTextColor = avgAlbumScore !== '-' ? getScoreTextColor(avgAlbumScore) : 'text-white';
-                        const albumBadgeColor = avgAlbumScore !== '-' ? getScoreBadgeColor(avgAlbumScore) : 'bg-gray-100 text-gray-500';
-
-                        // YENİ: Puan veren kullanıcıların isimlerini listeleme
-                        // Aggregation mantığınızda isimleri 'usernames' veya 'nicknames' dizisinde tuttuğunuz varsayılmıştır.
-                        const ratersList = agg.usernames || agg.nicknames; 
-                        const ratersText = ratersList && ratersList.length > 0 
-                            ? ratersList.join(', ') 
-                            : `${agg.scores.length} oy`; // Veri yoksa yedek olarak oy sayısını gösterir
-
-                        let tracksHtml = '';
-                        Object.keys(agg.tracks).forEach(trackTitle => {
-                            const trScores = agg.tracks[trackTitle];
-                            const trAvg = (trScores.reduce((a, b) => a + b, 0) / trScores.length).toFixed(1);
-                            const trackColor = getScoreTextColor(trAvg);
-                            
-                            tracksHtml += `<div class="flex justify-between items-center text-xs py-1.5 border-b border-lightBorder/30 dark:border-gray-800/40 last:border-0">
-                                <span class="truncate pr-2 font-medium italic text-gray-700 dark:text-gray-300">${Utils.escapeHTML(trackTitle)}</span>
-                                <span class="font-bold flex-shrink-0 ${trackColor}">${trAvg} ★</span>
-                            </div>`;
-                        });
-
-                        const card = document.createElement('div');
-                        card.className = "bg-white dark:bg-surface rounded-2xl border border-lightBorder dark:border-gray-800 shadow-sm flex flex-col relative overflow-hidden group min-h-[320px]";
-                        
-                        card.innerHTML = `
-                            <!-- Kapak Görseli ve Puan Katmanı -->
-                            <div class="absolute inset-0 z-20 transition-opacity duration-500 ease-in-out group-hover:opacity-0 pointer-events-none bg-lightHighlight dark:bg-surface">
-                                <img src="${Utils.escapeHTML(agg.coverUrl)}" onerror="this.src='https://placehold.co/400x400/ebe4dc/594636?text=${t('no_cover').replace(/ /g, '+')}'; this.onerror=null;" class="w-full h-full object-cover" alt="Cover">
-                                
-                                <!-- Sağ Alt Köşe Puan Rozeti (Renkli) -->
-                                <div class="absolute bottom-3 right-3 bg-black/70 backdrop-blur-md ${albumTextColor} px-3 py-1.5 rounded-xl text-sm font-black shadow-2xl border border-white/10 flex items-center gap-1.5">
-                                    ${avgAlbumScore} <i class="ph-fill ph-star"></i>
-                                </div>
-                            </div>
-
-                            <!-- Mevcut Detaylar Katmanı -->
-                            <div class="relative z-10 flex flex-col gap-3 p-4 h-full pointer-events-auto">
-                                <div class="flex gap-3 items-center">
-                                    <img src="${Utils.escapeHTML(agg.coverUrl)}" class="w-16 h-16 rounded-xl object-cover border border-lightBorder dark:border-gray-800 shadow-sm flex-shrink-0" onerror="this.src='https://placehold.co/100x100/ebe4dc/594636?text=${t('no_cover').replace(/ /g, '+')}'; this.onerror=null;">
-                                    <div class="min-w-0 flex-1">
-                                        <h3 class="font-bold text-gray-900 dark:text-white truncate text-base italic">${Utils.escapeHTML(agg.title)}</h3>
-                                        <p class="text-xs text-gray-500 truncate">${Utils.escapeHTML(agg.artist)}</p>
-                                        <p class="text-[10px] text-gray-400 font-semibold mb-1">${Utils.escapeHTML(agg.year)}</p>
-                                        
-                                        <!-- YENİ: Ortalamanın Yanında Kullanıcı İsimleri -->
-                                        <div class="flex items-center gap-1.5 mt-1 overflow-hidden">
-                                            <span class="text-xs font-black ${albumBadgeColor} px-2 py-0.5 rounded-full flex-shrink-0">${avgAlbumScore} Ort.</span>
-                                            <span class="text-[10px] text-gray-400 font-semibold truncate cursor-help" title="${Utils.escapeHTML(ratersText)}">(${Utils.escapeHTML(ratersText)})</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Liste Taşıyıcısı ve Dinamik Fade Efekti -->
-                                <div class="relative mt-2 flex-grow">
-                                    <div class="track-scroll-container bg-lightBg/50 dark:bg-darker/50 rounded-xl px-3 py-2 border border-lightBorder/50 dark:border-gray-800/50 max-h-48 overflow-y-auto hide-scrollbar h-full">
-                                        ${tracksHtml || '<p class="text-xs text-gray-500 text-center py-2">Henüz oylanan şarkı yok.</p>'}
-                                    </div>
-                                    <!-- Dinamik olarak gizlenip açılacak fade katmanı -->
-                                    <div class="track-fade-overlay absolute bottom-[1px] left-[1px] right-[1px] h-16 bg-gradient-to-t from-lightBg dark:from-darker to-transparent pointer-events-none rounded-b-xl transition-opacity duration-300"></div>
-                                </div>
-                            </div>
-                        `;
-                        
-                        aggregatedGrid.appendChild(card);
-
-                        // --- Scroll Durumunu Kontrol Eden Dinamik Yapı ---
-                        const scrollContainer = card.querySelector('.track-scroll-container');
-                        const fadeOverlay = card.querySelector('.track-fade-overlay');
-
-                        if (scrollContainer && fadeOverlay) {
-                            const updateFade = () => {
-                                const isAtBottom = Math.abs(scrollContainer.scrollHeight - scrollContainer.clientHeight - scrollContainer.scrollTop) <= 2;
-                                if (scrollContainer.scrollHeight <= scrollContainer.clientHeight || isAtBottom) {
-                                    fadeOverlay.style.opacity = '0';
-                                } else {
-                                    fadeOverlay.style.opacity = '1';
-                                }
-                            };
-                            scrollContainer.addEventListener('scroll', updateFade);
-                            setTimeout(updateFade, 10);
-                        }
-                    });
-                }
-            }
-
-            // 2. Render Public Feed Grid
-            if (publicGrid) {
-                publicGrid.innerHTML = '';
-                if (allPublicEntries.length === 0) {
-                    publicGrid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-500">Henüz açık kullanıcı puanı yok.</div>`;
-                } else {
-                    allPublicEntries.forEach(album => {
-                        const albumBadgeColor = album.averageScore > 0 ? getScoreBadgeColor(album.averageScore) : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400';
-                        
-                        const card = document.createElement('div');
-                        card.className = "bg-white dark:bg-surface rounded-2xl p-3 border border-lightBorder dark:border-gray-800 shadow-sm flex gap-3 items-center cursor-pointer hover:bg-lightHighlight dark:hover:bg-surfaceHover active:scale-95 transition-transform";
-                        card.onclick = () => this.openAlbumModal(album.id, album.title, album.artist, album.year);
-                        card.innerHTML = `
-                            <img src="${Utils.escapeHTML(album.customCoverUrl || album.coverUrl)}" class="w-16 h-16 rounded-xl object-cover border border-lightBorder dark:border-gray-800 shadow-sm flex-shrink-0">
-                            <div class="min-w-0 flex-1">
-                                <h4 class="font-bold text-gray-900 dark:text-white truncate text-sm italic">${Utils.escapeHTML(album.title)}</h4>
-                                <p class="text-xs text-gray-500 truncate">${Utils.escapeHTML(album.artist)}</p>
-                                <div class="flex justify-between items-center mt-1.5">
-                                    <span class="text-[10px] ${albumBadgeColor} px-2 py-0.5 rounded-md font-bold">${album.averageScore || '-'} ★</span>
-                                    <span class="text-[10px] text-gray-400 font-semibold truncate">${Utils.escapeHTML(album.userName)}</span>
-                                </div>
-                            </div>
-                        `;
-                        publicGrid.appendChild(card);
-                    });
-                }
-            }
-
-        } catch (e) {
-            console.error("Topluluk verisi çekilirken hata:", e);
-            if(aggregatedGrid) aggregatedGrid.innerHTML = `<div class="col-span-full text-center p-4 text-red-500">Yüklenemedi.</div>`;
-        }
-    },
 
     toggleLanguage() {
         AppState.language = AppState.language === 'en' ? 'tr' : 'en';
         localStorage.setItem('albumDiaryLang', AppState.language);
         this.updateLanguageUI();
         this.updateSearchPlaceholder();
-        this.updatePrivacyUI();
+         
         
         if (AppState.currentModalAlbum && !document.getElementById('album-modal').classList.contains('hidden')) {
             this.updateModalUI();
         }
         
         if (AppState.currentView === 'library') this.renderLibrary();
-        else if (AppState.currentView === 'community') this.loadCommunityData();
+        else if (AppState.currentView === 'queue') this.renderQueue();
         else if (AppState.currentView === 'stats') this.renderStats();
+        if (!document.getElementById('review-view')?.classList.contains('hidden')) this.renderReview();
     },
 
     updateLanguageUI() {
         const langIcon = document.getElementById('lang-icon');
         if (langIcon) langIcon.textContent = AppState.language === 'en' ? 'TR' : 'EN';
+        document.documentElement.lang = AppState.language;
+        document.querySelectorAll('[data-i18n-aria]').forEach(el => el.setAttribute('aria-label', t(el.dataset.i18nAria)));
         document.querySelectorAll('[data-i18n]').forEach(el => el.innerHTML = Translations[AppState.language][el.getAttribute('data-i18n')] || el.innerHTML);
         document.querySelectorAll('[data-i18n-placeholder]').forEach(el => el.placeholder = Translations[AppState.language][el.getAttribute('data-i18n-placeholder')] || el.placeholder);
         document.querySelectorAll('[data-i18n-title]').forEach(el => el.title = Translations[AppState.language][el.getAttribute('data-i18n-title')] || el.title);
@@ -905,201 +1137,6 @@ const app = {
         showToast(t("sign_out"), "info");
     },
 
-    // Yeni Nickname Güncelleme Fonksiyonu
-    async updateNickname() {
-        const user = auth.currentUser;
-        if (!user) return;
-        
-        const nickInput = document.getElementById('profile-nickname-input');
-        const newName = nickInput ? nickInput.value.trim() : '';
-        
-        if (!newName) {
-            showToast("Kullanıcı adı boş olamaz.", "error");
-            return;
-        }
-        
-        try {
-            // 1. Kullanıcı profilini güncelle
-            await setDoc(doc(db, 'users', user.uid), { displayName: newName }, { merge: true });
-            
-            // 2. Arayüzdeki ismi güncelle
-            const nameEl = document.getElementById('user-name');
-            if(nameEl) nameEl.textContent = newName;
-            showToast("Kullanıcı adı güncellendi!", "success");
-
-            // 3. Geçmiş oylamalardaki (Kitaplık) ismi güncelle ki toplulukta da görünsün
-            const q = query(collection(db, 'kitaplik'), where('user_id', '==', user.uid));
-            const querySnapshot = await getDocs(q);
-            querySnapshot.forEach(async (docSnap) => {
-                await setDoc(doc(db, 'kitaplik', docSnap.id), { userName: newName }, { merge: true });
-            });
-            
-            // Topluluk sekmesi açıksa yeniden yükle
-            if (AppState.currentView === 'community') this.loadCommunityData();
-
-        } catch (e) {
-            console.error("Kullanıcı adı güncellenirken hata:", e);
-            showToast("Bir hata oluştu.", "error");
-        }
-    },
-
-    // Formu yönetecek fonksiyon
-    initEmailAuth() {
-        const authForm = document.getElementById('auth-form');
-        const emailInput = document.getElementById('auth-email');
-        const passwordInput = document.getElementById('auth-password');
-        const nicknameGroup = document.getElementById('nickname-group');
-        const nicknameInput = document.getElementById('auth-nickname');
-        const authTitle = document.getElementById('auth-title');
-        const submitBtn = document.getElementById('auth-submit-btn');
-        const toggleBtn = document.getElementById('auth-toggle-btn');
-        const toggleText = document.getElementById('auth-toggle-text');
-
-        let isLoginMode = true;
-
-        if (toggleBtn) {
-            toggleBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                isLoginMode = !isLoginMode;
-                
-                if (isLoginMode) {
-                    authTitle.innerText = "Giriş Yap";
-                    submitBtn.innerText = "Giriş Yap";
-                    toggleText.innerText = "Hesabın yok mu?";
-                    toggleBtn.innerText = "Kayıt Ol";
-                    nicknameGroup.classList.add('hidden');
-                    nicknameInput.removeAttribute('required');
-                } else {
-                    authTitle.innerText = "Kayıt Ol";
-                    submitBtn.innerText = "Hesap Oluştur";
-                    toggleText.innerText = "Zaten bir hesabın var mı?";
-                    toggleBtn.innerText = "Giriş Yap";
-                    nicknameGroup.classList.remove('hidden');
-                    nicknameGroup.classList.add('flex');
-                    nicknameInput.setAttribute('required', 'true');
-                }
-            });
-        }
-
-        if (authForm) {
-            authForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
-                const email = emailInput.value.trim();
-                const password = passwordInput.value;
-                const nickname = nicknameInput.value.trim();
-                
-                const originalBtnText = submitBtn.innerText;
-                submitBtn.innerHTML = `<i class="ph-bold ph-spinner animate-spin"></i>`;
-                submitBtn.disabled = true;
-
-                try {
-                    if (isLoginMode) {
-                        await signInWithEmailAndPassword(auth, email, password);
-                        showToast("Giriş başarılı!", "success");
-                    } else {
-                        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                        const user = userCredential.user;
-
-                        await setDoc(doc(db, "users", user.uid), {
-                            displayName: nickname, 
-                            email: email,
-                            isPrivate: false,
-                            createdAt: new Date().toISOString()
-                        });
-                        showToast("Kayıt başarılı!", "success");
-                    }
-                    authForm.reset();
-                    app.toggleSidebar(false); 
-                } catch (error) {
-                    showToast("Hata: " + error.message, "error");
-                } finally {
-                    submitBtn.innerText = originalBtnText;
-                    submitBtn.disabled = false;
-                }
-            });
-        }
-    },
-
-    initEmailAuth() {
-        const authForm = document.getElementById('auth-form');
-        const emailInput = document.getElementById('auth-email');
-        const passwordInput = document.getElementById('auth-password');
-        const nicknameInput = document.getElementById('auth-nickname');
-        const authTitle = document.getElementById('auth-title');
-        const submitBtn = document.getElementById('auth-submit-btn');
-        const toggleBtn = document.getElementById('auth-toggle-btn');
-        const toggleText = document.getElementById('auth-toggle-text');
-
-        let isLoginMode = true;
-
-        if (toggleBtn) {
-            toggleBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                isLoginMode = !isLoginMode;
-                
-                if (isLoginMode) {
-                    authTitle.innerText = "Giriş Yap";
-                    submitBtn.innerText = "Giriş Yap";
-                    toggleText.innerText = "Hesabın yok mu?";
-                    toggleBtn.innerText = "Kayıt Ol";
-                    nicknameInput.classList.add('hidden');
-                    nicknameInput.removeAttribute('required');
-                } else {
-                    authTitle.innerText = "Kayıt Ol";
-                    submitBtn.innerText = "Hesap Oluştur";
-                    toggleText.innerText = "Zaten bir hesabın var mı?";
-                    toggleBtn.innerText = "Giriş Yap";
-                    nicknameInput.classList.remove('hidden');
-                    nicknameInput.setAttribute('required', 'true');
-                }
-            });
-        }
-
-        if (authForm) {
-            authForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
-                const email = emailInput.value.trim();
-                const password = passwordInput.value;
-                const nickname = nicknameInput.value.trim();
-                
-                const originalBtnText = submitBtn.innerText;
-                submitBtn.innerHTML = `<i class="ph-bold ph-spinner animate-spin"></i>`;
-                submitBtn.disabled = true;
-
-                try {
-                    if (isLoginMode) {
-                        await signInWithEmailAndPassword(auth, email, password);
-                        showToast("Giriş başarılı!", "success");
-                    } else {
-                        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                        const user = userCredential.user;
-
-                        // Yeni kullanıcının bilgilerini Firestore'a kaydet (Topluluk akışı için nickname kullanılır)
-                        await setDoc(doc(db, "users", user.uid), {
-                            displayName: nickname, 
-                            email: email,
-                            isPrivate: false,
-                            createdAt: new Date().toISOString()
-                        });
-                        
-                        showToast("Kayıt başarılı!", "success");
-                    }
-                    
-                    authForm.reset();
-                    app.toggleSidebar(false); 
-                    
-                } catch (error) {
-                    console.error("Auth hatası:", error);
-                    showToast("Bir hata oluştu: " + error.message, "error");
-                } finally {
-                    submitBtn.innerText = originalBtnText;
-                    submitBtn.disabled = false;
-                }
-            });
-        }
-    },
 
     async loadData() {
         const user = auth.currentUser;
@@ -1117,31 +1154,89 @@ const app = {
                 }
             });
 
-            if (AppState.currentView === 'library') this.renderLibrary();
-            if (AppState.currentView === 'stats') this.renderStats();
-            
-            console.log(`Veritabanından ${AppState.library.length} albüm çekildi!`);
         } catch (e) {
             console.error("Buluttan veri çekilirken hata: ", e.message);
             AppState.library = [];
+            showToast(t('toast_conn_error'), "error");
+        } finally {
+            AppState.isLoading = false;
+            this.renderLibrary();
+            if (AppState.currentView === 'queue') this.renderQueue();
+            if (AppState.currentView === 'stats') this.renderStats();
+            this.cacheMissingCovers();
         }
     },
-    
-    async saveAlbumData(album) { 
-        try {
-            const user = auth.currentUser;
-            if (!user) return;
 
-            const docId = `${user.uid}_${album.id}`;
-            await setDoc(doc(db, 'kitaplik', docId), {
+    // Kayıtlı bir albümdeki değişikliği kütüphaneye ve buluta hemen yazar
+    persistIfSaved() {
+        const al = AppState.currentModalAlbum;
+        if (!al) return false;
+        const libIdx = AppState.library.findIndex(a => a.id === al.id);
+        if (libIdx === -1) return false;
+        al.updatedAt = new Date().toISOString();
+        AppState.library[libIdx] = structuredClone(al);
+        this.saveAlbumData(AppState.library[libIdx]);
+        if (AppState.currentView === 'library') this.renderLibrary();
+        if (AppState.currentView === 'queue') this.renderQueue();
+        if (AppState.currentView === 'stats') this.renderStats();
+        return true;
+    },
+    
+    // Kapak açılmazsa sırayla: kayıtlı kopya → görsel vekili → yerel yedek
+    coverFallback(img) {
+        const stage = Number(img.dataset.fb || 0);
+        const id = img.dataset.coverId;
+        const al = id ? (AppState.library.find(a => a.id === id) || (AppState.currentModalAlbum?.id === id ? AppState.currentModalAlbum : null)) : null;
+        if (!img.dataset.orig) img.dataset.orig = img.currentSrc || img.src || '';
+        const orig = img.dataset.orig;
+        if (stage === 0 && al?.coverData && !orig.startsWith('data:')) { img.dataset.fb = '1'; img.src = al.coverData; return; }
+        if (stage <= 1 && /^https?:/.test(orig) && !orig.includes('images.weserv.nl')) { img.dataset.fb = '2'; img.src = CoverCache.proxy(orig); return; }
+        img.onerror = null;
+        img.removeAttribute('onerror');
+        img.src = AlbumUtils.NO_COVER;
+    },
+
+    // Kapağın küçük kopyasını üretip albümle birlikte kaydeder
+    async cacheCover(album) {
+        try {
+            if (!(await CoverCache.ensure(album))) return false;
+            const lib = AppState.library.find(a => a.id === album.id);
+            const modal = AppState.currentModalAlbum?.id === album.id ? AppState.currentModalAlbum : null;
+            [lib, modal].forEach(o => { if (o && o !== album) { o.coverData = album.coverData; o.coverDataSrc = album.coverDataSrc; } });
+            if (lib) await this.saveAlbumData(lib, { skipCover: true });
+            return true;
+        } catch (e) { return false; }
+    },
+
+    // Kitaplıktaki eski albümlerin kapak kopyalarını arka planda tamamlar
+    async cacheMissingCovers() {
+        if (this._coverJob || !auth.currentUser) return;
+        this._coverJob = true;
+        try {
+            const ids = AppState.library.filter(a => !CoverCache.isFresh(a)).map(a => a.id);
+            for (const id of ids) {
+                if (!auth.currentUser) break;
+                const al = AppState.library.find(a => a.id === id);
+                if (al && !CoverCache.isFresh(al)) await this.cacheCover(al);
+                await new Promise(r => setTimeout(r, 300));
+            }
+        } finally { this._coverJob = false; }
+    },
+
+    async saveAlbumData(album, opts = {}) {
+        const user = auth.currentUser;
+        if (!user) return;
+        try {
+            await setDoc(doc(db, 'kitaplik', `${user.uid}_${album.id}`), {
                 id: album.id.toString(),
                 album_data: album,
-                user_id: user.uid,
-                userName: user.displayName || 'Kullanıcı',
-                isPrivate: AppState.isPrivate
+                user_id: user.uid
             });
+            // Kapak değiştiyse ya da kopyası yoksa arka planda kopyasını kaydet
+            if (!opts.skipCover && !CoverCache.isFresh(album)) this.cacheCover(album);
         } catch (e) {
             console.error("Buluta kaydederken hata: ", e.message);
+            showToast("Kaydedilemedi, bağlantını kontrol et.", "error");
         }
     },
 
@@ -1159,15 +1254,48 @@ const app = {
     
     exportData() {
         if (AppState.library.length === 0) { showToast(t("toast_no_export"), "error"); return; }
-        const data = JSON.stringify(AppState.library, null, 2);
-        const blob = new Blob([data], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = `album_diary_${Date.now()}.json`;
-        document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+        Utils.download(`album_diary_${Utils.todayISO()}.json`, JSON.stringify(AppState.library, null, 2), "application/json");
+        showToast(t("toast_export_success"), "success");
+    },
+
+    // --- Markdown: tek albüm ve toplu dışa aktarma ---
+    albumToMarkdown(album) {
+        const avg = album.averageScore || AlbumUtils.runningAvg(album);
+        const lines = [`## ${album.title} — ${album.artist} (${album.year || '?'})`, ''];
+        const meta = [];
+        if (avg > 0) meta.push(`**${avg.toFixed(1)} / 5**`);
+        if (album.genres?.length) meta.push(album.genres.map(tGenre).join(', '));
+        if (album.tags?.length) meta.push(album.tags.map(tg => `#${tg}`).join(' '));
+        if (album.listens?.length) meta.push(`${album.listens.length} ${t('times')} ${t('nth_listen').toLowerCase()}`);
+        if (meta.length) lines.push(meta.join(' · '), '');
+        AlbumUtils.noteParagraphs(album.note).forEach(p => lines.push(p, ''));
+        const favs = (album.tracks || []).filter(tr => tr.rating >= 4).sort((a, b) => b.rating - a.rating);
+        if (favs.length) {
+            lines.push(`**${t('favorite_tracks')}:**`);
+            favs.forEach(tr => lines.push(`- ${tr.title} (${tr.rating}★)`));
+            lines.push('');
+        }
+        const trackNotes = (album.tracks || []).filter(tr => tr.note && tr.note.trim());
+        if (trackNotes.length) {
+            lines.push(`**${t('track_notes')}:**`);
+            trackNotes.forEach(tr => lines.push(`- *${tr.title}:* ${AlbumUtils.noteParagraphs(tr.note).join(' ')}`));
+            lines.push('');
+        }
+        return lines.join('\n');
+    },
+
+    exportMarkdown() {
+        const reviewed = AppState.library
+            .filter(a => (a.note && a.note.trim()) || (a.tracks || []).some(tr => tr.note && tr.note.trim()))
+            .sort((a, b) => new Date(AlbumUtils.lastActivity(b)) - new Date(AlbumUtils.lastActivity(a)));
+        if (!reviewed.length) { showToast(t("toast_md_none"), "error"); return; }
+        const md = `# RateAgainst — ${Utils.formatDate(new Date().toISOString())}\n\n` + reviewed.map(a => this.albumToMarkdown(a)).join('\n---\n\n');
+        Utils.download(`rateagainst_incelemeler_${Utils.todayISO()}.md`, md, "text/markdown");
         showToast(t("toast_export_success"), "success");
     },
 
     importData(event) {
+        if (!auth.currentUser) { showToast("Önce giriş yapmalısınız.", "error"); event.target.value = ''; return; }
         const file = event.target.files[0]; if (!file) return;
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -1210,7 +1338,7 @@ const app = {
         const ta = document.getElementById('playlist-textarea'); 
         if(!ta) return;
         ta.select(); ta.setSelectionRange(0, 99999);
-        try { document.execCommand('copy'); showToast(t("toast_copied"), "success"); } catch (err) { showToast(t("toast_copy_fail"), "error"); }
+        (navigator.clipboard ? navigator.clipboard.writeText(ta.value) : Promise.reject()).then(() => showToast(t("toast_copied"), "success")).catch(() => this.fallbackCopyText(ta.value));
     },
 
     openDropdown(event, type) {
@@ -1276,7 +1404,7 @@ const app = {
             const displayLabel = type === 'Genre' ? tGenre(item) : item;
             
             html += `
-                <div onclick="app.setFilter('${type}', '${Utils.escapeHTML(item)}')" class="px-5 py-3 hover:bg-lightHighlight dark:hover:bg-surfaceHover cursor-pointer text-sm ${isDecade ? 'font-bold bg-lightBg/50 dark:bg-surface/50 border-y border-lightBorder/30 dark:border-gray-800/50' : 'font-medium'} flex justify-between items-center transition-colors ${isSelected ? 'text-primary' : 'text-gray-600 dark:text-gray-400'}">
+                <div data-value="${Utils.escapeHTML(item)}" onclick="app.setFilter('${type}', this.dataset.value)" class="px-5 py-3 hover:bg-lightHighlight dark:hover:bg-surfaceHover cursor-pointer text-sm ${isDecade ? 'font-bold bg-lightBg/50 dark:bg-surface/50 border-y border-lightBorder/30 dark:border-gray-800/50' : 'font-medium'} flex justify-between items-center transition-colors ${isSelected ? 'text-primary' : 'text-gray-600 dark:text-gray-400'}">
                     <span class="truncate pr-4 ${isDecade ? 'text-gray-800 dark:text-gray-200' : ''}">${Utils.escapeHTML(displayLabel)}</span>
                     ${isSelected ? '<i class="ph-bold ph-check text-lg"></i>' : ''}
                 </div>
@@ -1320,7 +1448,28 @@ const app = {
     setFilter(type, value) {
         AppState[`filter${type}`] = value;
         this.closeDropdown();
+        this.closeToolGroups();
         this.renderLibrary();
+    },
+
+    // --- Araç çubuğu: dar ekranda grupları aç/kapat (sola doğru açılır) ---
+    toggleToolGroup(name) {
+        const group = document.getElementById(`tools-${name}`);
+        if (!group) return;
+        const willOpen = !group.classList.contains('is-open');
+        this.closeToolGroups();
+        this.closeDropdown();
+        if (willOpen) {
+            group.classList.add('is-open');
+            group.querySelector('.tool-trigger')?.setAttribute('aria-expanded', 'true');
+        }
+    },
+
+    closeToolGroups() {
+        document.querySelectorAll('.tool-group.is-open').forEach(g => {
+            g.classList.remove('is-open');
+            g.querySelector('.tool-trigger')?.setAttribute('aria-expanded', 'false');
+        });
     },
 
     filterSidebarArtists(text) {
@@ -1337,7 +1486,7 @@ const app = {
         filtered.forEach(art => {
             const count = AppState.library.filter(a => a.artist === art).length;
             const li = document.createElement('li');
-            li.className = 'px-3 py-2 hover:bg-lightHighlight dark:bg-surfaceHover cursor-pointer flex justify-between items-center rounded-lg';
+            li.className = 'px-3 py-2 hover:bg-lightHighlight dark:hover:bg-surfaceHover cursor-pointer flex justify-between items-center rounded-lg';
             li.onclick = () => {
                 this.setFilter('Group', art);
                 this.toggleSidebar(false);
@@ -1383,14 +1532,17 @@ const app = {
                 }
             }
         });
+        const gIcon = document.getElementById('tools-grid-icon');
+        if (gIcon) gIcon.className = `ph-fill ${{ normal: 'ph-square', small: 'ph-squares-four', xsmall: 'ph-dots-nine' }[size] || 'ph-squares-four'} text-base`;
+        this.closeToolGroups();
         this.updateGridClasses(); if(AppState.currentView === 'library') this.renderLibrary();
     },
     
     updateGridClasses() {
         const grid = document.getElementById('library-grid'); if(!grid) return;
-        if(AppState.gridSize === 'normal') grid.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3';
-        else if(AppState.gridSize === 'small') grid.className = 'grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-2';
-        else grid.className = 'grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9 xl:grid-cols-10 gap-1.5';
+        if(AppState.gridSize === 'normal') grid.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 gap-y-7 md:gap-x-7 md:gap-y-9';
+        else if(AppState.gridSize === 'small') grid.className = 'grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-x-3 gap-y-5 md:gap-x-5 md:gap-y-7';
+        else grid.className = 'grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9 xl:grid-cols-10 gap-x-2 gap-y-4 md:gap-x-3 md:gap-y-5';
     },
     
     toggleSort(type) {
@@ -1402,15 +1554,19 @@ const app = {
     },
     
     updateSortClasses() {
+        const sIcon = document.getElementById('tools-sort-icon');
+        const sDir = document.getElementById('tools-sort-dir');
+        if (sIcon) sIcon.className = `ph-bold ${{ dateAdded: 'ph-calendar-plus', year: 'ph-clock', rating: 'ph-star' }[AppState.sortBy] || 'ph-calendar-plus'} text-base`;
+        if (sDir) sDir.className = `ph-bold ph-arrow-${AppState.sortDirection === 'desc' ? 'down' : 'up'} text-[11px]`;
         ['dateAdded', 'year', 'rating'].forEach(type => {
             const btn = document.getElementById(`btn-sort-${type}`); const iconDir = document.getElementById(`icon-sort-${type}-dir`);
             if (!btn || !iconDir) return;
             if (AppState.sortBy === type) {
                 btn.classList.add('text-primary', 'bg-primary/10'); btn.classList.remove('text-gray-500');
-                iconDir.className = `ph-bold ph-arrow-${AppState.sortDirection === 'desc' ? 'down' : 'up'} text-[10px]`; iconDir.style.opacity = '1';
+                iconDir.className = `ph-bold ph-arrow-${AppState.sortDirection === 'desc' ? 'down' : 'up'} text-[11px]`; iconDir.style.opacity = '1';
             } else {
                 btn.classList.remove('text-primary', 'bg-primary/10'); btn.classList.add('text-gray-500');
-                iconDir.className = 'ph-bold ph-arrow-down text-[10px]'; iconDir.style.opacity = '0.3';
+                iconDir.className = 'ph-bold ph-arrow-down text-[11px]'; iconDir.style.opacity = '0.3';
             }
         });
     },
@@ -1418,18 +1574,38 @@ const app = {
     renderLibrary() {
         const grid = document.getElementById('library-grid'), emptyState = document.getElementById('empty-library-state');
         if(!grid || !emptyState) return;
-        
+
+        this.renderNowListening();
+        this.renderStatusChips();
+
+        // Yükleniyor: iskelet kartlar
+        if (AppState.isLoading) {
+            emptyState.classList.add('hidden'); emptyState.classList.remove('flex');
+            grid.innerHTML = Array.from({ length: 8 }, () => `
+                <div class="rounded-xl overflow-hidden border border-lightBorder dark:border-gray-800" aria-hidden="true">
+                    <div class="skeleton w-full pt-[100%]"></div>
+                    <div class="p-3 flex gap-2 items-center bg-white dark:bg-surface">
+                        <div class="skeleton w-9 h-9 rounded-full flex-shrink-0"></div>
+                        <div class="flex-1 flex flex-col gap-2"><div class="skeleton h-3 w-4/5 rounded"></div><div class="skeleton h-3 w-1/2 rounded"></div></div>
+                    </div>
+                </div>`).join('');
+            return;
+        }
+
         const fGroup = AppState.filterGroup;
         const fYear = AppState.filterYear;
         const fGenre = AppState.filterGenre;
         const fLabel = AppState.filterLabel;
-        
+        const fStatus = AppState.filterStatus;
+
         document.getElementById('icon-filter-group')?.classList.toggle('text-primary', !!fGroup);
         document.getElementById('icon-filter-genre')?.classList.toggle('text-primary', !!fGenre);
         document.getElementById('icon-filter-year')?.classList.toggle('text-primary', !!fYear);
         document.getElementById('icon-filter-label')?.classList.toggle('text-primary', !!fLabel);
+        document.getElementById('tools-filter-dot')?.classList.toggle('hidden', !(fGroup || fGenre || fYear || fLabel));
 
         let filtered = AppState.library.filter(a => {
+            if (fStatus && AlbumUtils.status(a) !== fStatus) return false;
             if (fGroup && a.artist !== fGroup) return false;
             if (fYear) {
                 if (fYear.endsWith('s')) {
@@ -1444,126 +1620,147 @@ const app = {
             if (fLabel && a.label !== fLabel) return false;
             return true;
         });
-        
+
         filtered.sort((a, b) => {
             const dir = AppState.sortDirection === 'desc' ? 1 : -1;
-            if (AppState.sortBy === 'rating') return ((b.averageScore || 0) - (a.averageScore || 0)) * dir;
+            if (AppState.sortBy === 'rating') return ((b.averageScore || AlbumUtils.runningAvg(b)) - (a.averageScore || AlbumUtils.runningAvg(a))) * dir;
             if (AppState.sortBy === 'year') return ((parseInt(b.year) || 0) - (parseInt(a.year) || 0)) * dir;
-            return (new Date(b.dateAdded || 0) - new Date(a.dateAdded || 0)) * dir;
+            return (new Date(AlbumUtils.lastActivity(b)) - new Date(AlbumUtils.lastActivity(a))) * dir;
         });
 
-        if (AppState.library.length === 0) { grid.innerHTML = ''; emptyState.classList.remove('hidden'); emptyState.classList.add('flex'); return; }
+        // Boş durum: giriş yapılmamışsa giriş butonu, yapılmışsa albüm ekleme
+        if (AppState.library.length === 0) {
+            grid.innerHTML = '';
+            emptyState.innerHTML = AppState.isLoggedIn ? `
+                <div class="w-20 h-20 bg-lightHighlight dark:bg-surface rounded-full flex items-center justify-center mb-4">
+                    <i class="ph-fill ph-music-notes text-4xl text-gray-600 dark:text-gray-400"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">${t('no_albums')}</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm max-w-xs mx-auto mb-6">${t('no_albums_desc')}</p>
+                <button onclick="app.showView('search')" class="bg-primary text-darker h-12 px-6 rounded-full font-bold active:scale-95 transition-transform shadow-lg flex items-center gap-2">
+                    <i class="ph-bold ph-magnifying-glass"></i> <span>${t('add_first_album')}</span>
+                </button>` : `
+                <div class="w-20 h-20 bg-lightHighlight dark:bg-surface rounded-full flex items-center justify-center mb-4">
+                    <i class="ph-fill ph-vinyl-record text-4xl text-primary"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">${t('login_empty_title')}</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm max-w-xs mx-auto mb-6">${t('login_empty_desc')}</p>
+                <button onclick="app.signIn()" class="bg-white text-gray-800 border border-lightBorder h-12 px-6 rounded-full font-bold active:scale-95 transition-transform shadow-lg flex items-center gap-3">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt=""> <span>${t('sign_in_google')}</span>
+                </button>`;
+            emptyState.classList.remove('hidden'); emptyState.classList.add('flex');
+            return;
+        }
         emptyState.classList.add('hidden'); emptyState.classList.remove('flex'); grid.innerHTML = '';
-        if (filtered.length === 0) { grid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-500">${t('no_data')}</div>`; return; }
+        if (filtered.length === 0) { grid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-600 dark:text-gray-400">${t('no_data')}</div>`; return; }
 
         const fragment = document.createDocumentFragment();
-        
+
         const isXSmall = AppState.gridSize === 'xsmall';
         const isSmall = AppState.gridSize === 'small';
-        
-        const titleSize = isXSmall ? 'text-[10px]' : (isSmall ? 'text-xs' : 'text-sm');
-        const artistSize = isXSmall ? 'text-[9px]' : (isSmall ? 'text-[10px]' : 'text-xs');
-        const metaSize = isXSmall ? 'text-[8px]' : (isSmall ? 'text-[9px]' : 'text-[10px]');
-        const padding = isXSmall ? 'p-1.5' : (isSmall ? 'p-2' : 'p-3');
-        const gapSize = isXSmall ? 'gap-1' : (isSmall ? 'gap-1.5' : 'gap-2 md:gap-3');
-        const circleSize = isXSmall ? 'w-5 h-5 text-[9px] border' : (isSmall ? 'w-7 h-7 text-xs border-2' : 'w-10 h-10 text-sm border-2');
 
+                // Dergi kartları: kapak, altında başlık + künye + tür, sağda yatık puan rozeti.
+        // Yazılar ve rozet kart genişliğine göre ölçeklenir (style.css: .album-card), her ölçekte aynı bilgiler görünür.
         const noCoverText = t('no_cover').replace(/ /g, '+');
 
         filtered.forEach(album => {
             const avg = album.averageScore || 0;
-            const rawGenre = (album.genres && album.genres.length > 0) ? album.genres[0] : t('unknown');
-            const displayGenre = tGenre(rawGenre);
+            const status = AlbumUtils.status(album);
+            const prog = AlbumUtils.progress(album);
+            const partialAvg = avg > 0 ? 0 : AlbumUtils.runningAvg(album);
+            const shown = avg > 0 ? avg : partialAvg;
+            const title = Utils.escapeHTML(album.title);
+            const artist = Utils.escapeHTML(album.artist);
+            const year = Utils.escapeHTML(album.year);
+            const genre = (album.genres && album.genres.length) ? Utils.escapeHTML(tGenre(album.genres[0])) : '';
 
-            const hasNotes = album.note || (album.tracks && album.tracks.some(tr => tr.note));
+            const statusBadge = status === 'listening'
+                ? `<span class="ac-status absolute bg-lightBg/95 dark:bg-dark/90 text-[#a85a1a] dark:text-primary font-bold">${t('badge_listening')}</span>`
+                : status === 'planned'
+                ? `<span class="ac-status absolute bg-lightBg/95 dark:bg-dark/90 text-gray-700 dark:text-gray-300 font-bold">${t('badge_planned')}</span>`
+                : '';
 
-            let bottomBgClass = 'bg-[#2a2a2a]'; 
-            let borderColorClass = 'border-[#3a3a3a] dark:border-[#333]';
-            let titleColorClass = 'text-white';
-            let subTextColorClass = 'text-gray-300';
-            let genreBgClass = 'bg-white/10 text-gray-200';
-            let circleClass = 'bg-gray-800 text-gray-400 border-gray-600';
+            const progressBar = (avg === 0 && prog.rated > 0)
+                ? `<div class="h-0.5 mt-2 bg-[#e6dbcf] dark:bg-[#3b2b20]" role="progressbar" aria-valuenow="${prog.pct}" aria-valuemin="0" aria-valuemax="100"><div class="h-full bg-[#a85a1a] dark:bg-primary" style="width:${prog.pct}%"></div></div>`
+                : '';
 
-            if (avg >= 4.5) { 
-                bottomBgClass = 'bg-[#1e3a8a]'; 
-                borderColorClass = 'border-[#1e40af] shadow-[#1e3a8a]/20';
-                subTextColorClass = 'text-blue-100/80';
-                genreBgClass = 'bg-white/20 text-blue-50';
-                circleClass = 'bg-[#172554] text-[#93c5fd] border-[#1e40af]';
-            } else if (avg >= 4.0) { 
-                bottomBgClass = 'bg-[#14532d]'; 
-                borderColorClass = 'border-[#166534] shadow-[#14532d]/20';
-                subTextColorClass = 'text-green-100/80';
-                genreBgClass = 'bg-white/20 text-green-50';
-                circleClass = 'bg-[#064e3b] text-[#86efac] border-[#166534]';
-            } else if (avg >= 3.5) { 
-                bottomBgClass = 'bg-[#15803d]'; 
-                borderColorClass = 'border-[#22c55e] shadow-[#15803d]/20';
-                subTextColorClass = 'text-green-100/90';
-                genreBgClass = 'bg-white/20 text-green-50';
-                circleClass = 'bg-[#166534] text-[#bbf7d0] border-[#22c55e]';
-            } else if (avg >= 3.0) { 
-                bottomBgClass = 'bg-[#a16207]'; 
-                borderColorClass = 'border-[#ca8a04] shadow-[#a16207]/20';
-                subTextColorClass = 'text-yellow-100/80';
-                genreBgClass = 'bg-white/20 text-yellow-50';
-                circleClass = 'bg-[#854d0e] text-[#fef08a] border-[#ca8a04]';
-            } else if (avg >= 2.5) { 
-                bottomBgClass = 'bg-[#c2410c]'; 
-                borderColorClass = 'border-[#ea580c] shadow-[#c2410c]/20';
-                subTextColorClass = 'text-orange-100/80';
-                genreBgClass = 'bg-white/20 text-orange-50';
-                circleClass = 'bg-[#9a3412] text-[#fed7aa] border-[#ea580c]';
-            } else if (avg > 0) { 
-                bottomBgClass = 'bg-[#991b1b]'; 
-                borderColorClass = 'border-[#dc2626] shadow-[#991b1b]/20';
-                subTextColorClass = 'text-red-100/80';
-                genreBgClass = 'bg-white/20 text-red-50';
-                circleClass = 'bg-[#7f1d1d] text-[#fca5a5] border-[#dc2626]';
-            } else { 
-                bottomBgClass = 'bg-white dark:bg-surfaceHover';
-                borderColorClass = 'border-lightBorder dark:border-gray-800';
-                titleColorClass = 'text-gray-900 dark:text-white';
-                subTextColorClass = 'text-gray-500 dark:text-gray-400';
-                genreBgClass = 'bg-lightBg dark:bg-white/10 text-gray-700 dark:text-gray-300';
-                circleClass = 'bg-lightBg text-gray-500 border-lightBorder dark:bg-darker dark:text-gray-500 dark:border-gray-800';
-            }
+            const badgeLabel = avg > 0 ? `${t('album_avg')}: ${avg.toFixed(1)}` : (partialAvg > 0 ? `${t('so_far_avg')}: ${partialAvg.toFixed(1)}` : '');
+            const badge = `<span ${badgeLabel ? `role="img" aria-label="${badgeLabel}" title="${badgeLabel}"` : 'aria-hidden="true"'} class="score-badge ${avg > 0 ? '' : 'is-partial'} ac-badge flex-shrink-0 rounded-full flex items-center justify-center font-black -rotate-[8deg] ${AlbumUtils.tier(shown).text}">${shown > 0 ? shown.toFixed(1) : '–'}</span>`;
 
             const card = document.createElement('div');
-            card.className = `flex flex-col rounded-xl overflow-hidden cursor-pointer active:scale-[0.98] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:brightness-105 dark:hover:shadow-[0_10px_20px_rgba(0,0,0,0.5)] shadow-md border ${borderColorClass} h-full`;
+            card.className = 'album-card group flex flex-col min-w-0 cursor-pointer outline-offset-4';
             card.onclick = () => this.openAlbumModal(album.id, album.title, album.artist, album.year);
+            card.tabIndex = 0; card.setAttribute('role', 'button');
+            card.setAttribute('aria-label', `${album.title} — ${album.artist}`);
+            card.onkeydown = (e) => { if (e.target === card && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); card.click(); } };
 
-            const coverToUse = Utils.escapeHTML(album.customCoverUrl || album.coverUrl);
-            const paperclipColorClass = subTextColorClass; 
 
             card.innerHTML = `
-                <div class="relative w-full pt-[100%] shrink-0 overflow-hidden bg-lightHighlight dark:bg-[#1a1a1a] border-b border-lightBorder/50 dark:border-white/5">
-                    <img loading="lazy" src="${coverToUse}" onerror="this.src='https://placehold.co/400x400/ebe4dc/594636?text=${noCoverText}'; this.onerror=null;" alt="Cover" class="absolute inset-0 w-full h-full object-cover object-center">
+                <div class="relative w-full pt-[100%] shrink-0 overflow-hidden bg-lightHighlight dark:bg-surface shadow-[0_10px_22px_rgba(36,26,19,0.22)] dark:shadow-[0_10px_22px_rgba(0,0,0,0.55)] transition-transform duration-300 group-hover:-translate-y-1 group-active:scale-[0.98]">
+                    <img loading="lazy" ${AlbumUtils.coverAttrs(album)} alt="" class="absolute inset-0 w-full h-full object-cover object-center">
+                    ${statusBadge}
                 </div>
-                <div class="flex ${padding} ${gapSize} ${bottomBgClass} flex-grow items-center">
-                    <div class="shrink-0 flex flex-col items-center justify-center gap-1.5">
-                        <div class="flex items-center justify-center rounded-full font-black ${circleSize} ${circleClass} shadow-sm">
-                            ${avg > 0 ? avg : '-'}
-                        </div>
-                        <button ${hasNotes ? `onclick="event.stopPropagation(); app.showAllNotes('${album.id}')"` : ''} class="${paperclipColorClass} transition-opacity ${hasNotes ? 'hover:opacity-75 cursor-pointer' : 'invisible pointer-events-none'}" data-i18n-title="all_notes" title="Tüm Notlar"><i class="ph-bold ph-paperclip text-lg"></i></button>
+                <div class="ac-body flex items-start justify-between">
+                    <div class="min-w-0 flex-1">
+                        <h3 class="ac-title font-black italic leading-tight break-words text-gray-900 dark:text-white" title="${title}">${title}</h3>
+                                                <p class="ac-meta text-gray-600 dark:text-gray-400 min-w-0">
+                            <button onclick="event.stopPropagation(); app.searchFromLink(this.textContent)" class="block max-w-full break-words hover:underline text-left">${artist}</button>
+                        </p>
+                        <p class="ac-sub truncate text-gray-600 dark:text-gray-400">${year}${genre ? ` · ${genre}` : ''}</p>
                     </div>
-                    <div class="flex flex-col justify-center min-w-0 flex-1 w-full h-full">
-                        <h3 class="font-bold ${titleColorClass} line-clamp-2 ${titleSize} leading-tight italic" title="${Utils.escapeHTML(album.title)}">${Utils.escapeHTML(album.title)}</h3>
-                        <div class="flex items-center min-w-0 mt-0.5 mb-1 w-full">
-                            <button onclick="event.stopPropagation(); app.searchFromLink(this.textContent)" class="${subTextColorClass} truncate ${artistSize} hover:underline cursor-pointer text-left max-w-full" title="${Utils.escapeHTML(album.artist)}">${Utils.escapeHTML(album.artist)}</button>
-                        </div>
-                        <div class="flex justify-between items-end gap-1 w-full mt-auto">
-                            <span class="${metaSize} font-semibold ${subTextColorClass} truncate text-left" style="max-width: 70%;">${Utils.escapeHTML(displayGenre)}</span>
-                            <div class="flex gap-1 shrink-0 items-center">
-                                <span class="${metaSize} font-bold ${genreBgClass} px-1.5 py-0.5 rounded-md text-right">${Utils.escapeHTML(album.year)}</span>
-                            </div>
-                        </div>
-                    </div>
+                    ${badge}
                 </div>
+                ${progressBar}
             `;
             fragment.appendChild(card);
         });
         grid.appendChild(fragment);
+    },
+
+    // "Şu an dinliyorum" kartı: durumu "listening" olan en son güncellenen albüm
+    renderNowListening() {
+        const box = document.getElementById('now-listening');
+        if (!box) return;
+        const current = AppState.library
+            .filter(a => AlbumUtils.status(a) === 'listening')
+            .sort((a, b) => new Date(AlbumUtils.lastActivity(b)) - new Date(AlbumUtils.lastActivity(a)))[0];
+        if (AppState.isLoading || !current || AppState.filterStatus) { box.classList.add('hidden'); box.innerHTML = ''; return; }
+
+        const prog = AlbumUtils.progress(current);
+        const avg = AlbumUtils.runningAvg(current);
+        box.innerHTML = `
+            <button onclick="app.openAlbumModal('${Utils.escapeHTML(current.id)}')" class="w-full text-left flex gap-4 p-3 rounded-2xl bg-white dark:bg-surface border border-lightBorder dark:border-gray-800 shadow-sm hover:bg-lightHighlight dark:hover:bg-surfaceHover transition-colors">
+                <img ${AlbumUtils.coverAttrs(current)} alt="" class="w-24 h-24 rounded-xl object-cover flex-shrink-0 shadow-md">
+                <span class="flex flex-col gap-1 min-w-0 flex-1 justify-center">
+                    <span class="flex items-center gap-1.5 text-[11px] font-bold tracking-widest text-[#a85a1a] dark:text-primary"><span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>${t('now_listening')}</span>
+                    <span class="text-lg font-black italic leading-tight text-gray-900 dark:text-white truncate">${Utils.escapeHTML(current.title)}</span>
+                    <span class="text-sm text-gray-600 dark:text-gray-400 truncate">${Utils.escapeHTML(current.artist)} · ${Utils.escapeHTML(current.year)}</span>
+                    <span class="flex items-center gap-2 mt-1">
+                        <span class="flex-1 h-1.5 rounded-full bg-lightHighlight dark:bg-surfaceHover overflow-hidden"><span class="block h-full bg-primary" style="width:${prog.pct}%"></span></span>
+                        <span class="text-[11px] text-gray-600 dark:text-gray-400 whitespace-nowrap">${prog.rated}/${prog.total}</span>
+                    </span>
+                    ${avg > 0 ? `<span class="text-[11px] text-gray-600 dark:text-gray-400">${t('so_far_avg')}: <b class="text-gray-900 dark:text-white">${avg.toFixed(1)}</b></span>` : ''}
+                </span>
+            </button>`;
+        box.classList.remove('hidden');
+    },
+
+    renderStatusChips() {
+        const box = document.getElementById('status-chips'); const issueEl = document.getElementById('header-issue'); if (issueEl) issueEl.textContent = `${t('issue_label')} · № ${AppState.library.length}`.toLocaleUpperCase(AppState.language === 'en' ? 'en-US' : 'tr-TR');
+        if (!box) return;
+        if (!AppState.isLoggedIn || AppState.library.length === 0) { box.innerHTML = ''; return; }
+        const counts = { planned: 0, listening: 0, done: 0 };
+        AppState.library.forEach(a => { counts[AlbumUtils.status(a)]++; });
+        const chips = [['', t('status_all'), AppState.library.length], ['listening', t('status_listening'), counts.listening], ['planned', t('status_planned'), counts.planned], ['done', t('status_done'), counts.done]];
+        box.innerHTML = chips.map(([val, label, n]) => {
+            const active = AppState.filterStatus === val;
+            return `<button onclick="app.setStatusFilter('${val}')" aria-pressed="${active}" class="h-9 px-4 rounded-full text-xs font-bold whitespace-nowrap flex-shrink-0 border transition-colors ${active ? 'bg-gray-900 border-gray-900 text-lightBg dark:bg-gray-100 dark:border-gray-100 dark:text-dark' : 'bg-transparent border-[#c9b8a6] dark:border-[#4a3829] text-gray-800 dark:text-gray-200 hover:bg-lightHighlight dark:hover:bg-surface'}">${label} <span class="${active ? 'opacity-70' : 'text-gray-600 dark:text-gray-400'}">${n}</span></button>`;
+        }).join('');
+    },
+
+    setStatusFilter(val) {
+        AppState.filterStatus = val;
+        this.renderLibrary();
     },
 
     updateSearchPlaceholder() {
@@ -1595,31 +1792,14 @@ const app = {
 
         try {
             if (searchType === 'album') {
-                const res = await fetch(`https://musicbrainz.org/ws/2/release-group/?query=${encodeURIComponent(input)} AND (type:album OR type:ep)&fmt=json&limit=50`);
-                const data = await res.json();
-                const albums = (data['release-groups'] || []).filter(rg => 
-                    (rg['primary-type'] === 'Album' || rg['primary-type'] === 'EP') && 
-                    (!rg['secondary-types'] || rg['secondary-types'].length === 0)
-                ).slice(0, 15);
-                
+                const albums = await MusicSource.searchAlbums(input);
                 if (albums.length === 0 && resCon) { resCon.innerHTML = `<div class="col-span-full text-center p-8 text-gray-500">${t('no_results')}</div>`; return; }
                 this.renderSearchResults(albums);
             } else {
-                const aRes = await fetch(`https://musicbrainz.org/ws/2/artist/?query=${encodeURIComponent(input)}&fmt=json&limit=1`);
-                const aData = await aRes.json();
-                if ((!aData.artists || aData.artists.length === 0) && resCon) { resCon.innerHTML = `<div class="col-span-full text-center p-8 text-gray-500">${t('no_results')}</div>`; return; }
-                const artist = aData.artists[0]; 
-                if(statText) statText.textContent = `${t('fetching_albums')} "${artist.name}"...`;
-                
-                const relRes = await fetch(`https://musicbrainz.org/ws/2/release-group?artist=${artist.id}&type=album|ep&fmt=json&limit=100`);
-                const rData = await relRes.json();
-                const albums = (rData['release-groups'] || []).filter(rg => 
-                    (rg['primary-type'] === 'Album' || rg['primary-type'] === 'EP') && 
-                    (!rg['secondary-types'] || rg['secondary-types'].length === 0)
-                );
-                
+                const { name, albums } = await MusicSource.searchArtist(input);
+                if (!name && resCon) { resCon.innerHTML = `<div class="col-span-full text-center p-8 text-gray-500">${t('no_results')}</div>`; return; }
                 if (albums.length === 0 && resCon) { resCon.innerHTML = `<div class="col-span-full text-center p-8 text-gray-500">${t('no_studio_albums')}</div>`; return; }
-                this.renderSearchResults(albums.sort((a,b)=>(b['first-release-date']||'0000').localeCompare(a['first-release-date']||'0000')), artist.name);
+                this.renderSearchResults(albums, name);
             }
         } catch (e) { showToast(t('toast_conn_error'), "error"); } 
         finally { 
@@ -1629,34 +1809,48 @@ const app = {
         }
     },
 
-    renderSearchResults(albums, fallbackArtist = null) {
+    // Arama sonuçları (MusicBrainz + Deezer birleşik liste)
+    renderSearchResults(items, fallbackArtist = null) {
         const con = document.getElementById('search-results'); 
         if(!con) return;
         con.innerHTML = '';
+        this._searchItems = new Map(items.map(it => [it.id, it]));
         const frag = document.createDocumentFragment();
-        const noCoverText = t('no_cover').replace(/ /g, '+');
 
-        albums.forEach(al => {
-            const mbid = al.id, title = Utils.escapeHTML(al.title), artist = Utils.escapeHTML(al['artist-credit']?.[0]?.name || fallbackArtist || t('unknown'));
-            const year = Utils.escapeHTML(al['first-release-date'] ? al['first-release-date'].substring(0, 4) : t('unknown'));
-            const coverUrl = `https://coverartarchive.org/release-group/${mbid}/front-250`;
-            const inLib = AppState.library.some(a => a.id === mbid);
+        items.forEach(it => {
+            const artistName = it.artist || fallbackArtist || t('unknown');
+            const title = Utils.escapeHTML(it.title), artist = Utils.escapeHTML(artistName);
+            const year = it.year || '';
+            // Aynı albüm kitaplıkta MusicBrainz ya da Deezer kimliğiyle kayıtlı olabilir
+            const libAlbum = AppState.library.find(a => a.id === it.id || (it.deezerId && (a.deezerId === it.deezerId || a.id === `dz_${it.deezerId}`)));
+            const inLib = !!libAlbum;
+            const inQueue = libAlbum && AlbumUtils.status(libAlbum) === 'planned';
+            const openId = libAlbum ? libAlbum.id : it.id;
 
             const card = document.createElement('div');
             card.className = `bg-white dark:bg-surface p-2.5 rounded-xl border ${inLib ? 'border-primary' : 'border-lightBorder dark:border-gray-800'} flex gap-3 active:scale-[0.98] transition-transform shadow-sm cursor-pointer hover:bg-lightHighlight dark:hover:bg-surfaceHover`;
-            card.onclick = () => this.openAlbumModal(mbid, al.title, al['artist-credit']?.[0]?.name || fallbackArtist, year, coverUrl); 
+            card.onclick = () => this.openAlbumModal(openId, it.title, artistName, year, it.coverBig || null);
+            card.tabIndex = 0; card.setAttribute('role', 'button');
+            card.onkeydown = (e) => { if (e.target === card && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); card.click(); } };
+
+            const laterBtn = !inLib
+                ? `<button class="later-btn mt-2 self-start h-8 px-3 rounded-full border border-lightBorder dark:border-gray-700 text-[11px] font-bold text-gray-800 dark:text-gray-200 hover:bg-primary/10 hover:text-primary flex items-center gap-1.5 transition-colors"><i class="ph-bold ph-clock-countdown"></i> ${t('listen_later')}</button>`
+                : '';
 
             card.innerHTML = `
-                <img loading="lazy" src="${coverUrl}" onerror="this.src='https://placehold.co/150x150/ebe4dc/594636?text=${noCoverText}'; this.onerror=null;" class="w-20 h-20 bg-lightHighlight rounded-lg object-cover flex-shrink-0">
+                <img loading="lazy" src="${Utils.escapeHTML(it.cover || AlbumUtils.NO_COVER)}" alt="" onerror="app.coverFallback(this)" class="w-20 h-20 bg-lightHighlight rounded-lg object-cover flex-shrink-0">
                 <div class="flex flex-col justify-center overflow-hidden flex-grow">
                     <h4 class="font-bold text-gray-900 dark:text-white truncate text-sm md:text-base italic">${title}</h4>
-                    <p class="text-xs text-gray-500 truncate mb-1">${artist}</p>
-                    <div class="flex gap-1.5 mt-1">
-                        <span class="text-[10px] bg-lightBg dark:bg-darker px-2 py-0.5 rounded text-gray-600 font-bold">${year}</span>
-                        <span class="text-[10px] bg-lightHighlight dark:bg-gray-800 px-2 py-0.5 rounded text-gray-600 dark:text-gray-300 font-bold">${al['primary-type'] === 'EP' ? 'EP' : t('studio_album')}</span>
-                        ${inLib ? `<span class="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded font-bold flex items-center gap-1"><i class="ph-fill ph-check-circle"></i> ${t("added_to_lib")}</span>` : ''}
+                    <p class="text-xs text-gray-600 dark:text-gray-400 truncate mb-1">${artist}</p>
+                    <div class="flex gap-1.5 mt-1 flex-wrap">
+                        ${year ? `<span class="text-[11px] bg-lightBg dark:bg-darker px-2 py-0.5 rounded text-gray-700 dark:text-gray-300 font-bold">${Utils.escapeHTML(year)}</span>` : ''}
+                        <span class="text-[11px] bg-lightHighlight dark:bg-gray-800 px-2 py-0.5 rounded text-gray-700 dark:text-gray-300 font-bold">${it.type === 'EP' ? 'EP' : t('studio_album')}</span>
+                        ${inLib ? `<span class="text-[11px] bg-primary/10 text-[#a85a1a] dark:text-primary px-2 py-0.5 rounded font-bold flex items-center gap-1"><i class="ph-fill ph-check-circle"></i> ${inQueue ? t('in_queue') : t("added_to_lib")}</span>` : ''}
                     </div>
+                    ${laterBtn}
                 </div>`;
+            const later = card.querySelector('.later-btn');
+            if (later) later.onclick = (e) => { e.stopPropagation(); this.addToQueue(it.id, it.title, artistName, year, it.coverBig || null, later); };
             frag.appendChild(card);
         });
         con.appendChild(frag);
@@ -1686,72 +1880,99 @@ const app = {
             });
         });
         
-        tl.innerHTML = `<div class="flex justify-center p-8"><i class="ph-bold ph-spinner-gap animate-spin text-3xl text-primary"></i></div>`;
+        clearTimeout(this._closeTimer); tl.innerHTML = `<div class="flex justify-center p-8"><i class="ph-bold ph-spinner-gap animate-spin text-3xl text-primary"></i></div>`;
         
         let albumData = AppState.library.find(a => a.id === mbid);
         if (!albumData) {
             try {
-                const res = await fetch(`https://musicbrainz.org/ws/2/release/?release-group=${mbid}&inc=recordings+labels+genres&fmt=json&limit=1`);
-                const data = await res.json();
-                let tracks = [], label = t("unknown"), country = t("unknown"), rDate = year, genres = [];
-                if (data.releases && data.releases.length > 0) {
-                    const rel = data.releases[0];
-                    if(rel.date) rDate = rel.date; 
-                    if(rel['label-info']?.length > 0) label = rel['label-info'][0].label?.name || t("independent");
-                    if(rel.country) country = rel.country;
-                    if(rel.genres?.length > 0) genres = rel.genres.sort((a,b)=>b.count-a.count).slice(0,3).map(g=>g.name.charAt(0).toUpperCase()+g.name.slice(1));
-                    if(rel.media?.length > 0) {
-                        let c = 1; tracks = rel.media.reduce((acc, m) => acc.concat(m.tracks.map(t => ({id:t.id, title:t.recording.title, number:(c++).toString(), rating:0}))), []);
-                    }
-                } else tracks = [{id:'1', title:t("no_tracks"), number:'1', rating:0}];
-                
-                albumData = { id: mbid, title: title||t('unknown'), artist: artist||t('unknown'), year: rDate.substring(0,4), label: label, country: country, coverUrl: defCover || `https://coverartarchive.org/release-group/${mbid}/front-500`, tracks: tracks, genres: genres, dateAdded: new Date().toISOString(), averageScore: 0 };
-            } catch(e) { tl.innerHTML = `<div class="text-red-500 text-center p-4">${t('error_loading')}</div>`; return; }
+                albumData = await this.fetchAlbumData(mbid, title, artist, year, defCover);
+            } catch(e) { tl.innerHTML = `<div class="text-red-600 dark:text-red-400 text-center p-4">${t('error_loading')}</div>`; return; }
         }
-        AppState.currentModalAlbum = JSON.parse(JSON.stringify(albumData)); 
+        AppState.currentModalAlbum = structuredClone(albumData); this.editingTrack = this.firstUnratedTrack(AppState.currentModalAlbum);
         this.updateModalUI();
     },
 
-    closeModal() {
+    // Albüm bilgisi ve parça listesi: MusicBrainz + Deezer (kapak, eksik parça/tür/şirket bilgisi)
+    async fetchAlbumData(id, title, artist, year, defCover = null) {
+        const hint = this._searchItems?.get(id) || {};
+        const d = await MusicSource.details(id, { title, artist, deezerId: hint.deezerId });
+        const cover = d.cover || defCover || (MusicSource.isMbid(id) ? `https://coverartarchive.org/release-group/${id}/front-500` : '');
+        const yr = d.year || year || '';
+        return {
+            id, title: title || d.title || t('unknown'), artist: artist || d.artist || t('unknown'),
+            year: yr || t('unknown'),
+            label: d.label || t('unknown'),
+            coverUrl: cover,
+            tracks: d.tracks.length ? d.tracks : [{ id: '1', title: t('no_tracks'), number: '1', rating: 0 }],
+            genres: d.genres || [], tags: [], listens: [], status: 'listening',
+            dateAdded: new Date().toISOString(), averageScore: 0,
+            source: d.source,
+            ...(d.deezerId ? { deezerId: String(d.deezerId) } : {})
+        };
+    },
+
+    // Arama sonucundan doğrudan "Dinlenecekler"e ekler
+    async addToQueue(mbid, title, artist, year, coverUrl, btn) {
+        if (!auth.currentUser) { showToast(t('login_empty_desc'), "error"); return; }
+        if (AppState.library.some(a => a.id === mbid)) return;
+        if (btn) { btn.disabled = true; btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin"></i>`; }
+        try {
+            const album = await this.fetchAlbumData(mbid, title, artist, year, coverUrl);
+            album.status = 'planned';
+            album.updatedAt = album.dateAdded;
+            AppState.library.unshift(album);
+            await this.saveAlbumData(album);
+            showToast(t('added_to_queue'), "success");
+            if (btn) btn.outerHTML = `<span class="mt-2 self-start text-[11px] bg-primary/10 text-[#a85a1a] dark:text-primary px-2 py-1 rounded font-bold flex items-center gap-1"><i class="ph-fill ph-check-circle"></i> ${t('in_queue')}</span>`;
+        } catch (e) {
+            showToast(t('toast_conn_error'), "error");
+            if (btn) { btn.disabled = false; btn.innerHTML = `<i class="ph-bold ph-clock-countdown"></i> ${t('listen_later')}`; }
+        }
+    },
+
+        closeModal() {
         const modal = document.getElementById('album-modal');
-        if(!modal) return;
+        if (!modal || modal.classList.contains('hidden')) return; this.saveScrub(false);
         const content = modal.querySelector('.modal-content');
-        
         modal.classList.add('opacity-0');
         if (content) {
             content.classList.remove('scale-100', 'opacity-100');
             content.classList.add('scale-95', 'opacity-0');
         }
-        
-        setTimeout(() => { 
-            modal.classList.add('hidden'); 
+        clearTimeout(this._closeTimer);
+        this._closeTimer = setTimeout(() => {
+            modal.classList.add('hidden');
             modal.classList.remove('flex');
-            AppState.currentModalAlbum = null; 
+            AppState.currentModalAlbum = null;
         }, 300);
     },
 
     updateModalUI() {
         const al = AppState.currentModalAlbum;
         if(!al) return;
-        
+
         const setElText = (id, text) => { const el = document.getElementById(id); if(el) el.textContent = text; };
-        
+
         setElText('modal-title', al.title);
         setElText('modal-artist', al.artist);
         setElText('modal-date', al.year);
         setElText('modal-label', al.label);
-        
-        const countryStr = al.country || t('unknown');
-        setElText('modal-country', countryStr);
-        this.updateCountryIcon(countryStr.trim().toLowerCase());
-        
+
+        // Künye: "DİNLEME NOTLARI № 97 · 5 Kasım 2026" (№ = kitaplığa eklenme sırası)
+        const sorted = AppState.library.slice().sort((a, b) => new Date(a.dateAdded || 0) - new Date(b.dateAdded || 0));
+        const pos = sorted.findIndex(a => a.id === al.id);
+        const issueNo = pos === -1 ? AppState.library.length + 1 : pos + 1;
+        const lang = AppState.language === 'en' ? 'en-US' : 'tr-TR';
+        const issueEl = document.getElementById('modal-issue');
+        if (issueEl) issueEl.innerHTML = `<span class="hidden md:inline">RATEAGAINST · ${Utils.escapeHTML(t('issue_label').toLocaleUpperCase(lang))} </span>№ ${issueNo} · ${Utils.escapeHTML(Utils.formatDate(al.updatedAt || al.dateAdded).toLocaleUpperCase(lang))}`;
+
         const artistEl = document.getElementById('modal-artist');
         if (artistEl) {
             if (!this.isEditMode) {
-                artistEl.classList.add('cursor-pointer', 'hover:underline', 'hover:text-primary');
+                artistEl.classList.add('cursor-pointer', 'hover:underline');
                 artistEl.onclick = () => app.searchFromLink(artistEl.textContent);
             } else {
-                artistEl.classList.remove('cursor-pointer', 'hover:underline', 'hover:text-primary');
+                artistEl.classList.remove('cursor-pointer', 'hover:underline');
                 artistEl.onclick = null;
             }
         }
@@ -1759,29 +1980,197 @@ const app = {
         this.renderDateAdded();
         this.updateAlbumNoteIcon();
 
-        const cov = document.getElementById('modal-cover'); 
-        if(cov) cov.src = al.customCoverUrl || al.coverUrl;
-        
-        const blurBg = document.getElementById('modal-bg-blur');
-        if(blurBg) blurBg.style.backgroundImage = `url('${Utils.escapeHTML(al.customCoverUrl || al.coverUrl)}')`;
-        
-        this.renderTracklist(); this.renderGenres(); this.updateModalButtons(); this.calculateAverageScore();
-    },
-
-    handleCountryInput(val) {
-        const code = val.trim().toLowerCase();
-        this.updateCountryIcon(code);
-    },
-
-    updateCountryIcon(code) {
-        const container = document.getElementById('modal-country-icon-container');
-        if (!container) return;
-        
-        if (code.length === 2 && /^[a-z]{2}$/.test(code)) {
-            container.innerHTML = `<img src="https://flagcdn.com/24x18/${code}.png" alt="${code.toUpperCase()}" class="w-5 h-auto rounded-sm shadow-sm object-cover" onerror="this.onerror=null; this.outerHTML='<i class=\\'ph-bold ph-globe text-lg text-gray-400\\'></i>'">`;
-        } else {
-            container.innerHTML = `<i class="ph-bold ph-globe text-lg text-gray-400"></i>`;
+        const cov = document.getElementById('modal-cover');
+        if(cov) {
+            cov.dataset.fb = '0'; cov.dataset.orig = ''; cov.dataset.coverId = al.id;
+            cov.onerror = () => app.coverFallback(cov);
+            cov.src = AlbumUtils.coverSrc(al);
         }
+
+        this.renderTracklist(); this.renderGenres(); this.calculateAverageScore();
+        this.renderModalStatus(); this.renderModalTags(); this.renderListenLog();
+        this.updateModalButtons();
+        requestAnimationFrame(() => this.scrollSelectedTrackIntoView(true));
+    },
+
+    // --- Dinleme durumu (Dinlenecek / Dinliyorum / Bitti) ---
+    renderModalStatus() {
+        const al = AppState.currentModalAlbum;
+        if (!al) return;
+        const current = AlbumUtils.status(al);
+        const html = [['planned', t('status_planned')], ['listening', t('status_listening')], ['done', t('status_done')]].map(([val, label]) => {
+            const on = current === val;
+            return `<button role="radio" aria-checked="${on}" onclick="app.setAlbumStatus('${val}')" class="flex-1 h-10 rounded-lg text-xs font-bold transition-colors ${on ? 'bg-primary text-darker' : 'text-gray-700 dark:text-gray-300 hover:bg-lightHighlight dark:hover:bg-surfaceHover'}">${label}</button>`;
+        }).join('');
+        document.querySelectorAll('#album-modal .modal-status-group').forEach(box => { box.innerHTML = html; });
+    },
+
+    setAlbumStatus(status) {
+        const al = AppState.currentModalAlbum;
+        if (!al) return;
+        al.status = status;
+        this.renderModalStatus();
+        this.persistIfSaved();
+        this.updateModalButtons();
+    },
+
+    // --- Kişisel etiketler ---
+    renderModalTags() {
+        const box = document.getElementById('modal-tags');
+        const al = AppState.currentModalAlbum;
+        if (!box || !al) return;
+        const tags = al.tags || [];
+        box.innerHTML = tags.map((tg, i) => `
+            <span class="pl-2 pr-1 h-7 rounded-lg bg-purple-100 text-purple-800 dark:bg-purple-500/20 dark:text-purple-200 text-[11px] font-bold flex items-center gap-1">
+                #${Utils.escapeHTML(tg)}
+                <button onclick="app.removeTag(${i})" aria-label="${Utils.escapeHTML(tg)} — ${t('remove')}" class="w-6 h-6 rounded flex items-center justify-center hover:bg-purple-200 dark:hover:bg-purple-500/30"><i class="ph-bold ph-x text-[11px]"></i></button>
+            </span>`).join('') +
+            `<button onclick="app.addTag()" class="h-7 px-2.5 rounded-lg border border-dashed border-gray-400 dark:border-gray-600 text-[11px] font-bold text-gray-700 dark:text-gray-300 hover:bg-lightHighlight dark:hover:bg-surfaceHover">${t('tags_add')}</button>`;
+    },
+
+    addTag() {
+        const al = AppState.currentModalAlbum;
+        if (!al) return;
+        const input = prompt(t('tag_prompt'));
+        if (!input) return;
+        if (!al.tags) al.tags = [];
+        input.split(',').map(s => s.trim().replace(/^#/, '').toLowerCase()).filter(Boolean).forEach(tg => {
+            if (!al.tags.includes(tg) && al.tags.length < 8) al.tags.push(tg.slice(0, 24));
+        });
+        this.renderModalTags();
+        this.persistIfSaved();
+        this.updateModalButtons();
+    },
+
+    removeTag(i) {
+        const al = AppState.currentModalAlbum;
+        if (!al?.tags) return;
+        al.tags.splice(i, 1);
+        this.renderModalTags();
+        this.persistIfSaved();
+        this.updateModalButtons();
+    },
+
+    // --- Dinleme kaydı: her kayıt o günkü ortalamayı saklar ---
+    renderListenLog() {
+        const box = document.getElementById('listen-log');
+        const countEl = document.getElementById('listen-count');
+        const al = AppState.currentModalAlbum;
+        if (!box || !al) return;
+        const listens = (al.listens || []).slice().sort((a, b) => a.date.localeCompare(b.date));
+        if (countEl) countEl.textContent = listens.length ? `· ${listens.length} ${t('times')}` : '';
+        if (!listens.length) {
+            box.innerHTML = `<p class="text-[11px] text-gray-600 dark:text-gray-400 leading-relaxed">${t('no_listens')}</p>`;
+            return;
+        }
+        const shown = listens.slice(-6);
+        box.innerHTML = shown.map((l, i) => {
+            const isLast = i === shown.length - 1;
+            const h = l.score > 0 ? Math.max(8, Math.round((l.score / 5) * 32)) : 6;
+            const label = Utils.formatDate(l.date, { month: 'short', year: '2-digit' });
+            const realIdx = (al.listens || []).indexOf(l);
+            return `<button onclick="app.deleteListen(${realIdx})" title="${t('delete_listen')}" aria-label="${label}: ${l.score > 0 ? l.score.toFixed(1) : '-'} — ${t('delete_listen')}" class="flex-1 min-w-0 max-w-[56px] flex flex-col items-center gap-1 group">
+                <span class="w-full rounded-t-md rounded-b-sm ${isLast ? 'bg-primary' : 'bg-[#c9a68a] dark:bg-[#6b4a33]'} group-hover:opacity-70 transition-opacity" style="height:${h}px"></span>
+                <span class="text-[11px] text-gray-600 dark:text-gray-400 whitespace-nowrap">${label}</span>
+                <span class="text-xs font-bold ${isLast ? 'text-[#a85a1a] dark:text-primary' : 'text-gray-900 dark:text-white'}">${l.score > 0 ? l.score.toFixed(1) : '-'}</span>
+            </button>`;
+        }).join('');
+    },
+
+    logListen() {
+        const al = AppState.currentModalAlbum;
+        if (!al) return;
+        if (!al.listens) al.listens = [];
+        al.listens.push({ date: Utils.todayISO(), score: AlbumUtils.runningAvg(al) });
+        if (AlbumUtils.status(al) === 'planned') al.status = 'listening';
+        this.renderListenLog();
+        this.renderModalStatus();
+        this.persistIfSaved();
+        this.updateModalButtons();
+        showToast(t('listen_logged'), "success");
+    },
+
+    deleteListen(idx) {
+        const al = AppState.currentModalAlbum;
+        if (!al?.listens?.[idx]) return;
+        if (!confirm(t('delete_listen') + '?')) return;
+        al.listens.splice(idx, 1);
+        this.renderListenLog();
+        this.persistIfSaved();
+        this.updateModalButtons();
+    },
+
+    // --- İnceleme (blog yazısı) görünümü ---
+    openReview() {
+        if (!AppState.currentModalAlbum) return;
+        this.renderReview();
+        const view = document.getElementById('review-view');
+        view?.classList.remove('hidden');
+        if (view) view.scrollTop = 0;
+        view?.querySelector('button')?.focus();
+    },
+
+    closeReview() {
+        document.getElementById('review-view')?.classList.add('hidden');
+    },
+
+    editReviewNote() {
+        this.closeReview();
+        this.openNotePanel('album');
+        this.setNoteEditMode(true);
+    },
+
+    renderReview() {
+        const al = AppState.currentModalAlbum;
+        const box = document.getElementById('review-content');
+        if (!al || !box) return;
+        const avg = al.averageScore || AlbumUtils.runningAvg(al);
+        const tier = AlbumUtils.tier(avg);
+        const listens = (al.listens || []).length;
+        const lastDate = al.listens?.length ? al.listens[al.listens.length - 1].date : (al.updatedAt || al.dateAdded);
+        const paragraphs = AlbumUtils.noteParagraphs(al.note);
+        const favs = (al.tracks || []).filter(tr => tr.rating >= 4).sort((a, b) => b.rating - a.rating || parseInt(a.number) - parseInt(b.number));
+        const trackNotes = (al.tracks || []).filter(tr => tr.note && tr.note.trim());
+
+        box.innerHTML = `
+            <div class="flex gap-4 items-center">
+                <img ${AlbumUtils.coverAttrs(al)} alt="" class="w-24 h-24 md:w-32 md:h-32 rounded-xl object-cover shadow-lg flex-shrink-0">
+                <div class="flex flex-col gap-1">
+                    <span class="text-[11px] font-bold tracking-widest text-gray-600 dark:text-gray-400">${t('review_label')}${listens ? ` · ${listens}. ${t('nth_listen')}` : ''}</span>
+                    <span class="text-xs text-gray-600 dark:text-gray-400">${Utils.formatDate(lastDate)}</span>
+                    ${avg > 0 ? `<span class="self-start mt-1 px-2.5 py-1 rounded-lg text-sm font-black ${tier.badge}">${avg.toFixed(1)} / 5</span>` : ''}
+                </div>
+            </div>
+            <header class="flex flex-col gap-1">
+                <h1 id="review-title" class="text-3xl md:text-4xl font-black italic leading-tight text-gray-900 dark:text-white">${Utils.escapeHTML(al.title)}</h1>
+                <p class="text-base text-gray-700 dark:text-gray-300">${Utils.escapeHTML(al.artist)} · ${Utils.escapeHTML(al.year)}</p>
+            </header>
+            ${(al.tags || []).length || (al.genres || []).length ? `<div class="flex flex-wrap gap-1.5">
+                ${(al.genres || []).map(g => `<span class="px-2.5 py-1 rounded-lg bg-lightHighlight dark:bg-surface text-[11px] font-bold text-gray-700 dark:text-gray-300">${Utils.escapeHTML(tGenre(g))}</span>`).join('')}
+                ${(al.tags || []).map(tg => `<span class="px-2.5 py-1 rounded-lg bg-purple-100 text-purple-800 dark:bg-purple-500/20 dark:text-purple-200 text-[11px] font-bold">#${Utils.escapeHTML(tg)}</span>`).join('')}
+            </div>` : ''}
+            <hr class="border-lightBorder dark:border-gray-800">
+            <div class="flex flex-col gap-4 text-[17px] leading-[1.8] text-gray-900 dark:text-gray-100">
+                ${paragraphs.length ? paragraphs.map(p => `<p>${Utils.escapeHTML(p)}</p>`).join('') : `<p class="text-base italic text-gray-600 dark:text-gray-400">${t('review_empty')}</p>`}
+            </div>
+            ${favs.length ? `<section class="p-4 rounded-2xl bg-white dark:bg-surface border border-lightBorder dark:border-gray-800 flex flex-col gap-2.5">
+                <h2 class="text-[11px] font-black tracking-widest text-gray-600 dark:text-gray-400">${t('favorite_tracks').toUpperCase()}</h2>
+                ${favs.map(tr => `<div class="flex justify-between items-center gap-3"><span class="font-bold italic text-gray-900 dark:text-white truncate">${Utils.escapeHTML(tr.title)}</span><span class="text-sm font-black ${AlbumUtils.tier(tr.rating).text} flex-shrink-0">${tr.rating} ★</span></div>`).join('')}
+            </section>` : ''}
+            ${trackNotes.length ? `<section class="flex flex-col gap-3">
+                <h2 class="text-[11px] font-black tracking-widest text-gray-600 dark:text-gray-400">${t('track_notes').toUpperCase()}</h2>
+                ${trackNotes.map(tr => `<div class="pl-4 border-l-2 border-primary/50"><p class="font-bold italic text-gray-900 dark:text-white mb-1">${Utils.escapeHTML(tr.number)}. ${Utils.escapeHTML(tr.title)}</p>${AlbumUtils.noteParagraphs(tr.note).map(p => `<p class="text-base leading-relaxed text-gray-700 dark:text-gray-300">${Utils.escapeHTML(p)}</p>`).join('')}</div>`).join('')}
+            </section>` : ''}
+        `;
+    },
+
+    copyReviewMarkdown() {
+        const al = AppState.currentModalAlbum;
+        if (!al) return;
+        const md = this.albumToMarkdown(al);
+        (navigator.clipboard ? navigator.clipboard.writeText(md) : Promise.reject())
+            .then(() => showToast(t("toast_copied"), "success"))
+            .catch(() => this.fallbackCopyText(md));
     },
 
     renderDateAdded() {
@@ -1792,12 +2181,12 @@ const app = {
         const formattedDate = isValid ? d.toLocaleDateString(AppState.language === 'en' ? 'en-US' : 'tr-TR') : '-';
         const isoDate = isValid ? d.toISOString().split('T')[0] : '';
 
-        const dateAddedContainer = document.getElementById('modal-date-added-container');
+        document.getElementById('modal-date-added-row')?.classList.toggle('hidden', !this.isEditMode); const dateAddedContainer = document.getElementById('modal-date-added-container');
         if (dateAddedContainer) {
             if (this.isEditMode) {
                 dateAddedContainer.innerHTML = `
                     <div class="relative flex items-center gap-1.5 cursor-pointer bg-lightHighlight dark:bg-darker border border-dashed border-primary px-1.5 py-0.5 rounded active:scale-95 transition-transform w-fit" onclick="document.getElementById('added-date-picker').showPicker()">
-                        <span class="text-[10px] font-bold text-gray-800 dark:text-gray-200">${formattedDate}</span>
+                        <span class="text-[11px] font-bold text-gray-800 dark:text-gray-200">${formattedDate}</span>
                         <i class="ph-bold ph-arrows-clockwise text-primary text-xs"></i>
                         <input type="date" id="added-date-picker" value="${isoDate}" class="absolute opacity-0 pointer-events-none w-0 h-0" onchange="app.updateAddedDate(this.value); event.stopPropagation();">
                     </div>
@@ -1831,7 +2220,7 @@ const app = {
             aBtn?.classList.add('hidden'); 
         }
         
-        ['modal-title', 'modal-artist', 'modal-date', 'modal-label', 'modal-country'].forEach(id => {
+        ['modal-title', 'modal-artist', 'modal-date', 'modal-label'].forEach(id => {
             const el = document.getElementById(id); 
             if(el) {
                 el.contentEditable = this.isEditMode;
@@ -1877,22 +2266,34 @@ const app = {
         } 
     },
     
-    async searchiTunesCover() {
-        const al = AppState.currentModalAlbum, btn = document.getElementById('itunes-search-btn'); 
+    // Kapak bul: Deezer → Cover Art Archive → iTunes (son yedek; engelli ağda sessizce atlanır)
+    async findCover() {
+        const al = AppState.currentModalAlbum, btn = document.getElementById('find-cover-btn'); 
         if(!al || !btn) return;
         const oH = btn.innerHTML; btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin"></i>`;
         try {
-            const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(al.artist+' '+al.title)}&entity=album&limit=1`);
-            const data = await res.json();
-            if(data.results?.length > 0) { 
-                AppState.currentModalAlbum.customCoverUrl = data.results[0].artworkUrl100.replace('100x100bb','600x600bb'); 
+            let url = null;
+            try { url = (await MusicSource.dzMatch(al.artist, al.title))?.cover_xl || null; } catch (e) {}
+            if (!url && MusicSource.isMbid(al.id)) {
+                const caa = `https://coverartarchive.org/release-group/${al.id}/front-500`;
+                if (await Net.imageOk(caa) || await Net.imageOk(CoverCache.proxy(caa))) url = caa;
+            }
+            if (!url) {
+                try {
+                    const list = await Net.itunes(`${al.artist} ${al.title}`);
+                    const hit = list.find(r => MusicSource.norm(r.collectionName) === MusicSource.norm(al.title)) || list[0];
+                    if (hit?.artworkUrl100) url = hit.artworkUrl100.replace('100x100bb', '600x600bb');
+                } catch (e) {}
+            }
+            if (url) { 
+                AppState.currentModalAlbum.customCoverUrl = url; 
                 this.updateModalUI(); 
                 document.getElementById('cover-edit-section')?.classList.add('hidden'); 
                 showToast(t("toast_cover_found"), "success"); 
             } else {
                 showToast(t("toast_cover_not_found"), "error");
             }
-        } catch(e) { showToast(t("toast_search_error"), "error"); } finally { btn.innerHTML = oH; }
+        } finally { btn.innerHTML = oH; }
     },
 
     renderGenres() {
@@ -1906,13 +2307,13 @@ const app = {
         al.genres.forEach((g, i) => {
             const displayG = tGenre(g);
             const tag = document.createElement('span');
-            tag.className = `px-2 py-1 bg-lightBorder dark:bg-darker rounded-lg text-[10px] font-bold flex items-center gap-1 ${!this.isEditMode ? 'active:scale-95 cursor-pointer hover:bg-primary/20 hover:text-primary transition-colors' : 'cursor-grab active:cursor-grabbing'}`;
+            tag.className = `px-2 py-1 bg-lightBorder dark:bg-darker rounded-lg text-[11px] font-bold flex items-center gap-1 ${!this.isEditMode ? 'active:scale-95 cursor-pointer hover:bg-primary/20 hover:text-primary transition-colors' : 'cursor-grab active:cursor-grabbing'}`;
             if(!this.isEditMode) { 
                 tag.innerHTML = Utils.escapeHTML(displayG); 
                 tag.onclick = (e) => { e.stopPropagation(); this.filterByGenre(g); }; 
             }
             else { 
-                tag.innerHTML = `<i class="ph-bold ph-dots-six-vertical text-gray-400 mr-0.5"></i> ${Utils.escapeHTML(displayG)} <i class="ph-bold ph-x ml-1 cursor-pointer hover:text-red-500 p-0.5" onclick="app.removeGenre(${i})"></i>`; 
+                tag.innerHTML = `<i class="ph-bold ph-dots-six-vertical text-gray-600 dark:text-gray-400 mr-0.5"></i> ${Utils.escapeHTML(displayG)} <i class="ph-bold ph-x ml-1 cursor-pointer hover:text-red-500 p-0.5" onclick="app.removeGenre(${i})"></i>`; 
                 
                 tag.draggable = true;
                 tag.dataset.index = i;
@@ -1935,7 +2336,7 @@ const app = {
             con.appendChild(tag);
         });
         if(this.isEditMode && al.genres.length < 3) {
-            const add = document.createElement('button'); add.className = 'px-2 py-1 bg-primary/20 text-primary rounded-lg text-[10px] font-bold flex items-center hover:bg-primary/30 transition-colors cursor-pointer';
+            const add = document.createElement('button'); add.className = 'px-2 py-1 bg-primary/20 text-primary rounded-lg text-[11px] font-bold flex items-center hover:bg-primary/30 transition-colors cursor-pointer';
             add.innerHTML = `<i class="ph-bold ph-plus"></i>`; add.onclick = () => this.promptAddGenre(); con.appendChild(add);
         }
     },
@@ -1952,12 +2353,19 @@ const app = {
         if (modalBtnIcon) { modalBtnIcon.classList.remove('ph-magic-wand'); modalBtnIcon.classList.add('ph-spinner', 'animate-spin'); }
         
         try {
+            // Tür: MusicBrainz → Deezer → iTunes (son yedek)
             let foundGenres = [];
-            const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(al.artist + ' ' + al.title)}&entity=album&limit=1`);
-            const data = await res.json();
-            
-            if (data.results?.length > 0 && data.results[0].primaryGenreName) {
-                foundGenres.push(data.results[0].primaryGenreName);
+            if (MusicSource.isMbid(al.id)) {
+                try { const rg = await Net.mb(`release-group/${al.id}?inc=genres`); foundGenres = MusicSource.pickGenres(rg.genres); } catch (e) {}
+            }
+            if (foundGenres.length === 0) {
+                try {
+                    const dzId = al.deezerId || (await MusicSource.dzMatch(al.artist, al.title))?.id;
+                    if (dzId) { const dz = await Net.deezer(`album/${dzId}`); foundGenres = (dz.genres?.data || []).map(g => g.name); }
+                } catch (e) {}
+            }
+            if (foundGenres.length === 0) {
+                try { const list = await Net.itunes(`${al.artist} ${al.title}`); if (list[0]?.primaryGenreName) foundGenres = [list[0].primaryGenreName]; } catch (e) {}
             }
 
             if (foundGenres.length > 0) {
@@ -2184,14 +2592,8 @@ const app = {
         textarea.value = text;
         if(display) display.textContent = text;
         
-        const isSaved = AppState.library.some(a => a.id === AppState.currentModalAlbum.id);
-        if (isSaved) {
-            const libIdx = AppState.library.findIndex(a => a.id === AppState.currentModalAlbum.id);
-            if (libIdx > -1) {
-                AppState.library[libIdx] = JSON.parse(JSON.stringify(AppState.currentModalAlbum));
-                this.saveAlbumData(AppState.library[libIdx]);
-            }
-        }
+        this.persistIfSaved();
+        this.updateModalButtons();
 
         if (close) {
             this.closeNotePanel();
@@ -2208,7 +2610,7 @@ const app = {
         let rawTextForCopy = '';
 
         html += `<div class="flex items-center gap-4 mb-5 pb-4 border-b border-lightBorder dark:border-gray-800">
-            <img src="${Utils.escapeHTML(album.customCoverUrl || album.coverUrl)}" onerror="this.src='https://placehold.co/100x100/ebe4dc/594636?text=${t('no_cover').replace(/ /g, '+')}'; this.onerror=null;" class="w-16 h-16 rounded-xl shadow-md object-cover border border-lightBorder dark:border-gray-800 flex-shrink-0">
+            <img ${AlbumUtils.coverAttrs(album)} alt="" class="w-16 h-16 rounded-xl shadow-md object-cover border border-lightBorder dark:border-gray-800 flex-shrink-0">
             <div class="min-w-0">
                 <h2 class="text-xl md:text-2xl font-black text-gray-900 dark:text-white italic leading-tight truncate">${Utils.escapeHTML(album.title)}</h2>
                 <p class="text-sm md:text-base font-semibold text-gray-500 dark:text-gray-400 truncate mt-0.5">${Utils.escapeHTML(album.artist)}</p>
@@ -2233,7 +2635,7 @@ const app = {
         if (tracksWithNotes.length > 0) {
             html += `<div class="space-y-4">
                 <div class="flex items-center gap-2 mb-3 pb-2 border-b border-lightBorder/50 dark:border-gray-800/50">
-                    <i class="ph-bold ph-music-notes text-gray-400 text-lg"></i>
+                    <i class="ph-bold ph-music-notes text-gray-600 dark:text-gray-400 text-lg"></i>
                     <h3 class="text-sm font-bold text-gray-500 uppercase tracking-widest">${t("track_notes")}</h3>
                 </div>`;
             
@@ -2310,18 +2712,23 @@ const app = {
         document.body.removeChild(ta);
     },
 
+    // Not ikonu + sol sütundaki alıntı
     updateAlbumNoteIcon() {
+        const al = AppState.currentModalAlbum;
+        if (!al) return;
+        const hasNote = !!(al.note && al.note.trim());
         const btn = document.getElementById('album-note-btn');
-        if(!btn || !AppState.currentModalAlbum) return;
-        const hasNote = !!AppState.currentModalAlbum.note;
-        if(hasNote) {
-            btn.classList.add('text-primary');
-            btn.classList.remove('text-gray-500');
-            btn.innerHTML = '<i class="ph-fill ph-paperclip text-lg"></i>';
-        } else {
-            btn.classList.remove('text-primary');
-            btn.classList.add('text-gray-500');
-            btn.innerHTML = '<i class="ph-bold ph-paperclip text-lg"></i>';
+        if (btn) {
+            btn.classList.toggle('text-[#a85a1a]', hasNote);
+            btn.classList.toggle('dark:text-primary', hasNote);
+            btn.innerHTML = `<i class="ph-${hasNote ? 'fill' : 'bold'} ph-paperclip text-lg"></i>`;
+        }
+        const quote = document.getElementById('modal-quote');
+        if (quote) {
+            const first = AlbumUtils.noteParagraphs(al.note)[0];
+            quote.innerHTML = first
+                ? `“${Utils.escapeHTML(first.length > 180 ? first.slice(0, 177) + '…' : first)}”`
+                : `<span class="not-italic text-sm text-gray-600 dark:text-gray-400">${t('quote_placeholder')}</span>`;
         }
     },
 
@@ -2334,194 +2741,538 @@ const app = {
 
     updateModalTrackSortButtons() {
         const mode = AppState.modalTrackSort;
+        const on = 'w-8 h-8 rounded-full flex items-center justify-center bg-primary/15 text-[#a85a1a] dark:text-[#e8955a]';
+        const off = 'w-8 h-8 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-lightHighlight dark:hover:bg-surface hover:text-gray-900 dark:hover:text-white transition-colors';
         const btnDef = document.getElementById('btn-track-sort-default');
         const btnRat = document.getElementById('btn-track-sort-rating');
-        if (btnDef && btnRat) {
-            if (mode === 'default') {
-                btnDef.className = "px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full font-semibold text-primary bg-white dark:bg-surfaceHover shadow-sm";
-                btnRat.className = "px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full font-semibold text-gray-500 dark:text-gray-400 hover:text-primary";
-            } else {
-                btnDef.className = "px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full font-semibold text-gray-500 dark:text-gray-400 hover:text-primary";
-                btnRat.className = "px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full font-semibold text-primary bg-white dark:bg-surfaceHover shadow-sm";
-            }
-        }
+        if (btnDef) { btnDef.className = mode === 'default' ? on : off; btnDef.setAttribute('aria-pressed', mode === 'default'); }
+        if (btnRat) { btnRat.className = mode === 'rating' ? on : off; btnRat.setAttribute('aria-pressed', mode === 'rating'); }
     },
 
     getStarColorClass(rating) {
-        switch(rating) {
-            case 1: return 'text-red-700 dark:text-red-600';      
-            case 2: return 'text-orange-700 dark:text-orange-600';    
-            case 3: return 'text-amber-600 dark:text-amber-500';     
-            case 4: return 'text-green-700 dark:text-green-600';      
-            case 5: return 'text-blue-800 dark:text-blue-600';       
-            default: return 'text-gray-300 dark:text-gray-600';
-        }
+        return AlbumUtils.tier(rating).text;
+    },
+
+    // İlk puanlanmamış parça (modal açılınca o satır düzenlemeye hazır gelir)
+    firstUnratedTrack(album) {
+        const idx = (album?.tracks || []).findIndex(tr => !(tr.rating > 0));
+        return idx === -1 ? null : idx;
     },
 
     renderTracklist() {
         const con = document.getElementById('modal-tracklist'), al = AppState.currentModalAlbum;
         if(!con || !al) return;
-        
-        if (!al.tracks || al.tracks.length === 0) { con.innerHTML = `<p class="text-sm text-gray-500 p-4">${t('no_tracks')}</p>`; return; }
-        con.innerHTML = ''; 
-        const frag = document.createDocumentFragment();
 
-        let tracksWithIndex = al.tracks.map((tr, idx) => ({ ...tr, originalIndex: idx }));
+        if (!al.tracks || al.tracks.length === 0) { con.innerHTML = `<p class="text-sm text-gray-600 dark:text-gray-400 py-4">${t('no_tracks')}</p>`; return; }
 
+        let rows = al.tracks.map((tr, idx) => ({ ...tr, originalIndex: idx }));
         if (AppState.modalTrackSort === 'rating') {
-            tracksWithIndex.sort((a, b) => {
-                if (b.rating !== a.rating) {
-                    return b.rating - a.rating;
-                }
-                return parseInt(a.number || 0) - parseInt(b.number || 0);
-            });
+            rows.sort((a, b) => (b.rating || 0) - (a.rating || 0) || parseInt(a.number || 0) - parseInt(b.number || 0));
         }
 
-        tracksWithIndex.forEach((tr) => {
+        const muted = 'text-gray-600 dark:text-gray-400';
+        const starSvg = (cls) => `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" class="${cls}" role="img" aria-label="${t('perfect_score')}"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8z"></path></svg>`;
+
+        let html = rows.map(tr => {
             const i = tr.originalIndex;
-            const row = document.createElement('div');
-            row.className = 'flex items-center justify-start py-1.5 gap-2 group w-full';
+            const r = tr.rating || 0;
+            const title = Utils.escapeHTML(tr.title);
+            const num = Utils.escapeHTML(tr.number);
+            const color = r > 0 ? AlbumUtils.tier(r).text : muted;
+            const score = r > 0 ? r.toFixed(1) : '–';
+            const perfect = r === 5 ? starSvg(color) : '';
+            const hasNote = !!(tr.note && tr.note.trim());
 
-            const starColorClass = tr.rating > 0 ? this.getStarColorClass(tr.rating) : 'text-gray-300 dark:text-gray-600';
-
-            let stars = `<div class="flex items-center star-container flex-shrink-0 bg-lightBg dark:bg-surface border border-lightBorder dark:border-surface shadow-sm rounded-full px-2 h-11">`;
-            for(let s=1; s<=5; s++) {
-                const isActive = tr.rating >= s;
-                const starColor = isActive ? starColorClass : 'text-gray-300 dark:text-gray-600';
-                stars += `<button class="star-btn p-0.5 sm:p-1 outline-none transition-transform hover:scale-110 active:scale-90" onclick="app.rateTrack(${i}, ${s})">
-                    <i class="ph-fill ph-star ${starColor} text-base sm:text-lg"></i>
-                </button>`;
+            // Düzenleme modu: parça adı/numarası ve silme
+            if (this.isEditMode) {
+                return `<div class="flex items-center gap-2 py-1.5">
+                    <input type="text" aria-label="#" value="${num}" onblur="app.updateTrackField(${i},'number',this.value)" class="w-10 h-10 text-xs text-center font-bold bg-white dark:bg-surface border border-lightBorder dark:border-gray-800 rounded-lg outline-none focus:border-primary text-gray-800 dark:text-gray-200">
+                    <input type="text" aria-label="${t('tracklist')}" value="${title}" onblur="app.updateTrackField(${i},'title',this.value)" class="flex-1 min-w-0 h-10 px-3 text-sm italic font-bold bg-white dark:bg-surface border border-lightBorder dark:border-gray-800 rounded-lg outline-none focus:border-primary text-gray-800 dark:text-gray-200">
+                    <button onclick="app.deleteTrack(${i})" aria-label="${title} — ${t('remove')}" class="w-10 h-10 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 flex items-center justify-center flex-shrink-0"><i class="ph-bold ph-trash"></i></button>
+                </div>`;
             }
-            stars += '</div>';
 
-            let info = this.isEditMode ? 
-                `<div class="flex items-center flex-grow min-w-0 bg-lightBg dark:bg-surface border border-lightBorder dark:border-surface shadow-sm rounded-full px-2 h-11">
-                    <input type="text" value="${Utils.escapeHTML(tr.number)}" onblur="app.updateTrackField(${i},'number',this.value)" class="w-7 text-xs text-center font-bold bg-white dark:bg-darker border border-lightBorder dark:border-gray-800 rounded-full py-1 flex-shrink-0 outline-none focus:border-primary transition-colors text-gray-800 dark:text-gray-200">
-                    <input type="text" value="${Utils.escapeHTML(tr.title)}" onblur="app.updateTrackField(${i},'title',this.value)" class="flex-grow text-xs sm:text-sm font-bold bg-white dark:bg-darker border border-lightBorder dark:border-gray-800 rounded-full px-3 py-1 mx-1.5 min-w-0 outline-none focus:border-primary transition-colors text-gray-800 dark:text-gray-200 italic">
-                    <button onclick="app.openNotePanel('track', ${i})" class="p-1.5 rounded-full flex-shrink-0 transition-colors active:scale-90 ${tr.note ? 'text-primary' : 'text-gray-400 hover:text-gray-600'}"><i class="ph-${tr.note ? 'fill' : 'bold'} ph-paperclip text-lg"></i></button>
-                    <button onclick="app.deleteTrack(${i})" class="bg-red-100 dark:bg-red-900/30 text-red-500 rounded-full p-1.5 flex-shrink-0 transition-transform active:scale-95 cursor-pointer ml-1"><i class="ph-bold ph-trash"></i></button>
-                 </div>` : 
-                `<div class="flex items-center flex-grow min-w-0 bg-lightBg dark:bg-surface border border-lightBorder dark:border-surface shadow-sm rounded-full px-4 h-11">
-                    <span class="text-gray-400 dark:text-gray-500 text-xs sm:text-sm w-5 text-left font-black flex-shrink-0 mr-1">${tr.number}</span>
-                    <span class="text-sm sm:text-base md:text-lg font-bold text-gray-900 dark:text-white truncate min-w-0 flex-grow italic" style="line-height: 1.2;">${Utils.escapeHTML(tr.title)}</span>
-                    <button onclick="app.openNotePanel('track', ${i})" class="ml-2 p-1.5 rounded-full transition-colors flex-shrink-0 active:scale-90 ${tr.note ? 'text-primary hover:bg-primary/10' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-lightHighlight dark:hover:bg-darker'}">
-                        <i class="ph-${tr.note ? 'fill' : 'bold'} ph-paperclip text-lg"></i>
-                    </button>
-                 </div>`;
-            
-            row.innerHTML = `${info}${stars}`;
-            frag.appendChild(row);
-        });
-        
+            // Seçili satır: puan kaydırıcı + kaydet (✓)
+            if (this.editingTrack === i) {
+                return `<div data-selected class="h-[52px] md:h-10 my-0.5 -mx-2 px-2 flex items-center gap-2 rounded-xl bg-[#ebe2d3] dark:bg-[#2a1f17]">
+                    <span class="w-5 text-xs font-bold ${muted} flex-shrink-0">${num}</span>
+                    <span class="flex-1 min-w-0 truncate text-[15px] italic font-bold">${title}</span>
+                    <button onclick="app.openNotePanel('track', ${i})" aria-label="${t('track_note')}" class="w-10 h-10 md:w-8 md:h-8 rounded-full flex items-center justify-center flex-shrink-0 ${hasNote ? 'text-[#a85a1a] dark:text-primary' : muted} hover:bg-black/5 dark:hover:bg-white/5"><i class="ph-${hasNote ? 'fill' : 'bold'} ph-paperclip"></i></button>
+                    <div data-scrub data-idx="${i}" role="slider" tabindex="0" aria-label="${title}" aria-valuemin="0" aria-valuemax="5" aria-valuenow="${r}" aria-valuetext="${score}" title="${t('scrub_hint')}" class="score-scrub ${color}">
+                        <i class="ph-bold ph-caret-up scrub-caret" aria-hidden="true"></i>
+                        <span data-scrub-val class="text-base md:text-[17px] font-black leading-none">${score}</span>
+                        <i class="ph-bold ph-caret-down scrub-caret" aria-hidden="true"></i>
+                        <span data-ghost-up class="scrub-ghost scrub-ghost-up" aria-hidden="true"></span>
+                        <span data-ghost-down class="scrub-ghost scrub-ghost-down" aria-hidden="true"></span>
+                    </div>
+                    <button type="button" data-scrub-save onmousedown="event.preventDefault()" onclick="app.saveScrub(true)" aria-label="${t('save_rating')}" title="${t('save_rating')} (Enter)" class="scrub-save"><i class="ph-bold ph-check"></i></button>
+                    <span class="w-4 flex justify-center flex-shrink-0">${perfect}</span>
+                </div>`;
+            }
+
+            // Normal satır: noktalı çizgiyle puana bağlanan dergi listesi
+            return `<button type="button" onclick="app.selectTrack(${i})" data-track="${i}" aria-label="${title}: ${score} — ${t('tap_to_rate')}" class="w-full h-11 md:h-[34px] flex items-center gap-2.5 text-left rounded-lg -mx-1 px-1 hover:bg-[#ebe2d3]/70 dark:hover:bg-[#2a1f17]/70 transition-colors">
+                <span class="w-5 text-xs font-bold ${muted} flex-shrink-0">${num}</span>
+                <span class="min-w-0 truncate text-[15px] italic">${title}</span>
+                ${hasNote ? `<i class="ph-fill ph-paperclip text-xs text-[#a85a1a] dark:text-primary flex-shrink-0" aria-hidden="true"></i>` : ''}
+                <span class="flex-1 min-w-[12px] border-b-2 border-dotted border-[#c9b8a6] dark:border-[#4a3829] translate-y-1" aria-hidden="true"></span>
+                <span class="w-8 text-right text-base font-black ${color} flex-shrink-0">${score}</span>
+                <span class="w-4 flex justify-center flex-shrink-0">${perfect}</span>
+            </button>`;
+        }).join('');
+
         if (this.isEditMode) {
-            const addBtn = document.createElement('button');
-            addBtn.className = 'w-full py-2.5 mt-2 border-2 border-dashed border-lightBorder dark:border-gray-800 rounded-xl text-gray-500 font-bold flex items-center justify-center gap-2 hover:bg-lightHighlight dark:hover:bg-surface transition-colors active:scale-[0.98] cursor-pointer';
-            addBtn.innerHTML = `<i class="ph-bold ph-plus text-lg"></i> ${t('add_new_track')}`;
-            addBtn.onclick = () => this.addNewTrack();
-            frag.appendChild(addBtn);
+            html += `<button onclick="app.addNewTrack()" class="w-full h-11 mt-2 border-2 border-dashed border-[#c9b8a6] dark:border-[#4a3829] rounded-xl text-gray-700 dark:text-gray-300 font-bold flex items-center justify-center gap-2 hover:bg-[#ebe2d3]/60 dark:hover:bg-[#2a1f17]/60"><i class="ph-bold ph-plus text-lg"></i> ${t('add_new_track')}</button>`;
         }
 
-        con.appendChild(frag);
+        con.innerHTML = html; this.bindScrub();
+        const countEl = document.getElementById('modal-track-count');
+        if (countEl) countEl.textContent = `· ${al.tracks.length}`;
         this.updateModalTrackSortButtons();
     },
 
-    rateTrack(idx, r) { 
-        if(!AppState.currentModalAlbum?.tracks?.[idx]) return;
-        AppState.currentModalAlbum.tracks[idx].rating = AppState.currentModalAlbum.tracks[idx].rating === r ? 0 : r; 
-        this.renderTracklist(); 
-        this.calculateAverageScore(); 
-        
-        const isSaved = AppState.library.some(a => a.id === AppState.currentModalAlbum.id);
-        if (isSaved) {
-            const libIdx = AppState.library.findIndex(a => a.id === AppState.currentModalAlbum.id);
-            if (libIdx > -1) {
-                AppState.currentModalAlbum.dateAdded = new Date().toISOString();
-                AppState.library[libIdx] = JSON.parse(JSON.stringify(AppState.currentModalAlbum));
-                this.saveAlbumData(AppState.library[libIdx]);
-                this.renderDateAdded();
-                if(AppState.currentView === 'library') { this.renderLibrary(); }
-                if(AppState.currentView === 'stats') { this.renderStats(); }
-            }
+    // Seçili parça, kayan listenin görünür alanında kalsın
+    scrollSelectedTrackIntoView(fromTop = false) {
+        const list = document.getElementById('modal-tracklist');
+        if (!list) return;
+        if (fromTop) list.scrollTop = 0;
+        const row = list.querySelector('[data-selected]');
+        if (!row || list.scrollHeight <= list.clientHeight) return;
+        const top = row.offsetTop - list.offsetTop;
+        if (top < list.scrollTop || top + row.offsetHeight > list.scrollTop + list.clientHeight) {
+            list.scrollTop = Math.max(0, top - list.clientHeight / 3);
         }
-        
-        this.updateModalButtons(); 
     },
-    
+
+    // Satıra dokununca düzenlemeye aç/kapat
+    selectTrack(i) {
+        this.saveScrub(false); this.editingTrack = this.editingTrack === i ? null : i;
+        this.renderTracklist();
+        this.scrollSelectedTrackIntoView();
+        this.focusScrub();
+    },
+
+        // --- Puan kaydırıcı: sürükle / tekerlek / ok tuşları ile seç, ✓ ya da Enter ile kaydet ---
+    focusScrub() {
+        document.querySelector('#modal-tracklist [data-scrub]')?.focus({ preventScroll: true });
+    },
+
+    paintScrub(el, v) {
+        const fmt = (x) => x > 0 ? x.toFixed(1) : '–';
+        el.querySelector('[data-scrub-val]').textContent = fmt(v);
+        el.querySelector('[data-ghost-up]').textContent = v < 5 ? fmt(v + 0.5) : '';
+        el.querySelector('[data-ghost-down]').textContent = v > 0 ? fmt(v - 0.5) : '';
+        el.className = `score-scrub ${AlbumUtils.tier(v).text}${el.classList.contains('is-scrubbing') ? ' is-scrubbing' : ''}`;
+        el.setAttribute('aria-valuenow', v);
+        el.setAttribute('aria-valuetext', fmt(v));
+        const dirty = !!this.scrub && v !== this.scrub.orig;
+        document.querySelector('#modal-tracklist [data-scrub-save]')?.classList.toggle('is-dirty', dirty);
+    },
+
+    // Seçilen puanı kaydet; close=true ise satırı kapatıp listeye dön
+    saveScrub(close = true) {
+        const s = this.scrub;
+        if (!s) return;
+        clearTimeout(s.blurTimer);
+        this.scrub = null;
+        if (s.value !== s.orig) this.setTrackRating(s.idx, s.value);
+        if (close) {
+            this.editingTrack = null;
+            this.renderTracklist();
+            document.querySelector(`#modal-tracklist [data-track="${s.idx}"]`)?.focus({ preventScroll: true });
+        }
+    },
+
+    // Esc: değişikliği bırak, satırı kapat
+    cancelScrub() {
+        const idx = this.scrub?.idx;
+        this.scrub = null;
+        this.editingTrack = null;
+        this.renderTracklist();
+        if (idx != null) document.querySelector(`#modal-tracklist [data-track="${idx}"]`)?.focus({ preventScroll: true });
+    },
+
+    bindScrub() {
+        const el = document.querySelector('#modal-tracklist [data-scrub]');
+        const al = AppState.currentModalAlbum;
+        if (!el || !al) { this.scrub = null; return; }
+        const idx = Number(el.dataset.idx);
+        const orig = al.tracks[idx]?.rating || 0;
+        const s = this.scrub = { idx, orig, value: orig, blurTimer: null };
+        const STEP_PX = 14; // bu kadar piksel sürükleme = yarım puan
+        const clamp = (v) => Math.min(5, Math.max(0, Math.round(v * 2) / 2));
+        let startY = 0, startVal = 0, moved = false, wheelAcc = 0;
+
+        const show = (v) => {
+            v = clamp(v);
+            if (v === s.value) return;
+            s.value = v;
+            this.paintScrub(el, v);
+            navigator.vibrate?.(4);
+        };
+
+        this.paintScrub(el, orig);
+
+        el.addEventListener('pointerdown', (e) => {
+            if (e.button > 0) return;
+            e.preventDefault();
+            el.setPointerCapture(e.pointerId);
+            startY = e.clientY; startVal = s.value; moved = false;
+            el.classList.add('is-scrubbing');
+            el.focus({ preventScroll: true });
+        });
+        el.addEventListener('pointermove', (e) => {
+            if (!el.hasPointerCapture(e.pointerId)) return;
+            const dy = startY - e.clientY;
+            if (Math.abs(dy) > 5) moved = true;
+            if (moved) show(startVal + Math.trunc(dy / STEP_PX) * 0.5);
+        });
+        el.addEventListener('pointerup', (e) => {
+            el.classList.remove('is-scrubbing');
+            // Sürüklemeden dokunma: üst yarı +0.5, alt yarı −0.5
+            if (!moved) {
+                const b = el.getBoundingClientRect();
+                show(s.value + (e.clientY < b.top + b.height / 2 ? 0.5 : -0.5));
+            }
+        });
+        el.addEventListener('pointercancel', () => el.classList.remove('is-scrubbing'));
+
+        el.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            wheelAcc += e.deltaY;
+            if (Math.abs(wheelAcc) < 40) return;
+            show(s.value + (wheelAcc < 0 ? 0.5 : -0.5));
+            wheelAcc = 0;
+        }, { passive: false });
+
+        el.addEventListener('keydown', (e) => {
+            const steps = { ArrowUp: 0.5, ArrowRight: 0.5, ArrowDown: -0.5, ArrowLeft: -0.5 };
+            if (e.key in steps) show(s.value + steps[e.key]);
+            else if (e.key === 'Home') show(0);
+            else if (e.key === 'End') show(5);
+            else if (/^[0-5]$/.test(e.key)) show(Number(e.key));
+            else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.saveScrub(true); return; }
+            else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); this.cancelScrub(); return; }
+            else return;
+            e.preventDefault();
+        });
+
+        // Başka bir yere tıklanırsa seçilen puan kaybolmasın: kısa süre sonra kendiliğinden kaydet
+        el.addEventListener('blur', () => {
+            clearTimeout(s.blurTimer);
+            s.blurTimer = setTimeout(() => { if (this.scrub === s) this.saveScrub(false); }, 300);
+        });
+        el.addEventListener('focus', () => clearTimeout(s.blurTimer));
+    },
+
+    // − / + : yarım puan adımları
+    stepTrack(idx, delta) {
+        const tr = AppState.currentModalAlbum?.tracks?.[idx];
+        if (!tr) return;
+        const next = Math.min(5, Math.max(0, (tr.rating || 0) + delta));
+        this.setTrackRating(idx, next);
+        const sel = delta > 0 ? '[data-rate-inc]' : '[data-rate-dec]';
+        const btn = document.querySelector(`#modal-tracklist ${sel}`);
+        (btn && !btn.disabled ? btn : document.querySelector('#modal-tracklist [data-rate-inc], #modal-tracklist [data-rate-dec]'))?.focus({ preventScroll: true });
+    },
+
+    // Eski yıldız tıklaması için: aynı puana tekrar basınca sıfırlar
+    rateTrack(idx, r) {
+        const tr = AppState.currentModalAlbum?.tracks?.[idx];
+        if (!tr) return;
+        this.setTrackRating(idx, tr.rating === r ? 0 : r);
+    },
+
+    setTrackRating(idx, value) {
+        const al = AppState.currentModalAlbum;
+        if (!al?.tracks?.[idx]) return;
+        al.tracks[idx].rating = value;
+        this.renderTracklist();
+        this.calculateAverageScore();
+
+        // Durumu kendiliğinden ilerlet: ilk puan → Dinliyorum, tüm parçalar puanlanınca → Bitti
+        const prog = AlbumUtils.progress(al);
+        const st = AlbumUtils.status(al);
+        if (st === 'planned' && prog.rated > 0) al.status = 'listening';
+        if (prog.total > 0 && prog.rated === prog.total && st !== 'done') al.status = 'done';
+        this.renderModalStatus();
+
+        this.persistIfSaved();
+        this.updateModalButtons();
+    },
+
     calculateAverageScore() {
         const al = AppState.currentModalAlbum;
         if(!al) return;
-        
+
         const totalTracks = al.tracks ? al.tracks.length : 0;
-        const ratedTracks = al.tracks ? al.tracks.filter(t => t.rating > 0) : [];
-        
-        let runningAvg = "0.0";
-        let finalAvg = 0;
-        
-        if (ratedTracks.length > 0) {
-            runningAvg = (ratedTracks.reduce((a,t)=>a+t.rating,0)/ratedTracks.length).toFixed(1);
-        }
-        
-        if (totalTracks > 0 && ratedTracks.length === totalTracks) {
-            finalAvg = parseFloat(runningAvg);
-        }
-        
+        const ratedTracks = al.tracks ? al.tracks.filter(tr => tr.rating > 0) : [];
+        const runningAvg = ratedTracks.length ? ratedTracks.reduce((s, tr) => s + tr.rating, 0) / ratedTracks.length : 0;
+        const shown = Math.round(runningAvg * 10) / 10;
+
         const avgEl = document.getElementById('modal-avg-score');
-        if(avgEl) avgEl.textContent = runningAvg > 0 ? runningAvg : "-"; 
-        al.averageScore = finalAvg;
+        if (avgEl) avgEl.textContent = shown > 0 ? shown.toFixed(1) : '–';
+
+        // Mühür rengi puana göre; tüm parçalar puanlanmadıysa kesikli çizgi
+        const stamp = document.getElementById('modal-stamp');
+        if (stamp) {
+            const complete = totalTracks > 0 && ratedTracks.length === totalTracks;
+            stamp.className = `score-badge ${complete ? '' : 'is-partial'} flex-shrink-0 w-[68px] h-[68px] md:w-[80px] md:h-[80px] rounded-full flex items-center justify-center -rotate-[8deg] ${AlbumUtils.tier(shown).text}`;
+            stamp.setAttribute('aria-label', `${t('album_avg')}: ${shown > 0 ? shown.toFixed(1) : '–'}`);
+        }
+
+        const progEl = document.getElementById('modal-rated-progress');
+        if (progEl) progEl.textContent = totalTracks > 0 ? `${ratedTracks.length} / ${totalTracks} ${t('tracks_rated')}` : '';
+
+        al.averageScore = totalTracks > 0 && ratedTracks.length === totalTracks ? shown : 0;
     },
-    
-    addNewTrack() { 
+
+    addNewTrack() {
         if (!AppState.currentModalAlbum) return;
         if (!AppState.currentModalAlbum.tracks) AppState.currentModalAlbum.tracks = [];
         const tracks = AppState.currentModalAlbum.tracks;
-        const newNum = tracks.length > 0 ? (tracks.length + 1).toString() : "1";
-        tracks.push({ id: 'manual_' + Date.now(), title: t('add_new_track'), number: newNum, rating: 0 });
-        this.renderTracklist();
-        this.updateModalButtons();
-    }, 
-    
-    deleteTrack(idx) { 
-        if (!AppState.currentModalAlbum || !AppState.currentModalAlbum.tracks) return;
-        AppState.currentModalAlbum.tracks.splice(idx, 1);
+        tracks.push({ id: 'manual_' + Date.now(), title: t('add_new_track'), number: String(tracks.length + 1), rating: 0 });
         this.renderTracklist();
         this.calculateAverageScore();
         this.updateModalButtons();
     },
 
+    deleteTrack(idx) {
+        if (!AppState.currentModalAlbum || !AppState.currentModalAlbum.tracks) return;
+        AppState.currentModalAlbum.tracks.splice(idx, 1);
+        this.editingTrack = null;
+        this.renderTracklist();
+        this.calculateAverageScore();
+        this.updateModalButtons();
+    },
+
+    // Alt bar: Ekle / Güncelle / Kaldır
     updateModalButtons() {
         const con = document.getElementById('modal-save-btn-container'), al = AppState.currentModalAlbum;
         if(!con || !al) return;
         const orig = AppState.library.find(a => a.id === al.id);
         const isMod = orig ? JSON.stringify(orig) !== JSON.stringify(al) : true;
+        const primary = 'h-12 px-6 rounded-full bg-primary text-darker text-sm font-black active:scale-[0.98] transition-transform';
 
-        if(orig) {
-            if(isMod) con.innerHTML = `<button onclick="app.saveAlbumToLibrary()" class="bg-primary text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-md cursor-pointer hover:scale-105 transition-transform">${t("update")}</button>`;
-            else con.innerHTML = `<button onclick="app.removeAlbumFromLibrary('${al.id}')" class="bg-red-100 text-red-600 px-4 py-1.5 rounded-full text-xs font-bold cursor-pointer hover:bg-red-200 transition-colors">${t("remove")}</button>`;
-        } else con.innerHTML = `<button onclick="app.saveAlbumToLibrary()" class="bg-primary text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-md cursor-pointer hover:scale-105 transition-transform">${t("add")}</button>`;
+        if (!orig) con.innerHTML = `<button onclick="app.saveAlbumToLibrary()" class="${primary}">${t("add")}</button>`;
+        else if (isMod) con.innerHTML = `<button onclick="app.saveAlbumToLibrary()" class="${primary}">${t("update")}</button>`;
+        else con.innerHTML = `<button onclick="app.confirmRemoveAlbum('${Utils.escapeHTML(al.id)}')" class="h-12 px-3 rounded-full text-sm font-bold text-red-700 dark:text-red-400 hover:bg-red-500/10">${t("remove")}</button>`;
+    },
+
+    confirmRemoveAlbum(id) {
+        if (confirm(t('confirm_remove'))) this.removeAlbumFromLibrary(id);
     },
     
-    saveAlbumToLibrary() {
-        if(!AppState.currentModalAlbum) return;
-        
-        AppState.currentModalAlbum.dateAdded = new Date().toISOString();
-        
-        const idx = AppState.library.findIndex(a => a.id === AppState.currentModalAlbum.id);
-        if (idx > -1) { AppState.library[idx] = AppState.currentModalAlbum; showToast(t("toast_changes_saved"), "success"); } 
-        else { AppState.library.unshift(AppState.currentModalAlbum); showToast(t("toast_album_added"), "success"); }
-        
-        this.saveAlbumData(AppState.currentModalAlbum); 
-        this.updateModalButtons(); 
+        saveAlbumToLibrary() {
+        const al = AppState.currentModalAlbum;
+        if (!al) return;
+        const now = new Date().toISOString();
+        const idx = AppState.library.findIndex(a => a.id === al.id);
+        al.updatedAt = now;
+
+        if (idx > -1) {
+            AppState.library[idx] = structuredClone(al);
+            showToast(t("toast_changes_saved"), "success");
+        } else {
+            al.dateAdded = now;
+            AppState.library.unshift(structuredClone(al));
+            showToast(t("toast_album_added"), "success");
+        }
+
+        this.saveAlbumData(al);
+        this.updateModalButtons();
         this.renderDateAdded();
-        
-        if(AppState.currentView === 'library') { this.renderLibrary(); }
+        if (AppState.currentView === 'library') this.renderLibrary();
     },
     
     removeAlbumFromLibrary(id) {
         AppState.library = AppState.library.filter(a => a.id !== id); 
         this.deleteAlbumData(id); 
-        showToast(t("toast_album_removed"), "info"); 
+        showToast(t("toast_album_removed"), "info");
         this.closeModal();
         if(AppState.currentView === 'library') { this.renderLibrary(); }
+        if(AppState.currentView === 'queue') { this.renderQueue(); }
+    },
+
+    // --- Dinlenecekler (kuyruk) ---
+    relativeTime(iso) {
+        const diffDays = Math.round((new Date(iso) - new Date()) / 86400000);
+        const rtf = new Intl.RelativeTimeFormat(AppState.language === 'en' ? 'en' : 'tr', { numeric: 'auto' });
+        if (Math.abs(diffDays) < 7) return rtf.format(diffDays, 'day');
+        if (Math.abs(diffDays) < 60) return rtf.format(Math.round(diffDays / 7), 'week');
+        if (Math.abs(diffDays) < 365) return rtf.format(Math.round(diffDays / 30), 'month');
+        return rtf.format(Math.round(diffDays / 365), 'year');
+    },
+
+    getQueue() {
+        const dir = AppState.queueSort === 'newest' ? -1 : 1;
+        return AppState.library
+            .filter(a => AlbumUtils.status(a) === 'planned')
+            .sort((a, b) => (new Date(a.dateAdded || 0) - new Date(b.dateAdded || 0)) * dir);
+    },
+
+    renderQueue() {
+        const list = document.getElementById('queue-list');
+        const sub = document.getElementById('queue-subtitle');
+        const sortLabel = document.getElementById('queue-sort-label');
+        if (!list) return;
+        if (sortLabel) sortLabel.textContent = AppState.queueSort === 'newest' ? t('queue_sort_newest') : t('queue_sort_oldest');
+
+        if (AppState.isLoading) {
+            list.innerHTML = Array.from({ length: 3 }, () => `<li class="skeleton-row" aria-hidden="true"><div class="skeleton w-16 h-16 rounded-lg"></div><div class="flex-1 flex flex-col gap-2 justify-center"><div class="skeleton h-3 w-2/3 rounded"></div><div class="skeleton h-3 w-1/3 rounded"></div></div></li>`).join('');
+            if (sub) sub.textContent = '';
+            return;
+        }
+
+        const queue = this.getQueue();
+        if (sub) {
+            if (!queue.length) sub.textContent = '';
+            else {
+                const oldest = queue.reduce((m, a) => (new Date(a.dateAdded) < new Date(m.dateAdded) ? a : m), queue[0]);
+                sub.textContent = `${queue.length} ${t('queue_subtitle')} · ${t('queue_oldest')} ${this.relativeTime(oldest.dateAdded)}`;
+            }
+        }
+
+        if (!queue.length) {
+            list.innerHTML = `<li class="p-6 text-center text-sm text-gray-600 dark:text-gray-400 rounded-2xl bg-white dark:bg-surface border border-lightBorder dark:border-gray-800">${AppState.isLoggedIn ? t('queue_empty') : t('login_empty_desc')}</li>`;
+            return;
+        }
+
+        list.innerHTML = queue.map(a => `
+            <li class="flex gap-3 items-center p-2.5 rounded-2xl bg-white dark:bg-surface border border-lightBorder dark:border-gray-800">
+                <button onclick="app.openAlbumModal('${Utils.escapeHTML(a.id)}')" class="flex gap-3 items-center flex-1 min-w-0 text-left rounded-xl">
+                    <img ${AlbumUtils.coverAttrs(a)} alt="" loading="lazy" class="w-16 h-16 rounded-lg object-cover flex-shrink-0">
+                    <span class="flex flex-col gap-0.5 min-w-0">
+                        <span class="text-sm font-bold italic text-gray-900 dark:text-white truncate">${Utils.escapeHTML(a.title)}</span>
+                        <span class="text-xs text-gray-700 dark:text-gray-300 truncate">${Utils.escapeHTML(a.artist)} · ${Utils.escapeHTML(a.year)}</span>
+                        <span class="text-[11px] text-gray-600 dark:text-gray-400">${this.relativeTime(a.dateAdded)}</span>
+                    </span>
+                </button>
+                <button onclick="app.startListening('${Utils.escapeHTML(a.id)}')" aria-label="${Utils.escapeHTML(a.title)} — ${t('start_listening')}" class="w-11 h-11 rounded-full bg-primary/15 text-[#a85a1a] dark:text-primary flex items-center justify-center flex-shrink-0 active:scale-95 transition-transform">
+                    <i class="ph-fill ph-play text-lg"></i>
+                </button>
+            </li>`).join('');
+    },
+
+    toggleQueueSort() {
+        AppState.queueSort = AppState.queueSort === 'oldest' ? 'newest' : 'oldest';
+        localStorage.setItem('albumDiaryQueueSort', AppState.queueSort);
+        this.renderQueue();
+    },
+
+    startListening(id) {
+        const idx = AppState.library.findIndex(a => a.id === id);
+        if (idx === -1) return;
+        const album = AppState.library[idx];
+        album.status = 'listening';
+        album.updatedAt = new Date().toISOString();
+        this.saveAlbumData(album);
+        showToast(t('started_listening'), "success");
+        this.renderQueue();
+        this.openAlbumModal(id);
+    },
+
+    pickRandomFromQueue() {
+        const queue = this.getQueue();
+        if (!queue.length) { showToast(t('queue_empty'), "info"); return; }
+        const pick = queue[Math.floor(Math.random() * queue.length)];
+        this.startListening(pick.id);
+    },
+
+    // --- Aylık / yıllık özet ---
+    getSummaryRange() {
+        const now = new Date();
+        if (AppState.summaryPeriod === 'year') {
+            const y = now.getFullYear() + AppState.summaryOffset;
+            return { start: new Date(y, 0, 1), end: new Date(y + 1, 0, 1), label: `${y}` };
+        }
+        const start = new Date(now.getFullYear(), now.getMonth() + AppState.summaryOffset, 1);
+        const end = new Date(start.getFullYear(), start.getMonth() + 1, 1);
+        const label = start.toLocaleDateString(AppState.language === 'en' ? 'en-US' : 'tr-TR', { month: 'long', year: 'numeric' });
+        return { start, end, label };
+    },
+
+    shiftSummaryPeriod(step) {
+        if (AppState.summaryOffset + step > 0) return; // geleceğe gitme
+        AppState.summaryOffset += step;
+        this.renderSummary();
+    },
+
+    toggleSummaryPeriod() {
+        AppState.summaryPeriod = AppState.summaryPeriod === 'month' ? 'year' : 'month';
+        AppState.summaryOffset = 0;
+        this.renderSummary();
+    },
+
+    renderSummary() {
+        const card = document.getElementById('summary-card');
+        const labelEl = document.getElementById('summary-period-label');
+        if (!card) return;
+        const { start, end, label } = this.getSummaryRange();
+        if (labelEl) labelEl.textContent = label;
+
+        const inRange = iso => { const d = new Date(iso); return !isNaN(d) && d >= start && d < end; };
+        const albums = AppState.library.filter(a => {
+            if (AlbumUtils.status(a) === 'planned' && !(a.listens || []).length) return false;
+            const dates = [a.dateAdded, ...(a.listens || []).map(l => l.date)];
+            if (AlbumUtils.status(a) === 'done') dates.push(a.updatedAt);
+            return dates.some(d => d && inRange(d));
+        });
+
+        const switchBtn = `<button onclick="app.toggleSummaryPeriod()" class="h-11 px-4 rounded-xl bg-primary text-darker text-sm font-black active:scale-[0.98] transition-transform">${AppState.summaryPeriod === 'month' ? `${start.getFullYear()} ${t('year_summary').toLowerCase()}` : t('month_summary')}</button>`;
+
+        if (!albums.length) {
+            card.innerHTML = `<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4"><p class="text-base text-gray-700 dark:text-gray-300">${t('summary_empty')}</p>${switchBtn}</div>`;
+            return;
+        }
+
+        const scored = albums.map(a => ({ a, s: a.averageScore || AlbumUtils.runningAvg(a) })).filter(x => x.s > 0);
+        const avg = scored.length ? (scored.reduce((sum, x) => sum + x.s, 0) / scored.length).toFixed(1) : '-';
+        const best = scored.sort((x, y) => y.s - x.s)[0];
+        const trackRatings = albums.reduce((n, a) => n + AlbumUtils.ratedTracks(a).length, 0);
+        const reviews = albums.filter(a => a.note && a.note.trim()).length;
+        const mostCommon = arr => { const c = {}; arr.forEach(x => { if (x) c[x] = (c[x] || 0) + 1; }); return Object.entries(c).sort((x, y) => y[1] - x[1])[0]?.[0]; };
+        const topArtist = mostCommon(albums.map(a => a.artist));
+        const topGenre = mostCommon(albums.map(a => a.genres?.[0]));
+
+        const stat = (n, l) => `<div class="p-3 rounded-xl bg-lightBg dark:bg-dark flex flex-col gap-0.5"><span class="text-2xl font-black text-gray-900 dark:text-white">${n}</span><span class="text-xs text-gray-600 dark:text-gray-400">${l}</span></div>`;
+        const row = (l, v, italic = false) => v ? `<div class="flex justify-between gap-3 text-sm"><span class="text-gray-600 dark:text-gray-400">${l}</span><span class="font-bold text-gray-900 dark:text-white text-right truncate ${italic ? 'italic' : ''}">${v}</span></div>` : '';
+
+        card.innerHTML = `
+            <p class="text-lg leading-relaxed text-gray-900 dark:text-white mb-4">
+                ${t('summary_listened')} <b class="text-[#a85a1a] dark:text-primary">${albums.length} ${t('summary_albums')}</b> ${t('summary_avg')} <b class="text-[#a85a1a] dark:text-primary">${avg}</b>.
+            </p>
+            <div class="grid grid-cols-3 gap-2 mb-4">
+                ${stat(albums.length, t('summary_albums'))}
+                ${stat(trackRatings, t('summary_track_ratings'))}
+                ${stat(reviews, t('summary_reviews'))}
+            </div>
+            <div class="flex flex-col gap-2 mb-4">
+                ${best ? row(t('summary_album_of'), `${Utils.escapeHTML(best.a.title)} · ${best.s.toFixed(1)}`, true) : ''}
+                ${row(t('summary_top_artist'), Utils.escapeHTML(topArtist || ''))}
+                ${row(t('summary_top_genre'), Utils.escapeHTML(topGenre ? tGenre(topGenre) : ''))}
+            </div>
+            <div class="flex justify-end">${switchBtn}</div>`;
+    },
+
+    renderFavTracks() {
+        const list = document.getElementById('fav-tracks-list');
+        if (!list) return;
+        const tracks = [];
+        AppState.library.forEach(a => (a.tracks || []).forEach(tr => { if (tr.rating === 5) tracks.push({ tr, a }); }));
+        tracks.sort((x, y) => new Date(AlbumUtils.lastActivity(y.a)) - new Date(AlbumUtils.lastActivity(x.a)));
+        if (!tracks.length) { list.innerHTML = `<li class="p-3 text-sm text-gray-600 dark:text-gray-400">${t('no_fav_tracks')}</li>`; return; }
+        list.innerHTML = tracks.slice(0, 6).map(({ tr, a }) => `
+            <li>
+                <button onclick="app.openAlbumModal('${Utils.escapeHTML(a.id)}')" class="w-full flex items-center gap-3 p-2 rounded-xl text-left hover:bg-lightBg dark:hover:bg-surfaceHover transition-colors">
+                    <img ${AlbumUtils.coverAttrs(a)} alt="" loading="lazy" class="w-10 h-10 rounded object-cover flex-shrink-0">
+                    <span class="flex-1 min-w-0">
+                        <span class="block text-sm font-bold italic truncate text-gray-900 dark:text-white">${Utils.escapeHTML(tr.title)}</span>
+                        <span class="block text-[11px] text-gray-600 dark:text-gray-400 truncate">${Utils.escapeHTML(a.artist)} · ${Utils.escapeHTML(a.title)}</span>
+                    </span>
+                    <span class="text-xs font-black text-blue-700 dark:text-blue-400 flex-shrink-0">5 ★</span>
+                </button>
+            </li>`).join('');
     },
 
     toggleArtistStatsSort(t) { 
@@ -2537,7 +3288,10 @@ const app = {
     },
     
     renderStats() {
-        const lib = AppState.library;
+        this.renderSummary();
+        this.renderFavTracks();
+        // Dinlenecekler (henüz dinlenmemiş) istatistiklere dahil edilmez
+        const lib = AppState.library.filter(a => AlbumUtils.status(a) !== 'planned');
         const setEl = (id, txt) => { const el = document.getElementById(id); if(el) el.textContent = txt; };
         
         setEl('stat-total-albums', lib.length);
@@ -2555,10 +3309,10 @@ const app = {
             if(a.genres) a.genres.forEach(g => { const ng = g.trim().toLowerCase(); if(!gStats[ng]) gStats[ng]={n:g.trim(),c:0, raw: g.trim()}; gStats[ng].c++; });
         });
 
-        const distribution = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+        const distribution = Array(10).fill(0); // 0.5, 1, 1.5 ... 5
         lib.forEach(a => {
             if(a.tracks) {
-                a.tracks.forEach(t => { if(t.rating >= 1 && t.rating <= 5) distribution[Math.round(t.rating)]++; });
+                a.tracks.forEach(t => { if(t.rating >= 0.5 && t.rating <= 5) distribution[Math.round(t.rating * 2) - 1]++; });
             }
         });
 
@@ -2627,7 +3381,7 @@ const app = {
             });
         };
 
-        buildChart('chart-distribution', 'bar', ['1 ★', '2 ★', '3 ★', '4 ★', '5 ★'], Object.values(distribution), '#d17b38');
+        buildChart('chart-distribution', 'bar', ['½', '1', '1½', '2', '2½', '3', '3½', '4', '4½', '5'], distribution, '#d17b38');
         buildChart('chart-decade', 'bar', decadeLabels, decadeData, '#3b82f6', false);
         buildChart('chart-trends', 'line', sortedMonths, trendData, '#22c55e', false);
 
@@ -2636,7 +3390,7 @@ const app = {
             tl.innerHTML = '';
             [...rated].sort((a,b)=>b.averageScore-a.averageScore).slice(0,5).forEach((al, i) => {
                 const el = document.createElement('div'); el.className = 'flex items-center gap-3 p-2 bg-lightBg dark:bg-surface rounded-xl cursor-pointer active:scale-95 transition-transform hover:bg-lightHighlight dark:hover:bg-surfaceHover'; el.onclick = () => this.openAlbumModal(al.id, al.title, al.artist, al.year);
-                el.innerHTML = `<span class="font-bold text-gray-400 w-4 text-center">${i+1}</span><img src="${Utils.escapeHTML(al.customCoverUrl || al.coverUrl)}" class="w-10 h-10 rounded shadow-sm object-cover"><div class="flex-1 min-w-0"><p class="text-sm font-bold truncate italic">${Utils.escapeHTML(al.title)}</p><p class="text-[10px] text-gray-500 truncate">${Utils.escapeHTML(al.artist)}</p></div><span class="text-xs font-bold text-yellow-500 bg-yellow-50 dark:bg-yellow-500/10 px-2 py-1 rounded-lg">${al.averageScore.toFixed(1)}</span>`;
+                el.innerHTML = `<span class="font-bold text-gray-600 dark:text-gray-400 w-4 text-center">${i+1}</span><img ${AlbumUtils.coverAttrs(al)} alt="" class="w-10 h-10 rounded shadow-sm object-cover"><div class="flex-1 min-w-0"><p class="text-sm font-bold truncate italic">${Utils.escapeHTML(al.title)}</p><p class="text-[11px] text-gray-500 truncate">${Utils.escapeHTML(al.artist)}</p></div><span class="text-xs font-bold text-yellow-500 bg-yellow-50 dark:bg-yellow-500/10 px-2 py-1 rounded-lg">${al.averageScore.toFixed(1)}</span>`;
                 tl.appendChild(el);
             });
         }
@@ -2647,7 +3401,7 @@ const app = {
             if (!btn || !iconDir) return;
             if (AppState.statsArtistSortBy === type) {
                 btn.classList.add('text-primary', 'bg-primary/10'); btn.classList.remove('text-gray-500');
-                iconDir.className = `ph-bold ph-arrow-${AppState.statsArtistSortDirection === 'desc' ? 'down' : 'up'} text-[10px]`;
+                iconDir.className = `ph-bold ph-arrow-${AppState.statsArtistSortDirection === 'desc' ? 'down' : 'up'} text-[11px]`;
                 iconDir.classList.remove('hidden');
             } else {
                 btn.classList.remove('text-primary', 'bg-primary/10'); btn.classList.add('text-gray-500');
@@ -2676,7 +3430,7 @@ const app = {
                     window.scrollTo(0,0);
                     showToast(`${t('toast_filtered_genre')} ${Utils.escapeHTML(art)}`, "info");
                 };
-                li.innerHTML = `<div><p class="font-bold">${Utils.escapeHTML(art)}</p><p class="text-[10px] text-gray-500">${st.c} ${t('albums')}</p></div><span class="text-yellow-500 font-bold flex items-center gap-1"><i class="ph-fill ph-star"></i> ${avg}</span>`;
+                li.innerHTML = `<div><p class="font-bold">${Utils.escapeHTML(art)}</p><p class="text-[11px] text-gray-500">${st.c} ${t('albums')}</p></div><span class="text-yellow-500 font-bold flex items-center gap-1"><i class="ph-fill ph-star"></i> ${avg}</span>`;
                 alEl.appendChild(li);
             });
         }
