@@ -3,12 +3,17 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebas
 import { 
     getAuth, 
     signInWithPopup, 
+    signInWithRedirect,
     GoogleAuthProvider, 
     signOut, 
     onAuthStateChanged 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import {
     getFirestore,
+    initializeFirestore,
+    persistentLocalCache,
+    persistentMultipleTabManager,
+    getDocsFromCache,
     collection,
     doc,
     getDocs,
@@ -30,7 +35,10 @@ const firebaseConfig = {
 
 const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
-const db = getFirestore(firebaseApp);
+// Veriler telefonda da saklanır: uygulama anında açılır, internet yokken de kitaplık görünür
+let db;
+try { db = initializeFirestore(firebaseApp, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) }); }
+catch (e) { db = getFirestore(firebaseApp); }
 const googleProvider = new GoogleAuthProvider();
 const OWNER_UID = "2i3wrGcLPfMDZNDNGpY4QTYiudb2";
 
@@ -119,6 +127,8 @@ const Translations = {
         image_link: "Image URL",
         apply_url: "Apply",
         search_itunes: "Find cover",
+        choose_cover: "Pick a cover",
+        cover_selected: "Cover updated", upload_cover: "Upload from computer", install_app: "Install as app", install_ios_hint: "To add it as an app, tap Share in Safari, then “Add to Home Screen”.", app_installed: "RateAgainst was added to your home screen", upload_not_image: "This file could not be read as an image",
         album_avg: "Album Average",
         tracklist: "Tracklist",
         default_sort: "Default",
@@ -323,6 +333,8 @@ const Translations = {
         image_link: "Görsel URL",
         apply_url: "Uygula",
         search_itunes: "Kapak bul",
+        choose_cover: "Bir kapak seç",
+        cover_selected: "Kapak değiştirildi", upload_cover: "Bilgisayardan yükle", install_app: "Uygulama olarak yükle", install_ios_hint: "Uygulama olarak eklemek için Safari'de Paylaş düğmesine, sonra “Ana Ekrana Ekle”ye dokun.", app_installed: "RateAgainst ana ekrana eklendi", upload_not_image: "Bu dosya görsel olarak okunamadı",
         album_avg: "Albüm Ortalaması",
         tracklist: "Şarkı Listesi",
         default_sort: "Varsayılan",
@@ -564,7 +576,7 @@ const AlbumUtils = {
         if (album.averageScore > 0) return 'done';
         return this.ratedTracks(album).length > 0 ? 'listening' : 'done';
     },
-    lastActivity(album) { return album.updatedAt || album.dateAdded || 0; },
+    lastActivity(album) { return album.sortAt || album.updatedAt || album.dateAdded || 0; },
     // Tek bir renk sistemi: kartlar, rozetler ve özet aynı eşikleri kullanır
     tier(score) {
         if (score >= 4.5) return { text: 'text-blue-700 dark:text-blue-400', badge: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300' };
@@ -922,6 +934,7 @@ const app = {
         this.showView('library');
         this.updateSearchPlaceholder();
         this.updateModalTrackSortButtons();
+        this.setupAppMode();
          
 
         // Firebase Auth Listener
@@ -1122,10 +1135,68 @@ const app = {
         }
     },
 
+    // --- Telefonda uygulama: kurulum, geri tuşu, arka plandan dönünce yenileme ---
+    setupAppMode() {
+        const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        document.documentElement.classList.toggle('is-standalone', standalone);
+
+        if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+            navigator.serviceWorker.register('sw.js').catch(() => {});
+        }
+
+        // Ana ekrana ekle (Android / masaüstü Chrome, Edge)
+        const btn = document.getElementById('install-app-btn');
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            this._installPrompt = e;
+            btn?.classList.remove('hidden'); btn?.classList.add('flex');
+        });
+        window.addEventListener('appinstalled', () => {
+            this._installPrompt = null;
+            btn?.classList.add('hidden'); btn?.classList.remove('flex');
+            showToast(t('app_installed'), 'success');
+        });
+        // iPhone / iPad: Safari'de elle eklenir, nasıl yapılacağını göster
+        const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        if (ios && !standalone) document.getElementById('install-ios-hint')?.classList.remove('hidden');
+
+        // Telefonun geri tuşu / geri hareketi albüm panelini kapatsın, uygulamadan çıkmasın
+        window.addEventListener('popstate', () => {
+            if (this._skipPop) { this._skipPop = false; return; }
+            const modal = document.getElementById('album-modal');
+            if (modal && !modal.classList.contains('hidden')) this.closeModal(true);
+        });
+
+        // Uygulama uzun süre arka planda kaldıysa dönünce kitaplığı yenile
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState !== 'visible' || !auth.currentUser) return;
+            const modalOpen = !document.getElementById('album-modal')?.classList.contains('hidden');
+            if (!modalOpen && Date.now() - (this._lastLoad || 0) > 10 * 60 * 1000) this.loadData();
+        });
+
+        // Kısayollar: ./?view=search gibi
+        const v = new URLSearchParams(location.search).get('view');
+        if (['queue', 'search', 'stats'].includes(v)) this.showView(v);
+    },
+
+    async installApp() {
+        const p = this._installPrompt;
+        if (!p) return;
+        p.prompt();
+        try { await p.userChoice; } catch (e) {}
+        this._installPrompt = null;
+        const btn = document.getElementById('install-app-btn');
+        btn?.classList.add('hidden'); btn?.classList.remove('flex');
+    },
+
     async signIn() {
         try {
             await signInWithPopup(auth, googleProvider);
         } catch (error) {
+            // Ana ekrandan açılan uygulamada açılır pencere engellenirse sayfa yönlendirmesiyle dene
+            if (['auth/popup-blocked', 'auth/operation-not-supported-in-this-environment', 'auth/web-storage-unsupported'].includes(error.code)) {
+                try { await signInWithRedirect(auth, googleProvider); return; } catch (e) {}
+            }
             console.error("Giriş hatası:", error.message);
             showToast("Giriş yapılamadı.", "error");
         }
@@ -1141,23 +1212,29 @@ const app = {
     async loadData() {
         const user = auth.currentUser;
         if (!user) return;
+        const q = query(collection(db, 'kitaplik'), where('user_id', '==', user.uid));
+        const fill = (snap) => {
+            const list = [];
+            snap.forEach((docSnap) => { const data = docSnap.data(); if (data && data.album_data) list.push(data.album_data); });
+            return list;
+        };
+        this._lastLoad = Date.now();
+
+        // Önce telefondaki kayıttan hemen göster (uygulama gibi anında açılır), sonra güncelini getir
+        try {
+            const cached = await getDocsFromCache(q);
+            if (!cached.empty) {
+                AppState.library = fill(cached);
+                AppState.isLoading = false;
+                this.renderLibrary();
+            }
+        } catch (e) {}
 
         try {
-            const q = query(collection(db, 'kitaplik'), where('user_id', '==', user.uid));
-            const querySnapshot = await getDocs(q);
-            
-            AppState.library = [];
-            querySnapshot.forEach((docSnap) => {
-                const data = docSnap.data();
-                if (data && data.album_data) {
-                    AppState.library.push(data.album_data);
-                }
-            });
-
+            AppState.library = fill(await getDocs(q));
         } catch (e) {
             console.error("Buluttan veri çekilirken hata: ", e.message);
-            AppState.library = [];
-            showToast(t('toast_conn_error'), "error");
+            if (AppState.isLoading) { AppState.library = []; showToast(t('toast_conn_error'), "error"); }
         } finally {
             AppState.isLoading = false;
             this.renderLibrary();
@@ -1173,7 +1250,7 @@ const app = {
         if (!al) return false;
         const libIdx = AppState.library.findIndex(a => a.id === al.id);
         if (libIdx === -1) return false;
-        al.updatedAt = new Date().toISOString();
+        if (!al.sortAt) al.sortAt = AlbumUtils.lastActivity(AppState.library[libIdx]); al.updatedAt = new Date().toISOString();
         AppState.library[libIdx] = structuredClone(al);
         this.saveAlbumData(AppState.library[libIdx]);
         if (AppState.currentView === 'library') this.renderLibrary();
@@ -1863,11 +1940,14 @@ const app = {
 
         this.isEditMode = false; 
         document.getElementById('cover-edit-section')?.classList.add('hidden');
+        document.getElementById('cover-options')?.classList.add('hidden');
+        this._coverOptions = [];
         document.getElementById('edit-mode-btn')?.classList.remove('bg-primary/20', 'text-primary');
         document.getElementById('auto-fetch-genre-btn')?.classList.add('hidden');
         
         modal.classList.remove('hidden');
         modal.classList.add('flex'); 
+        if (!history.state?.raModal) history.pushState({ raModal: true }, '');
         
         requestAnimationFrame(() => {
             requestAnimationFrame(() => { 
@@ -1930,9 +2010,10 @@ const app = {
         }
     },
 
-        closeModal() {
+        closeModal(fromHistory = false) {
         const modal = document.getElementById('album-modal');
         if (!modal || modal.classList.contains('hidden')) return; this.saveScrub(false);
+        if (!fromHistory && history.state?.raModal) { this._skipPop = true; history.back(); }
         const content = modal.querySelector('.modal-content');
         modal.classList.add('opacity-0');
         if (content) {
@@ -2252,7 +2333,7 @@ const app = {
         const sec = document.getElementById('cover-edit-section');
         if(sec) sec.classList.toggle('hidden'); 
         const curl = document.getElementById('custom-cover-url');
-        if(curl) curl.value = AppState.currentModalAlbum.customCoverUrl || AppState.currentModalAlbum.coverUrl; 
+        if(curl) { const u = AppState.currentModalAlbum.customCoverUrl || AppState.currentModalAlbum.coverUrl || ''; curl.value = u.startsWith('data:') ? '' : u; } 
     },
     
     applyCustomCover() { 
@@ -2266,34 +2347,97 @@ const app = {
         } 
     },
     
-    // Kapak bul: Deezer → Cover Art Archive → iTunes (son yedek; engelli ağda sessizce atlanır)
-    async findCover() {
-        const al = AppState.currentModalAlbum, btn = document.getElementById('find-cover-btn'); 
-        if(!al || !btn) return;
-        const oH = btn.innerHTML; btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin"></i>`;
+    // Bilgisayardan kapak yükle: kare kırpılıp en fazla 600 px'e küçültülür, albümle birlikte kaydedilir
+    async uploadCover(e) {
+        const input = e.target, file = input.files?.[0];
+        input.value = '';
+        if (!file || !AppState.currentModalAlbum) return;
+        if (!file.type.startsWith('image/')) { showToast(t('upload_not_image'), 'error'); return; }
         try {
-            let url = null;
-            try { url = (await MusicSource.dzMatch(al.artist, al.title))?.cover_xl || null; } catch (e) {}
-            if (!url && MusicSource.isMbid(al.id)) {
-                const caa = `https://coverartarchive.org/release-group/${al.id}/front-500`;
-                if (await Net.imageOk(caa) || await Net.imageOk(CoverCache.proxy(caa))) url = caa;
-            }
-            if (!url) {
-                try {
-                    const list = await Net.itunes(`${al.artist} ${al.title}`);
-                    const hit = list.find(r => MusicSource.norm(r.collectionName) === MusicSource.norm(al.title)) || list[0];
-                    if (hit?.artworkUrl100) url = hit.artworkUrl100.replace('100x100bb', '600x600bb');
-                } catch (e) {}
-            }
-            if (url) { 
-                AppState.currentModalAlbum.customCoverUrl = url; 
-                this.updateModalUI(); 
-                document.getElementById('cover-edit-section')?.classList.add('hidden'); 
-                showToast(t("toast_cover_found"), "success"); 
-            } else {
-                showToast(t("toast_cover_not_found"), "error");
-            }
-        } finally { btn.innerHTML = oH; }
+            const bmp = await createImageBitmap(file);
+            const side = Math.min(bmp.width, bmp.height), size = Math.min(600, side);
+            const canvas = document.createElement('canvas');
+            canvas.width = canvas.height = size;
+            canvas.getContext('2d').drawImage(bmp, (bmp.width - side) / 2, (bmp.height - side) / 2, side, side, 0, 0, size, size);
+            bmp.close?.();
+            AppState.currentModalAlbum.customCoverUrl = canvas.toDataURL('image/jpeg', 0.85);
+            const urlInput = document.getElementById('custom-cover-url'); if (urlInput) urlInput.value = '';
+            this.updateModalUI();
+            this.renderCoverOptions();
+            showToast(t('cover_selected'), 'success');
+        } catch (err) { showToast(t('upload_not_image'), 'error'); }
+    },
+
+    // Kapak bul: Deezer, MusicBrainz ve iTunes'tan seçenekleri toplar, aralarından seçtirir
+    async findCover() {
+        const al = AppState.currentModalAlbum, btn = document.getElementById('find-cover-btn'), box = document.getElementById('cover-options');
+        if (!al || !btn || !box) return;
+        const oH = btn.innerHTML; btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin"></i>`;
+        box.classList.remove('hidden');
+        box.innerHTML = Array.from({ length: 6 }, () => `<div class="skeleton aspect-square rounded-lg" aria-hidden="true"></div>`).join('');
+
+        const opts = [];
+        const add = (full, thumb, src) => { if (full && !opts.some(o => o.full === full)) opts.push({ full, thumb: thumb || full, src }); };
+        const nt = MusicSource.norm(al.title), na = MusicSource.norm(al.artist);
+        const near = (a, b) => a && b && (a === b || a.includes(b) || b.includes(a));
+        const found = { deezer: [], mb: [], itunes: [] };
+
+        await Promise.allSettled([
+            (async () => {
+                const res = await Net.deezer(`search/album?q=${encodeURIComponent(`${al.artist} ${al.title}`)}&limit=25`);
+                found.deezer = (res.data || []).filter(d => near(MusicSource.norm(d.title), nt) && near(MusicSource.norm(d.artist?.name), na)).slice(0, 8);
+            })(),
+            (async () => {
+                if (MusicSource.isMbid(al.id)) found.mb = [al.id];
+            })(),
+            (async () => {
+                const list = await Net.itunes(`${al.artist} ${al.title}`);
+                found.itunes = list.filter(r => near(MusicSource.norm(r.collectionName), nt)).slice(0, 4);
+            })()
+        ]);
+        found.deezer.forEach(d => add(d.cover_xl || d.cover_big, d.cover_medium, 'Deezer'));
+        found.mb.forEach(id => add(`https://coverartarchive.org/release-group/${id}/front-500`, `https://coverartarchive.org/release-group/${id}/front-250`, 'MusicBrainz'));
+        found.itunes.forEach(r => r.artworkUrl100 && add(r.artworkUrl100.replace('100x100bb', '600x600bb'), r.artworkUrl100.replace('100x100bb', '250x250bb'), 'iTunes'));
+
+        this._coverOptions = opts;
+        this.renderCoverOptions();
+        btn.innerHTML = oH;
+    },
+
+    renderCoverOptions() {
+        const box = document.getElementById('cover-options');
+        const al = AppState.currentModalAlbum;
+        if (!box || !al) return;
+        const opts = this._coverOptions || [];
+        const cur = CoverCache.source(al);
+        if (!opts.length) { box.innerHTML = `<p class="col-span-full text-xs text-gray-600 dark:text-gray-400">${t('toast_cover_not_found')}</p>`; return; }
+        box.innerHTML = `<p class="col-span-full text-[11px] font-bold text-gray-700 dark:text-gray-300">${t('choose_cover')}</p>` + opts.map((o, i) => {
+            const on = o.full === cur;
+            return `<button type="button" onclick="app.pickCover(${i})" aria-pressed="${on}" aria-label="${t('choose_cover')}: ${o.src} ${i + 1}" class="flex flex-col gap-1 text-left min-w-0">
+                <span class="relative block aspect-square overflow-hidden rounded-lg ring-2 ${on ? 'ring-primary' : 'ring-transparent hover:ring-primary/50'} transition">
+                    <img src="${Utils.escapeHTML(o.thumb)}" alt="" loading="lazy" onerror="app.coverOptionError(this)" class="w-full h-full object-cover bg-lightHighlight dark:bg-dark">
+                    ${on ? `<span class="absolute top-1 right-1 w-5 h-5 rounded-full bg-primary text-darker flex items-center justify-center"><i class="ph-bold ph-check text-[11px]"></i></span>` : ''}
+                </span>
+                <span class="text-[10px] font-bold text-gray-600 dark:text-gray-400 truncate">${o.src}</span>
+            </button>`;
+        }).join('');
+    },
+
+    // Seçenek görseli açılmazsa bir kez görsel vekiliyle dene, yine olmazsa seçeneği kaldır
+    coverOptionError(img) {
+        if (!img.dataset.proxied) { img.dataset.proxied = '1'; img.src = CoverCache.proxy(img.src, 300); return; }
+        img.onerror = null;
+        img.closest('button')?.remove();
+    },
+
+    pickCover(i) {
+        const o = (this._coverOptions || [])[i];
+        if (!o || !AppState.currentModalAlbum) return;
+        AppState.currentModalAlbum.customCoverUrl = o.full;
+        const urlInput = document.getElementById('custom-cover-url'); if (urlInput) urlInput.value = o.full;
+        this.updateModalUI();
+        this.renderCoverOptions();
+        showToast(t('cover_selected'), "success");
     },
 
     renderGenres() {
@@ -2986,7 +3130,7 @@ const app = {
     setTrackRating(idx, value) {
         const al = AppState.currentModalAlbum;
         if (!al?.tracks?.[idx]) return;
-        al.tracks[idx].rating = value;
+        al.tracks[idx].rating = value; al.sortAt = new Date().toISOString();
         this.renderTracklist();
         this.calculateAverageScore();
 
@@ -3068,7 +3212,7 @@ const app = {
         if (!al) return;
         const now = new Date().toISOString();
         const idx = AppState.library.findIndex(a => a.id === al.id);
-        al.updatedAt = now;
+        if (idx > -1 && !al.sortAt) al.sortAt = AlbumUtils.lastActivity(AppState.library[idx]); al.updatedAt = now;
 
         if (idx > -1) {
             AppState.library[idx] = structuredClone(al);
@@ -3165,7 +3309,7 @@ const app = {
         if (idx === -1) return;
         const album = AppState.library[idx];
         album.status = 'listening';
-        album.updatedAt = new Date().toISOString();
+        if (!album.sortAt) album.sortAt = AlbumUtils.lastActivity(album); album.updatedAt = new Date().toISOString();
         this.saveAlbumData(album);
         showToast(t('started_listening'), "success");
         this.renderQueue();

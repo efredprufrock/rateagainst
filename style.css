@@ -230,3 +230,14 @@ body:has(#review-view:not(.hidden)) { overflow: hidden; }
     font-size: clamp(6px, 5cqw, 11px);
     letter-spacing: 0.15em;
 }
+
+/* Telefonda uygulama gibi: yazı boyutu sabit, çift dokunmada yakınlaşma yok, uzun basınca seçim menüsü çıkmaz */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+button, a, label, [role="button"], input, select { touch-action: manipulation; }
+.album-card, .nav-btn, .tool-group, #status-chips { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+/* Dokunmatik ekranda kartlar dokunduktan sonra havada kalmasın */
+@media (hover: none) {
+    .album-card .group-hover\:-translate-y-1 { --tw-translate-y: 0 !important; }
+}
+/* Ana ekrandan açıldığında sayfa kenardan esnemesin */
+.is-standalone, .is-standalone body { overscroll-behavior: none; }

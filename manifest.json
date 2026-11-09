@@ -1,0 +1,25 @@
+{
+  "name": "RateAgainst · Dinleme Notları",
+  "short_name": "RateAgainst",
+  "description": "Kişisel müzik günlüğü: dinlediğin albümleri ve şarkıları puanla, notlar al, incelemeler yaz.",
+  "lang": "tr",
+  "id": "./",
+  "start_url": "./?source=app",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#1c140f",
+  "theme_color": "#1c140f",
+  "categories": ["music", "lifestyle", "entertainment"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Albüm ara", "short_name": "Ara", "url": "./?view=search", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Dinlenecekler", "short_name": "Sırada", "url": "./?view=queue", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Özet", "short_name": "Özet", "url": "./?view=stats", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}
