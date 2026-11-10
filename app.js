@@ -1510,18 +1510,21 @@ const app = {
         
         dd.classList.remove('hidden');
         
-        let top = rect.bottom + 10;
-        let left = rect.left;
+        // Telefonda sayfa %75 ölçekli: ekran koordinatları CSS pikseline çevrilir
+        const z = (document.documentElement.getBoundingClientRect().width / document.documentElement.offsetWidth) || 1;
+        const vw = window.innerWidth / z, vh = window.innerHeight / z;
+        let top = rect.bottom / z + 10;
+        let left = rect.left / z;
         
         const ddWidth = Math.max(200, btn.offsetWidth * 1.5);
         dd.style.minWidth = `${ddWidth}px`;
         
-        if (left + ddWidth > window.innerWidth) {
-            left = window.innerWidth - ddWidth - 16;
+        if (left + ddWidth > vw) {
+            left = vw - ddWidth - 16;
         }
         
-        if (top + 250 > window.innerHeight) {
-            top = rect.top - dd.offsetHeight - 10; 
+        if (top + 250 > vh) {
+            top = rect.top / z - dd.offsetHeight - 10; 
         }
         
         dd.style.top = `${top}px`;
@@ -1829,17 +1832,24 @@ const app = {
         if (current) {
             const prog = AlbumUtils.progress(current);
             const avg = AlbumUtils.runningAvg(current);
+            const complete = (current.averageScore || 0) > 0;
+            const shown = current.averageScore || avg;
             box.innerHTML = `
                 <button onclick="app.openAlbumModal('${Utils.escapeHTML(current.id)}')" class="w-full h-full text-left flex gap-4 p-3 rounded-2xl bg-white/70 dark:bg-surface border border-[#c9b8a6] dark:border-[#4a3829] hover:bg-lightHighlight dark:hover:bg-surfaceHover transition-colors">
                     <span class="relative w-24 h-24 lg:h-auto lg:w-auto lg:min-w-[96px] aspect-square self-center lg:self-stretch flex-shrink-0 shadow-[0_8px_18px_rgba(36,26,19,0.25)]"><img ${AlbumUtils.coverAttrs(current)} alt="" class="absolute inset-0 w-full h-full object-cover"></span>
                     <span class="flex flex-col gap-1 min-w-0 flex-1 justify-center">
-                        <span class="flex items-center gap-1.5 text-[11px] font-bold tracking-[0.15em] text-[#a85a1a] dark:text-primary"><i class="ph-bold ph-repeat text-sm"></i>${t('loop_title')}</span>
-                        <span class="text-lg font-black italic leading-tight text-gray-900 dark:text-white line-clamp-2">${Utils.escapeHTML(current.title)}</span>
-                        <span class="text-sm text-gray-600 dark:text-gray-400 truncate">${Utils.escapeHTML(current.artist)} · <span class="text-[0.85em]">${Utils.escapeHTML(current.year)}</span></span> ${(current.genres?.length || current.label) ? `<span class="text-xs text-gray-600 dark:text-gray-400 truncate">${[current.genres?.[0] ? tGenre(current.genres[0]) : '', current.label && current.label !== t('unknown') ? current.label : ''].filter(Boolean).map(Utils.escapeHTML).join(' · ')}</span>` : ''}
-                                                <span class="flex items-center gap-2 mt-1">
+                        <span class="flex items-start justify-between gap-2">
+                            <span class="flex flex-col gap-1 min-w-0">
+                                <span class="flex items-center gap-1.5 text-[11px] font-bold tracking-[0.15em] text-[#a85a1a] dark:text-primary"><i class="ph-bold ph-repeat text-sm"></i>${t('loop_title')}</span>
+                                <span class="text-lg font-black italic leading-tight text-gray-900 dark:text-white line-clamp-2">${Utils.escapeHTML(current.title)}</span>
+                            </span>
+                            <span role="img" aria-label="${t(complete ? 'album_avg' : 'so_far_avg')}: ${shown > 0 ? shown.toFixed(1) : '–'}" title="${t(complete ? 'album_avg' : 'so_far_avg')}" class="score-badge ${complete ? '' : 'is-partial'} flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center -rotate-[8deg] text-base font-black ${AlbumUtils.tier(shown).text}">${shown > 0 ? shown.toFixed(1) : '–'}</span>
+                        </span>
+                        <span class="text-sm text-gray-600 dark:text-gray-400 truncate">${Utils.escapeHTML(current.artist)} · <span class="text-[0.85em]">${Utils.escapeHTML(current.year)}</span></span>
+                        ${(current.genres?.length || (current.label && current.label !== t('unknown'))) ? `<span class="text-sm text-gray-600 dark:text-gray-400 truncate">${[current.genres?.[0] ? `<span class="text-[0.75em]">${Utils.escapeHTML(tGenre(current.genres[0]))}</span>` : '', current.label && current.label !== t('unknown') ? `<span class="text-[0.5em] tracking-wide">${Utils.escapeHTML(current.label)}</span>` : ''].filter(Boolean).join(' <span class="text-[0.75em]">·</span> ')}</span>` : ''}
+                        <span class="flex items-center gap-2 mt-1">
                             <span class="flex-1 h-1 bg-lightHighlight dark:bg-surfaceHover overflow-hidden"><span class="block h-full bg-primary" style="width:${prog.pct}%"></span></span>
                         </span>
-                        <span class="text-[11px] text-gray-600 dark:text-gray-400">${prog.rated}/${prog.total}${avg > 0 ? ` · ${t('so_far_avg')}: <b class="text-gray-900 dark:text-white">${avg.toFixed(1)}</b>` : ''}</span>
                     </span>
                 </button>`;
             box.classList.remove('hidden');
@@ -1861,8 +1871,7 @@ const app = {
                 <div class="flex items-center justify-between gap-3">
                     <h2 id="shelf-title" class="text-[11px] font-bold tracking-[0.15em] text-[#a85a1a] dark:text-primary">${t('shelf_title')}</h2>
                     <span class="flex items-center gap-1">
-                        <span class="text-[11px] text-gray-600 dark:text-gray-400 whitespace-nowrap">${favs.length} / 10</span>
-                        <button type="button" onclick="app.toggleShelfOpen()" aria-controls="shelf-body" aria-expanded="${open}" aria-label="${t(open ? 'shelf_hide' : 'shelf_show')}" title="${t(open ? 'shelf_hide' : 'shelf_show')}" class="shelf-toggle sm:hidden w-10 h-10 -my-2 -mr-2.5 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-lightHighlight dark:hover:bg-surfaceHover transition-colors"><i class="ph-bold ph-caret-down text-base"></i></button>
+                    <button type="button" onclick="app.toggleShelfOpen()" aria-controls="shelf-body" aria-expanded="${open}" aria-label="${t(open ? 'shelf_hide' : 'shelf_show')}" title="${t(open ? 'shelf_hide' : 'shelf_show')}" class="shelf-toggle sm:hidden w-10 h-10 -my-2 -mr-2.5 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-lightHighlight dark:hover:bg-surfaceHover transition-colors"><i class="ph-bold ph-caret-down text-base"></i></button>
                     </span>
                 </div>
                 <div id="shelf-body" class="flex-1 flex flex-col min-h-0">
@@ -2031,10 +2040,44 @@ const app = {
         const counts = { planned: 0, listening: 0, done: 0 };
         AppState.library.forEach(a => { counts[AlbumUtils.status(a)]++; });
         const chips = [['', t('status_all'), AppState.library.length, 'ph-squares-four'], ['listening', t('status_listening'), counts.listening, 'ph-headphones'], ['planned', t('status_planned'), counts.planned, 'ph-clock-countdown'], ['done', t('status_done'), counts.done, 'ph-check-circle']];
-        box.innerHTML = chips.map(([val, label, n, icon]) => {
+        // Masaüstü: yan yana çipler · Telefon: seçili durum tek düğmede, diğerleri altında açılan listede
+        const pills = chips.map(([val, label, n, icon]) => {
             const active = AppState.filterStatus === val;
-            return `<button onclick="app.setStatusFilter('${val}')" aria-pressed="${active}" aria-label="${label}: ${n}" title="${label}" class="h-9 px-2.5 sm:px-4 inline-flex items-center gap-1 sm:gap-1.5 rounded-full text-xs font-bold whitespace-nowrap flex-shrink-0 border transition-colors ${active ? 'bg-gray-900 border-gray-900 text-lightBg dark:bg-gray-100 dark:border-gray-100 dark:text-dark' : 'bg-transparent border-[#c9b8a6] dark:border-[#4a3829] text-gray-800 dark:text-gray-200 hover:bg-lightHighlight dark:hover:bg-surface'}"><i class="${active ? 'ph-fill' : 'ph-bold'} ${icon} text-base" aria-hidden="true"></i><span class="hidden sm:inline">${label}</span><span class="${active ? 'opacity-70' : 'text-gray-600 dark:text-gray-400'}">${n}</span></button>`;
+            return `<button onclick="app.setStatusFilter('${val}')" aria-pressed="${active}" aria-label="${label}: ${n}" title="${label}" class="hidden sm:inline-flex h-9 px-4 items-center gap-1.5 rounded-full text-xs font-bold whitespace-nowrap flex-shrink-0 border transition-colors ${active ? 'bg-gray-900 border-gray-900 text-lightBg dark:bg-gray-100 dark:border-gray-100 dark:text-dark' : 'bg-transparent border-[#c9b8a6] dark:border-[#4a3829] text-gray-800 dark:text-gray-200 hover:bg-lightHighlight dark:hover:bg-surface'}"><i class="${active ? 'ph-fill' : 'ph-bold'} ${icon} text-base" aria-hidden="true"></i><span>${label}</span><span class="${active ? 'opacity-70' : 'text-gray-600 dark:text-gray-400'}">${n}</span></button>`;
         }).join('');
+        const cur = chips.find(c => c[0] === AppState.filterStatus) || chips[0];
+        const items = chips.map(([val, label, n, icon]) => {
+            const active = AppState.filterStatus === val;
+            return `<button type="button" role="menuitemradio" aria-checked="${active}" onclick="app.toggleStatusMenu(false); app.setStatusFilter('${val}')" class="w-full h-11 px-3 flex items-center gap-3 rounded-xl text-sm font-bold text-left transition-colors ${active ? 'bg-lightHighlight dark:bg-surfaceHover text-gray-900 dark:text-white' : 'text-gray-800 dark:text-gray-200 hover:bg-lightHighlight dark:hover:bg-surfaceHover'}"><i class="${active ? 'ph-fill' : 'ph-bold'} ${icon} text-lg" aria-hidden="true"></i><span class="flex-1">${label}</span><span class="text-xs ${active ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'}">${n}</span>${active ? '<i class="ph-bold ph-check text-sm text-[#a85a1a] dark:text-primary" aria-hidden="true"></i>' : '<span class="w-[14px]"></span>'}</button>`;
+        }).join('');
+        box.innerHTML = `${pills}
+            <div class="status-menu sm:hidden relative">
+                <button type="button" id="status-menu-btn" onclick="app.toggleStatusMenu()" aria-haspopup="true" aria-expanded="false" aria-controls="status-menu-list" aria-label="${cur[1]}: ${cur[2]}" class="h-9 pl-2.5 pr-2 inline-flex items-center gap-1 rounded-full text-xs font-bold whitespace-nowrap border bg-gray-900 border-gray-900 text-lightBg dark:bg-gray-100 dark:border-gray-100 dark:text-dark"><i class="ph-fill ${cur[3]} text-base" aria-hidden="true"></i><span class="opacity-80">${cur[2]}</span><i class="ph-bold ph-caret-down text-[11px] opacity-70 status-caret" aria-hidden="true"></i></button>
+                <div id="status-menu-list" role="menu" class="status-menu-list hidden absolute left-0 top-full mt-2 z-50 w-56 p-1.5 rounded-2xl bg-[#fbf8f4] dark:bg-surface border border-[#c9b8a6] dark:border-[#4a3829] shadow-[0_16px_40px_rgba(36,26,19,0.25)]">${items}</div>
+            </div>`;
+    },
+
+    // Telefonda durum listesi: aç/kapat, dışarıya dokununca kapanır
+    toggleStatusMenu(force) {
+        const list = document.getElementById('status-menu-list');
+        const btn = document.getElementById('status-menu-btn');
+        if (!list || !btn) return;
+        const open = typeof force === 'boolean' ? force : list.classList.contains('hidden');
+        list.classList.toggle('hidden', !open);
+        btn.setAttribute('aria-expanded', open);
+        btn.classList.toggle('is-open', open);
+        if (open && !this._statusMenuBound) {
+            this._statusMenuBound = true;
+            document.addEventListener('click', (e) => {
+                const l = document.getElementById('status-menu-list');
+                if (!l || l.classList.contains('hidden') || e.target.closest('.status-menu')) return;
+                this.toggleStatusMenu(false);
+            }, true);
+            document.addEventListener('keydown', (e) => {
+                const l = document.getElementById('status-menu-list');
+                if (e.key === 'Escape' && l && !l.classList.contains('hidden')) { this.toggleStatusMenu(false); document.getElementById('status-menu-btn')?.focus(); }
+            });
+        }
     },
 
     setStatusFilter(val) {

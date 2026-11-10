@@ -538,3 +538,24 @@ html:has(#album-modal:not(.hidden)) body, html:has(#review-view:not(.hidden)) bo
     #shelf .shelf-toggle i { transition: transform .3s ease; }
     #shelf.is-collapsed .shelf-toggle i { transform: rotate(-90deg); }
 }
+
+/* Telefonda tüm arayüz %75 ölçekte */
+@media (max-width: 767px) {
+    html { zoom: .75; }
+    body { min-height: calc(100dvh / .75); }
+}
+
+/* Telefonda durum filtreleri tek düğmede toplanır; açılan liste kesilmesin */
+@media (max-width: 639px) {
+    #status-chips { overflow: visible; -webkit-mask-image: none; mask-image: none; padding-right: 0; }
+    .status-menu-list { animation: ra-menu-in .18s ease both; transform-origin: top left; }
+    .status-caret { transition: transform .25s ease; }
+    #status-menu-btn.is-open .status-caret { transform: rotate(180deg); }
+    /* Raf boşken plak alanı yer kaplamasın */
+    #shelf .shelf-row:not(:has(.shelf-rec)) { display: none !important; }
+}
+
+/* Web: raftaki plaklar dümdüz durur */
+@media (min-width: 641px) {
+    #shelf .shelf-rec { --tilt: 0deg !important; }
+}
