@@ -1,6 +1,6 @@
 // RateAgainst service worker: uygulama kabuğunu ve kapakları önbellekte tutar, internet yokken de açılır.
 // Siteyi güncelledikten sonra değişikliklerin hemen gelmesi için kendi dosyaların önce internetten alınır.
-const VERSION = 'ra-v1';
+const VERSION = 'ra-v2';
 const SHELL_CACHE = `${VERSION}-shell`;
 const CDN_CACHE = `${VERSION}-cdn`;
 const IMG_CACHE = 'ra-covers';
@@ -43,8 +43,8 @@ async function networkFirst(request) {
     } catch (e) {
         const hit = await cache.match(request, { ignoreSearch: true });
         if (hit) return hit;
-        if (request.mode === 'navigate') return (await cache.match('./index.html')) || (await cache.match('./'));
-        throw e;
+        if (request.mode === 'navigate') return (await cache.match('./index.html')) || (await cache.match('./')) || Response.error();
+        return Response.error();
     }
 }
 
@@ -55,7 +55,7 @@ async function staleWhileRevalidate(request) {
     const fresh = fetch(request).then(res => {
         if (res && (res.ok || res.type === 'opaque')) cache.put(request, res.clone());
         return res;
-    }).catch(() => hit);
+    }).catch(() => hit || Response.error());
     return hit || fresh;
 }
 
@@ -64,9 +64,14 @@ async function cacheFirst(request) {
     const cache = await caches.open(IMG_CACHE);
     const hit = await cache.match(request);
     if (hit) return hit;
-    const res = await fetch(request);
-    if (res && (res.ok || res.type === 'opaque')) { cache.put(request, res.clone()); trim(IMG_CACHE, IMG_LIMIT); }
-    return res;
+    try {
+        const res = await fetch(request);
+        if (res && (res.ok || res.type === 'opaque')) { cache.put(request, res.clone()); trim(IMG_CACHE, IMG_LIMIT); }
+        return res;
+    } catch (e) {
+        // Bu ağda engelli ya da ulaşılamıyor: sessizce hata ver, sayfa yedek kapağa geçer
+        return Response.error();
+    }
 }
 
 self.addEventListener('fetch', (event) => {

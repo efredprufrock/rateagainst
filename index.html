@@ -174,7 +174,7 @@
 
         <section id="view-library" class="view-section animate-fade-in w-full flex flex-col p-4 md:px-6 md:pt-6">
             <!-- Şu an dinliyorum kartı (JS doldurur) -->
-            <div id="now-listening" class="hidden mb-4"></div>
+            <div id="library-top" class="hidden mb-6 grid grid-cols-1 lg:grid-cols-[minmax(280px,360px)_minmax(0,1fr)] gap-4 items-stretch"><div id="now-listening" class="hidden"></div><section id="shelf" aria-labelledby="shelf-title" class="hidden min-w-0"></section></div>
 
                         <!-- Araç çubuğu: durum filtreleri + kategori / sıralama / görünüm (tek satır) -->
             <div id="filter-bar" class="flex items-center gap-2 mb-6 pb-1 pt-1 -mx-4 px-4 md:-mx-6 md:px-6 bg-lightBg dark:bg-dark relative">
@@ -476,13 +476,18 @@
                 <header class="flex justify-between items-center gap-3 border-b-[3px] border-double border-gray-900 dark:border-[#6b5442] pb-1.5 flex-shrink-0">
                     <span id="modal-issue" class="text-[11px] md:text-xs tracking-[0.2em] font-bold truncate"></span>
                     <div class="flex items-center flex-shrink-0 -mr-2">
+                        <button type="button" id="modal-more-btn" onclick="app.toggleModalMenu()" aria-haspopup="true" aria-expanded="false" data-i18n-aria="more_actions" class="md:hidden w-11 h-11 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-lightHighlight dark:hover:bg-surface transition-colors"><i class="ph-bold ph-dots-three-vertical text-xl"></i></button><div id="modal-actions" class="md:contents"><button onclick="app.toggleLoop()" id="loop-btn" data-i18n-aria="loop_add_btn" class="w-11 h-11 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-lightHighlight dark:hover:bg-surface transition-colors">
+                            <i class="ph-bold ph-repeat text-lg"></i>
+                        </button> <button onclick="app.toggleShelf()" id="shelf-btn" data-i18n-aria="shelf_add_btn" class="w-11 h-11 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-lightHighlight dark:hover:bg-surface transition-colors">
+                            <i class="ph-bold ph-vinyl-record text-lg"></i>
+                        </button>
                         <button onclick="app.openNotePanel('album')" id="album-note-btn" data-i18n-aria="album_note" class="w-11 h-11 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-lightHighlight dark:hover:bg-surface transition-colors">
                             <i class="ph-bold ph-paperclip text-lg"></i>
                         </button>
                         <button onclick="app.toggleEditMode()" id="edit-mode-btn" data-i18n-aria="edit" class="w-11 h-11 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-lightHighlight dark:hover:bg-surface transition-colors">
                             <i class="ph-bold ph-pencil-simple text-lg"></i>
                         </button>
-                        <button onclick="app.closeModal()" data-i18n-aria="close" class="w-11 h-11 rounded-full flex items-center justify-center text-gray-900 dark:text-gray-100 hover:bg-lightHighlight dark:hover:bg-surface transition-colors">
+                        </div><button onclick="app.closeModal()" data-i18n-aria="close" class="w-11 h-11 rounded-full flex items-center justify-center text-gray-900 dark:text-gray-100 hover:bg-lightHighlight dark:hover:bg-surface transition-colors">
                             <i class="ph-bold ph-x text-xl"></i>
                         </button>
                     </div>
@@ -506,10 +511,10 @@
                 </div>
 
                 <!-- Gövde: masaüstünde iki sütun, kalan yüksekliği doldurur -->
-                <div class="mt-5 grid grid-cols-1 md:grid-cols-[300px_minmax(0,1fr)] md:grid-rows-[minmax(0,1fr)] gap-6 md:gap-x-8 md:flex-1 md:min-h-0">
+                <div id="modal-body" class="mt-5 grid grid-cols-1 md:grid-cols-[300px_minmax(0,1fr)] md:grid-rows-[minmax(0,1fr)] gap-6 md:gap-x-8 md:flex-1 md:min-h-0">
 
                     <!-- Sol sütun (masaüstünde kendi içinde kayar; mobilde parçalar araya girer) -->
-                    <div class="contents md:flex md:flex-col md:gap-4 md:min-h-0 md:overflow-y-auto md:col-start-1 md:row-start-1 md:pb-2 md:pr-2 md:-mr-2">
+                    <div id="modal-left" class="contents md:flex md:flex-col md:gap-4 md:min-h-0 md:overflow-y-auto md:col-start-1 md:row-start-1 md:pb-2 md:pr-2 md:-mr-2">
 
                         <div class="flex flex-col gap-4 min-w-0 order-1 md:order-none">
                             <div class="flex items-end gap-4 md:flex-col md:items-stretch md:gap-2">
@@ -563,7 +568,7 @@
                     </div>
 
                     <!-- Parçalar (masaüstünde sağ sütun, liste kendi içinde kayar) -->
-                    <div class="min-w-0 flex flex-col order-2 md:order-none md:col-start-2 md:row-start-1 md:min-h-0">
+                    <div id="modal-tracks-col" class="min-w-0 flex flex-col order-2 md:order-none md:col-start-2 md:row-start-1 md:min-h-0">
                         <div class="flex justify-between items-center gap-3 pb-1.5 mb-1 border-b border-[#c9b8a6] dark:border-[#4a3829] flex-shrink-0">
                             <h3 class="text-xs tracking-[0.2em] font-bold uppercase"><span data-i18n="tracks_header">Parçalar</span> <span id="modal-track-count" class="normal-case tracking-normal font-normal text-gray-600 dark:text-gray-400"></span></h3>
                             <div class="flex items-center gap-1 text-[11px]">
@@ -582,7 +587,7 @@
 
             <!-- Alt bar -->
             <footer class="flex items-center gap-2 md:gap-4 px-5 md:px-9 pt-3 border-t border-[#c9b8a6] dark:border-[#4a3829] bg-lightBg dark:bg-dark shadow-[0_-10px_24px_rgba(0,0,0,0.08)] md:shadow-none flex-shrink-0" style="padding-bottom: max(0.75rem, env(safe-area-inset-bottom));">
-                <button onclick="app.openReview()" class="h-12 px-6 rounded-full bg-gray-900 text-lightBg dark:bg-gray-100 dark:text-dark text-sm font-bold active:scale-[0.98] transition-transform flex-shrink-0" data-i18n="open_review">İncelemeyi aç</button>
+                <button onclick="app.openReview()" id="review-btn" class="h-12 px-6 rounded-full bg-gray-900 text-lightBg dark:bg-gray-100 dark:text-dark text-sm font-bold active:scale-[0.98] transition-transform flex-shrink-0" data-i18n-aria="open_review"><i class="ph-bold ph-book-open-text md:hidden" aria-hidden="true"></i><span id="review-btn-label" class="hidden md:inline" data-i18n="open_review">İncelemeyi aç</span></button>
                 <div role="radiogroup" data-i18n-aria="listen_status" class="modal-status-group hidden md:flex w-[340px] p-1 rounded-xl border border-[#c9b8a6] dark:border-[#4a3829]"></div>
                 <div id="modal-save-btn-container" class="flex items-center gap-2 ml-auto"></div>
             </footer>
@@ -682,13 +687,16 @@
     <!-- İnceleme (blog yazısı) görünümü -->
     <div id="review-view" role="dialog" aria-modal="true" aria-labelledby="review-title" class="fixed inset-0 z-[170] hidden bg-lightBg dark:bg-dark overflow-y-auto">
         <div class="max-w-2xl mx-auto px-5 safe-pt pb-16">
-            <div class="flex justify-between items-center py-3 sticky top-0 bg-lightBg/95 dark:bg-dark/95 backdrop-blur-md z-10">
-                <button onclick="app.closeReview()" class="h-11 px-1 flex items-center gap-2 text-sm font-bold text-[#a85a1a] dark:text-primary">
-                    <i class="ph-bold ph-arrow-left text-lg"></i> <span data-i18n="back_to_album">Albüme dön</span>
-                </button>
-                <div class="flex items-center gap-2">
-                    <button onclick="app.editReviewNote()" class="h-9 px-3 rounded-full border border-lightBorder dark:border-gray-700 bg-white dark:bg-surface text-xs font-bold text-gray-700 dark:text-gray-200" data-i18n="edit">Düzenle</button>
-                    <button onclick="app.copyReviewMarkdown()" class="h-9 px-3 rounded-full border border-lightBorder dark:border-gray-700 bg-white dark:bg-surface text-xs font-bold text-gray-700 dark:text-gray-200" data-i18n="copy_markdown">Markdown kopyala</button>
+            <div class="flex justify-between items-center gap-2 py-3 sticky top-0 bg-lightBg/95 dark:bg-dark/95 backdrop-blur-md z-10">
+                <div class="flex items-center gap-1 min-w-0 flex-1">
+                    <button onclick="app.closeReview()" data-i18n-aria="back_to_album" data-i18n-title="back_to_album" class="w-11 h-11 -ml-2.5 flex-shrink-0 rounded-full flex items-center justify-center text-[#a85a1a] dark:text-primary hover:bg-lightHighlight dark:hover:bg-surface transition-colors">
+                        <i class="ph-bold ph-arrow-left text-xl"></i>
+                    </button>
+                    <span id="review-date" class="min-w-0 truncate text-[11px] font-bold tracking-[0.15em] uppercase text-gray-900 dark:text-gray-100"></span>
+                </div>
+                <div class="flex items-center gap-1 flex-shrink-0 -mr-2">
+                    <button onclick="app.editReviewNote()" data-i18n-aria="edit" data-i18n-title="edit" class="w-11 h-11 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-lightHighlight dark:hover:bg-surface transition-colors"><i class="ph-bold ph-pencil-simple text-lg"></i></button>
+                    <button onclick="app.copyReviewMarkdown()" data-i18n-aria="copy_markdown" data-i18n-title="copy_markdown" class="w-11 h-11 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-lightHighlight dark:hover:bg-surface transition-colors"><i class="ph-bold ph-copy text-lg"></i></button>
                 </div>
             </div>
             <article id="review-content" class="flex flex-col gap-5 pt-2"></article>

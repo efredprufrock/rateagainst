@@ -241,3 +241,300 @@ button, a, label, [role="button"], input, select { touch-action: manipulation; }
 }
 /* Ana ekrandan açıldığında sayfa kenardan esnemesin */
 .is-standalone, .is-standalone body { overscroll-behavior: none; }
+
+
+/* Raf: en sevilen 10 albüm, rafta duran plaklar gibi */
+.shelf-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    padding: 12px 34px 0 4px;
+    margin-top: 2px;
+    overflow-x: auto;
+    overflow-y: visible;
+    container-type: inline-size;
+}
+.shelf-rec, .shelf-slot {
+    --size: clamp(76px, calc((100cqw - 146px) / 10), 150px);
+    position: relative;
+    flex: 0 0 auto;
+    width: var(--size);
+    height: var(--size);
+}
+@media (max-width: 640px) { .shelf-rec, .shelf-slot { --size: 70px; } }
+.shelf-rec {
+    padding: 0; border: 0; background: none; cursor: pointer;
+    transform-origin: 50% 100%;
+    transform: rotate(var(--tilt));
+    transition: transform .4s cubic-bezier(.34, 1.56, .64, 1);
+    animation: shelf-drop .6s cubic-bezier(.34, 1.4, .64, 1) backwards;
+    animation-delay: calc(var(--i) * 70ms);
+}
+.shelf-sleeve {
+    position: absolute; inset: 0; z-index: 2;
+    box-shadow: 0 6px 12px rgba(36, 26, 19, .3), inset 0 0 0 1px rgba(0, 0, 0, .08);
+    background: #ebe4dc;
+    overflow: hidden;
+}
+.shelf-sleeve img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* Kartondaki hafif parlama */
+.shelf-sleeve::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(115deg, rgba(255, 255, 255, .22) 0%, rgba(255, 255, 255, 0) 38%, rgba(0, 0, 0, .08) 100%);
+    pointer-events: none;
+}
+/* Plak: kılıfın arkasından hafifçe görünür, üstüne gelince dışarı kayıp döner */
+.shelf-disc {
+    position: absolute; top: 4%; left: 4%; width: 92%; height: 92%; z-index: 1;
+    transform: translateX(16%);
+    transition: transform .55s cubic-bezier(.22, 1, .36, 1);
+}
+.shelf-disc-spin {
+    position: absolute; inset: 0; border-radius: 50%;
+    background:
+        radial-gradient(circle, transparent 0 31%, rgba(255, 255, 255, .06) 31.5% 32%, transparent 32.5%),
+        repeating-radial-gradient(circle, #151515 0 1.2px, #232323 1.2px 2.4px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .35), 0 0 0 1px rgba(255, 255, 255, .06);
+    display: flex; align-items: center; justify-content: center;
+}
+.shelf-disc-spin::after {
+    content: ""; position: absolute; inset: 0; border-radius: 50%;
+    background: conic-gradient(from 30deg, rgba(255, 255, 255, 0) 0deg, rgba(255, 255, 255, .14) 40deg, rgba(255, 255, 255, 0) 90deg, rgba(255, 255, 255, 0) 180deg, rgba(255, 255, 255, .1) 220deg, rgba(255, 255, 255, 0) 270deg);
+}
+.shelf-disc-label {
+    width: 34%; height: 34%; border-radius: 50%; object-fit: cover;
+    box-shadow: 0 0 0 2px #151515;
+}
+.shelf-rec:hover, .shelf-rec:focus-visible { transform: translateY(-8px) rotate(0deg); z-index: 5; }
+.shelf-rec:hover .shelf-disc, .shelf-rec:focus-visible .shelf-disc { transform: translateX(52%); }
+.shelf-rec:hover .shelf-disc-spin, .shelf-rec:focus-visible .shelf-disc-spin { animation: shelf-spin 1.8s linear infinite; }
+.shelf-rec:active { transform: translateY(-6px) rotate(0deg) scale(.97); }
+
+/* Boş raf yeri */
+.shelf-slot {
+    border: 1.5px dashed #c9b8a6;
+    opacity: .7;
+    animation: shelf-drop .6s ease backwards;
+    animation-delay: calc(var(--i) * 70ms);
+}
+.dark .shelf-slot { border-color: #4a3829; }
+
+/* Ahşap raf tahtası */
+.shelf-board {
+    height: 14px;
+    margin: 0 -16px;
+    background:
+        repeating-linear-gradient(90deg, rgba(0, 0, 0, 0) 0 46px, rgba(0, 0, 0, .06) 46px 48px, rgba(0, 0, 0, 0) 48px 110px),
+        linear-gradient(180deg, #b07a4a 0%, #8f5d33 55%, #6e4524 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 -1px 0 rgba(0, 0, 0, .15);
+}
+.dark .shelf-board {
+    background:
+        repeating-linear-gradient(90deg, rgba(0, 0, 0, 0) 0 46px, rgba(0, 0, 0, .12) 46px 48px, rgba(0, 0, 0, 0) 48px 110px),
+        linear-gradient(180deg, #6e4a2c 0%, #553620 55%, #3d2616 100%);
+}
+
+@keyframes shelf-drop {
+    from { opacity: 0; transform: translateY(-26px) rotate(var(--tilt, 0deg)); }
+    to { opacity: 1; transform: translateY(0) rotate(var(--tilt, 0deg)); }
+}
+@keyframes shelf-spin { to { transform: rotate(360deg); } }
+
+/* Albüm paneli ya da inceleme açıkken arka plandaki sayfa kaymaz */
+html:has(#album-modal:not(.hidden)), html:has(#review-view:not(.hidden)),
+html:has(#album-modal:not(.hidden)) body, html:has(#review-view:not(.hidden)) body { overflow: hidden; }
+#album-modal *, #review-view { overscroll-behavior: contain; }
+
+/* Albüm paneli, masaüstü: "İncelemeyi aç" ile inceleme parçaların yerine gelir; kartın boyutu değişmez */
+#modal-review, #modal-meta { display: none; }
+@keyframes ra-swap-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (min-width: 768px) {
+    /* Büyük başlık satırı gizlenir; künye sol sütuna, kapağın altına iner */
+    .modal-content.is-review div:has(> #modal-stamp) { display: none; }
+    .modal-content.is-review #modal-body {
+        --rows: 13; --row-min: 17px; --meta-h: 52px; --tracks-head: 38px;
+        container-type: size;
+        grid-template-columns: 300px minmax(0, 1fr);
+        grid-template-rows: auto var(--meta-h) minmax(0, 1fr);
+        row-gap: 10px; margin-top: 1.25rem;
+    }
+    /* 1. satır: kapak sol sütunun genişliğinde; yalnız ekran parçalara yetmeyecek kadar alçaksa küçülür */
+    .modal-content.is-review #modal-left {
+        grid-column: 1; grid-row: 1;
+        display: block; overflow: hidden; padding: 0; margin: 0;
+    }
+    .modal-content.is-review #modal-left > div:first-child { display: block; }
+    .modal-content.is-review #modal-left > div:first-child > div:first-child { display: block; }
+    .modal-content.is-review #modal-left > div:first-child > :not(:first-child),
+    .modal-content.is-review #modal-left > div:first-child > div:first-child > :not(:first-child),
+    .modal-content.is-review #modal-left > div:nth-child(2) { display: none; }
+    .modal-content.is-review div:has(> #modal-cover) {
+        --cover: min(300px, calc(100cqh - var(--meta-h) - 24px - var(--tracks-head) - var(--rows) * var(--row-min)));
+        width: var(--cover); height: var(--cover); max-width: none; aspect-ratio: auto;
+    }
+    /* 2. satır: künye (puan + ad + sanatçı · yıl · plak şirketi) */
+    .modal-content.is-review #modal-meta {
+        grid-column: 1; grid-row: 2;
+        display: flex; align-items: center; gap: 12px; min-width: 0; overflow: hidden;
+        animation: ra-swap-in .35s ease both;
+    }
+    /* 3. satır: parçalar kalan alanı doldurur; 13'e kadar hepsi görünür, fazlası kendi içinde kayar */
+    .modal-content.is-review #modal-tracks-col {
+        grid-column: 1; grid-row: 3;
+        container-type: size; min-height: 0;
+        animation: ra-swap-in .35s ease both;
+    }
+    .modal-content.is-review #modal-tracks-col > div:first-child { height: calc(var(--tracks-head) - 5px); padding-bottom: 0; }
+    .modal-content.is-review #modal-tracks-col > div:first-child button { width: 28px; height: 28px; }
+    .modal-content.is-review #modal-tracklist {
+        --rh: clamp(var(--row-min), calc((100cqh - var(--tracks-head) - 4px) / var(--rows)), 30px);
+        padding-bottom: 0;
+    }
+    .modal-content.is-review #modal-tracklist > button,
+    .modal-content.is-review #modal-tracklist > [data-selected] { height: var(--rh) !important; gap: 8px; margin-top: 0; margin-bottom: 0; }
+    .modal-content.is-review #modal-tracklist > button > span,
+    .modal-content.is-review #modal-tracklist > [data-selected] > span { font-size: clamp(11px, calc(var(--rh) * 0.52), 14px) !important; }
+    .modal-content.is-review #modal-tracklist > button > span:nth-last-child(2) { font-size: clamp(12px, calc(var(--rh) * 0.56), 15px) !important; }
+    .modal-content.is-review #modal-tracklist [data-selected] > button:not(.scrub-save) { width: var(--rh); height: var(--rh); }
+    .modal-content.is-review #modal-tracklist .score-scrub { height: calc(var(--rh) - 2px); width: 46px; }
+    .modal-content.is-review #modal-tracklist .score-scrub [data-scrub-val] { font-size: clamp(12px, calc(var(--rh) * 0.56), 16px); }
+    .modal-content.is-review #modal-tracklist .scrub-caret { display: none; }
+    .modal-content.is-review #modal-tracklist .scrub-save { width: calc(var(--rh) - 2px); height: calc(var(--rh) - 2px); font-size: 12px; }
+    /* Sağ: doğrudan REVIEW başlığıyla, sol sütunla aynı hizadan başlar */
+    .modal-content.is-review #modal-review {
+        display: flex; flex-direction: column;
+        grid-column: 2; grid-row: 1 / -1;
+        min-height: 0; min-width: 0;
+        animation: ra-swap-in .35s ease both;
+    }
+}
+
+/* Albüm paneli, telefonda: panel sabit durur, yalnız parçalar kendi içinde kayar.
+   Sıra: kapak (ortada, büyük) → künye ve puan → parçalar → durum. Düzenleme modunda eski kaydırmalı görünüm döner. */
+@media (max-width: 767px) {
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) > div:first-child {
+        --m-row-min: 24px;
+        --m-fixed: 196px;
+        display: flex; flex-direction: column;
+        overflow: hidden; container-type: size;
+        padding-bottom: 10px;
+    }
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) #modal-body,
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) #modal-left > div:first-child,
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) #modal-left > div:first-child > div:first-child { display: contents; }
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) #modal-quote,
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) #modal-quote + div { display: none; }
+    /* Kapak: ortada; parçalara yer kaldıkça büyür */
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) div:has(> #modal-cover) {
+        --m-cover: clamp(130px, calc(100cqh - var(--m-fixed) - var(--m-rows, 13) * var(--m-row-min)), min(100cqw - 24px, 340px));
+        order: 1; align-self: center;
+        width: var(--m-cover); height: var(--m-cover);
+        margin-top: 14px; flex-shrink: 0;
+    }
+    /* Künye ve toplam puan: kapağın altında */
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) div:has(> #modal-stamp) { order: 2; margin-top: 12px; align-items: center; }
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) #modal-title { font-size: 28px; line-height: 1.1; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) #modal-title + p { margin-top: 2px; font-size: 16px; }
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) #modal-stamp { width: 60px; height: 60px; }
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) #modal-avg-score { font-size: 21px; }
+    /* Parçalar: kalan alanı doldurur; 13'e kadar hepsi görünür, fazlası kendi içinde kayar */
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) #modal-tracks-col { order: 3; flex: 1 1 0; min-height: 0; margin-top: 12px; container-type: size; }
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) #modal-tracks-col > div:first-child { height: 39px; }
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) #modal-tracklist {
+        --rh: clamp(var(--m-row-min), calc((100cqh - 44px) / var(--m-rows, 13)), 44px);
+        flex: 1 1 0; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+    }
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) #modal-tracklist > button,
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) #modal-tracklist > [data-selected] { height: var(--rh) !important; margin-top: 0; margin-bottom: 0; }
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) #modal-tracklist > button > span:nth-child(2),
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) #modal-tracklist > [data-selected] > span:nth-child(2) { font-size: clamp(13px, calc(var(--rh) * 0.5), 15px); }
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) #modal-tracklist > button > span:nth-last-child(2) { font-size: clamp(13px, calc(var(--rh) * 0.55), 16px); }
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) #modal-tracklist [data-selected] > button:not(.scrub-save) { width: calc(var(--rh) + 4px); height: var(--rh); }
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) #modal-tracklist .score-scrub { height: calc(var(--rh) - 2px); }
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) #modal-tracklist .scrub-caret { display: none; }
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) #modal-tracklist .scrub-save { width: calc(var(--rh) + 4px); height: calc(var(--rh) - 2px); }
+    /* Durum seçimi: en altta, parçaların altında */
+    #album-modal .modal-content:not(.is-editing):not(:has(#cover-edit-section:not(.hidden))) #modal-left > div:nth-child(2) { display: none; }
+}
+/* Albüm paneli, telefonda: üstteki işlemler "⋮" menüsünde, alt şerit yalnız ikonlarla ince */
+@keyframes ra-menu-in { from { opacity: 0; transform: translateY(-6px) scale(.97); } to { opacity: 1; transform: none; } }
+@media (max-width: 767px) {
+    #modal-actions { display: none; }
+    #modal-actions.is-open {
+        display: flex; flex-direction: column; gap: 2px;
+        position: absolute; z-index: 30;
+        top: calc(max(1rem, env(safe-area-inset-top)) + 46px); right: 14px;
+        min-width: 220px; padding: 6px; border-radius: 16px;
+        background: #fbf8f4; border: 1px solid #c9b8a6;
+        box-shadow: 0 16px 40px rgba(36, 26, 19, .25);
+        transform-origin: top right; animation: ra-menu-in .18s ease both;
+    }
+    .dark #modal-actions.is-open { background: #241a13; border-color: #4a3829; box-shadow: 0 16px 40px rgba(0, 0, 0, .5); }
+    #modal-actions.is-open > button {
+        width: 100%; height: 46px; border-radius: 10px;
+        justify-content: flex-start; gap: 12px; padding: 0 12px;
+        font-size: 14px; font-weight: 700; text-align: left;
+    }
+    #modal-actions.is-open > button::after { content: attr(aria-label); }
+    #modal-more-btn[aria-expanded="true"] { background: #ebe4dc; }
+    .dark #modal-more-btn[aria-expanded="true"] { background: #3b2b20; }
+
+    #album-modal footer { padding-top: 6px; padding-bottom: max(6px, env(safe-area-inset-bottom)) !important; }
+    #review-btn { width: 44px; height: 44px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    #modal-save-btn-container > button { height: 44px; min-width: 44px; }
+}
+
+/* Raf, telefonda: plaklar rafa soldan sağa yayılır; dokunulan plak raftan çıkar */
+@keyframes shelf-fade { from { opacity: 0; } to { opacity: 1; } }
+.shelf-caption { display: none; }
+@media (max-width: 640px) {
+    #shelf > div { height: auto !important; }
+    #shelf > div > div:first-child { position: relative; z-index: 60; }
+    #shelf #shelf-body { flex: none; }
+    #shelf .shelf-row {
+        position: relative;
+        display: block !important;
+        flex: none !important;
+        height: 106px !important;
+        min-height: 106px;
+        margin-top: 8px;
+        padding: 0 !important;
+        overflow: visible !important;
+        touch-action: pan-y;
+    }
+    #shelf .shelf-rec, #shelf .shelf-slot {
+        --size: 76px;
+        position: absolute;
+        left: 0;
+        bottom: 1px;
+        width: 76px; height: 76px;
+        z-index: var(--z, 1);
+        transform: translateX(var(--x, 0)) rotate(var(--tilt, 0deg));
+        transform-origin: 50% 100%;
+        transition: transform .45s cubic-bezier(.34, 1.4, .64, 1);
+        animation-name: shelf-fade;
+    }
+    #shelf .shelf-rec:hover, #shelf .shelf-rec:focus-visible, #shelf .shelf-rec:active { transform: translateX(var(--x, 0)) rotate(var(--tilt, 0deg)); z-index: var(--z, 1); }
+    /* Dokunulan plak: kalkar, düzleşir, plak kılıfından çıkıp döner */
+    #shelf .shelf-rec.is-front, #shelf .shelf-rec.is-front:hover, #shelf .shelf-rec.is-front:active { transform: translateX(var(--x, 0)) translateY(-12px) rotate(0deg) scale(1.06); }
+    #shelf .shelf-slot { display: none; }
+    #shelf .shelf-rec .shelf-disc { display: block; opacity: 0; transform: translateX(16%); transition: transform .55s cubic-bezier(.22, 1, .36, 1), opacity .2s ease; }
+    #shelf .shelf-rec.is-front .shelf-disc { opacity: 1; transform: translateX(38%); }
+    #shelf .shelf-rec.is-front .shelf-disc-spin { animation: shelf-spin 1.8s linear infinite; }
+    #shelf .shelf-rec .shelf-sleeve { filter: none; box-shadow: -3px 3px 8px rgba(36, 26, 19, .32); transition: filter .3s ease, box-shadow .3s ease; }
+    #shelf .shelf-row.has-front .shelf-rec:not(.is-front) .shelf-sleeve { filter: brightness(.82); }
+    #shelf .shelf-rec.is-front .shelf-sleeve { box-shadow: 0 12px 22px rgba(36, 26, 19, .42); }
+    #shelf .shelf-caption {
+        display: block;
+        padding: 9px 0 11px;
+        font-size: 12px; line-height: 1.3;
+        color: #594636;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .dark #shelf .shelf-caption { color: #b5a18c; }
+    /* Kapalı raf: yalnız başlık satırı kalır */
+    #shelf.is-collapsed #shelf-body { display: none; }
+    #shelf.is-collapsed > div { padding-bottom: 12px; }
+    #shelf .shelf-toggle i { transition: transform .3s ease; }
+    #shelf.is-collapsed .shelf-toggle i { transform: rotate(-90deg); }
+}
