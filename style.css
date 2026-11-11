@@ -665,3 +665,17 @@ html:has(#album-modal:not(.hidden)) body, html:has(#review-view:not(.hidden)) bo
 .is-visitor .visitor-only { display: flex; }
 /* Giriş penceresinde "yalnızca görüntüleme" açıklaması gerekmez */
 #login-modal [data-i18n="login_prompt"] { display: none; }
+
+/* iPhone uygulamasında saat/şarj çubuğu: arayüz %75 ölçekli olduğu için güvenli alan boşlukları da 1/0.75 oranında büyütülür */
+@media (max-width: 767px) {
+    .safe-pt { padding-top: max(1rem, calc(env(safe-area-inset-top) / .75)); }
+    .safe-pb { padding-bottom: max(5rem, calc(env(safe-area-inset-bottom) / .75)); }
+    body { padding-left: calc(env(safe-area-inset-left) / .75); padding-right: calc(env(safe-area-inset-right) / .75); }
+    #modal-actions.is-open { top: calc(max(1rem, env(safe-area-inset-top) / .75) + 46px); }
+    #album-modal footer { padding-bottom: max(6px, calc(env(safe-area-inset-bottom) / .75)) !important; }
+    div.fixed.bottom-4[style*="safe-area-inset-bottom"] { padding-bottom: calc(env(safe-area-inset-bottom) / .75) !important; }
+    #toast-container { top: calc(env(safe-area-inset-top) / .75 + 12px); }
+    /* İnceleme sayfası: kaydırınca üstte yapışan şerit saat çubuğunun altında kalsın */
+    #review-view > div { padding-top: 0; }
+    #review-view > div > .sticky { padding-top: calc(max(.75rem, env(safe-area-inset-top) / .75 + .5rem)); }
+}
