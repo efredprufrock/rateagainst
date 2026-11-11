@@ -679,3 +679,9 @@ html:has(#album-modal:not(.hidden)) body, html:has(#review-view:not(.hidden)) bo
     #review-view > div { padding-top: 0; }
     #review-view > div > .sticky { padding-top: calc(max(.75rem, env(safe-area-inset-top) / .75 + .5rem)); }
 }
+
+/* Üst çubuk: Tailwind'in py-3 sınıfı güvenli alan boşluğunu eziyordu; saat çubuğunun altından başlasın */
+header.safe-pt { padding-top: calc(env(safe-area-inset-top) + .75rem) !important; }
+@media (max-width: 767px) {
+    header.safe-pt { padding-top: calc(env(safe-area-inset-top) / .75 + .75rem) !important; }
+}
