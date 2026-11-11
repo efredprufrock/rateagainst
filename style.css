@@ -559,3 +559,109 @@ html:has(#album-modal:not(.hidden)) body, html:has(#review-view:not(.hidden)) bo
 @media (min-width: 641px) {
     #shelf .shelf-rec { --tilt: 0deg !important; }
 }
+
+/* Web: raf plak sayısına göre daralır, Loop'ta paneli kalan genişliği doldurur */
+@media (min-width: 1024px) {
+    #library-top {
+        grid-template-columns: minmax(240px, 1fr) max(260px, calc(var(--shelf-n, 10) * (clamp(40px, (100% - 520px) / 10 * .64, 96px) + 12px) + 62px));
+    }
+    #library-top:not(:has(#now-listening:not(.hidden))) { grid-template-columns: minmax(0, 1fr); }
+    #shelf .shelf-rec, #shelf .shelf-slot { --size: min(96px, calc((100cqw - (var(--shelf-n, 10) - 1) * 12px) / var(--shelf-n, 10))); }
+    #shelf .shelf-slot { display: none; }
+}
+
+/* Ziyaretçi modu: düzenleme düğmeleri gizlenir, site yalnızca görüntülenir */
+.is-visitor #nav-search,
+.is-visitor [onclick*="app.showView('search')"],
+.is-visitor [onclick*="app.toggleLoop"],
+.is-visitor [onclick*="app.toggleShelf("],
+.is-visitor [onclick*="app.toggleEditMode"],
+.is-visitor [onclick*="app.toggleCoverEdit"],
+.is-visitor [onclick*="app.confirmRemoveAlbum"],
+.is-visitor [onclick*="app.setAlbumStatus"],
+.is-visitor [onclick*="app.promptAddGenre"],
+.is-visitor [onclick*="app.autoFetchGenres"],
+.is-visitor [onclick*="app.addTag"],
+.is-visitor [onclick*="app.editReviewNote"],
+.is-visitor [onclick*="app.startListening"],
+.is-visitor [onclick*="app.addToQueue"],
+.is-visitor [onclick*="app.addNewTrack"],
+.is-visitor [onclick*="app.toggleNoteEditMode"],
+.is-visitor [onclick*="app.logListen"],
+.is-visitor [onclick*="app.deleteListen"],
+.is-visitor #note-edit-btn,
+.is-visitor #note-modal-footer,
+.is-visitor #modal-save-btn-container,
+.is-visitor [role="radiogroup"]:has([onclick*="app.setAlbumStatus"]),
+.is-visitor div:has(> label > #import-file) { display: none !important; }
+/* Ziyaretçide parça satırları ve albüm notu tıklanmaz görünmesin diye imleç normal */
+.is-visitor #modal-tracklist > button { cursor: default; }
+/* Ziyaretçide boş raf (yönetici için yönerge içerir) gösterilmez */
+.is-visitor #shelf:not(:has(.shelf-rec)) { display: none !important; }
+
+/* Ziyaretçi yalnızca bitmiş albümleri gördüğü için durum filtresi ve "Sırada" sekmesi gizlenir */
+.is-visitor #status-chips, .is-visitor #nav-queue { display: none !important; }
+
+/* Filtre, sıralama ve görünüm düğmeleri her zaman sağda */
+#filter-bar > #status-chips ~ div { margin-left: auto; }
+
+/* Loop'ta ve raf panelleri: daha alçak (yaklaşık 3/4) */
+#now-listening > button { padding: 8px; gap: 12px; }
+#now-listening > button > span:nth-child(2) { gap: 2px; }
+#now-listening .line-clamp-2 { -webkit-line-clamp: 1; font-size: 16px; }
+#now-listening .score-badge { width: 40px; height: 40px; font-size: 14px; }
+@media (max-width: 1023px) {
+    #now-listening > button > span:first-child { width: 60px; height: 60px; }
+    #now-listening > button > span:nth-child(2) > span { line-height: 1.15; }
+    #now-listening > button > span:nth-child(2) > span:last-child { margin-top: 3px; }
+    #now-listening .score-badge { width: 36px; height: 36px; font-size: 13px; }
+}
+@media (max-width: 640px) {
+    #shelf .shelf-row { height: 72px !important; min-height: 72px; margin-top: 2px; }
+    #shelf .shelf-rec, #shelf .shelf-slot { --size: 56px; width: 56px; height: 56px; }
+    #shelf .shelf-rec.is-front, #shelf .shelf-rec.is-front:hover, #shelf .shelf-rec.is-front:active { transform: translateX(var(--x, 0)) translateY(-8px) rotate(0deg) scale(1.06); }
+    #shelf .shelf-caption { padding: 5px 0 7px; }
+    #shelf > div { padding-top: 10px; }
+}
+
+/* Albüm kartı: puanlamanın bittiği tarih, kapağın üstünde (küçük, italik, zeminsiz) */
+.album-card .ac-date {
+    position: static !important;
+    display: block;
+    margin: 0 0 2cqw;
+    padding: 0 !important;
+    background: none !important;
+    -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+    box-shadow: none !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+    font-weight: 400 !important;
+    font-size: clamp(9px, 5.2cqw, 12px) !important;
+    font-style: italic;
+    line-height: 1.2;
+    color: #75604d !important;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.dark .album-card .ac-date { color: #b5a18c !important; }
+
+/* Albüm sayfası: büyük başlıklarda g, y, f gibi harflerin alt uzantıları kesilmesin (satır aralığı aynı kalır) */
+#modal-title, #modal-meta p:first-child, #review-title {
+    padding-bottom: .14em;
+    margin-bottom: -.14em;
+}
+
+/* 5 puanlık parça: satırın arkasında çok hafif yeşil bir parıltı */
+#modal-tracklist > [data-perfect] {
+    background-image: linear-gradient(rgba(34, 197, 94, .10), rgba(34, 197, 94, .10));
+    box-shadow: 0 0 16px rgba(34, 197, 94, .12);
+}
+.dark #modal-tracklist > [data-perfect] {
+    background-image: linear-gradient(rgba(52, 211, 153, .11), rgba(52, 211, 153, .11));
+    box-shadow: 0 0 16px rgba(52, 211, 153, .10);
+}
+
+/* Ziyaretçi üst çubuğu: dil ve tema düğmeleri + yöneticinin fotoğrafı */
+.visitor-only { display: none; }
+.is-visitor .visitor-only { display: flex; }
+/* Giriş penceresinde "yalnızca görüntüleme" açıklaması gerekmez */
+#login-modal [data-i18n="login_prompt"] { display: none; }

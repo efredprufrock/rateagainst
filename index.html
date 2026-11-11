@@ -69,6 +69,11 @@
           
          
         <div class="flex items-center gap-2">
+            <!-- Ziyaretçi: yalnızca dil ve tema düğmeleri (ayarlar paneli yok) -->
+            <div class="visitor-only items-center gap-1.5">
+                <button type="button" onclick="app.toggleLanguage()" data-i18n-aria="toggle_language" data-i18n-title="toggle_language" class="h-9 rounded-full border border-[#c9b8a6] dark:border-[#4a3829] text-gray-800 dark:text-gray-200 hover:bg-lightHighlight dark:hover:bg-surface transition-colors flex items-center justify-center min-w-[2.25rem] px-2 text-[11px] font-bold tracking-[0.12em]"><span id="lang-icon-head">EN</span></button>
+                <button type="button" onclick="app.toggleTheme()" data-i18n-aria="toggle_theme" data-i18n-title="toggle_theme" class="h-9 rounded-full border border-[#c9b8a6] dark:border-[#4a3829] text-gray-800 dark:text-gray-200 hover:bg-lightHighlight dark:hover:bg-surface transition-colors flex items-center justify-center w-9"><i id="theme-icon-head" class="ph-fill ph-sun text-base"></i></button>
+            </div>
             <button id="header-user-btn" onclick="app.toggleSidebar(true)" data-i18n-aria="menu_settings" class="p-1 rounded-full hover:bg-lightHighlight dark:hover:bg-gray-800 transition-colors active:scale-95 flex items-center justify-center border border-transparent">
                 <div id="header-user-avatar-container" class="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shadow-sm overflow-hidden">
                     <i class="ph-bold ph-list text-xl"></i>
@@ -92,24 +97,47 @@
         <div class="p-4 border-b border-lightBorder dark:border-gray-800 bg-white dark:bg-surface">
             
             <!-- ÇIKIŞ YAPILMIŞ DURUM -->
-                        <div id="auth-logged-out" class="flex flex-col gap-3">
+                <div id="auth-logged-out" class="flex flex-col gap-3">
                 <p class="text-xs text-gray-600 dark:text-gray-400 text-center" data-i18n="login_prompt">Arşivinizi yedeklemek ve senkronize etmek için giriş yapın.</p>
                 <button onclick="app.signIn()" class="w-full bg-white dark:bg-surface border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-surfaceHover text-gray-700 dark:text-white py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-3 transition-all shadow-sm">
                     <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="">
                     <span data-i18n="sign_in_google">Google ile Giriş Yap</span>
                 </button>
+                <!-- E-posta ile giriş (uygulama olarak kullanırken Google penceresi açılmazsa) -->
+                <details id="email-login" class="group">
+                    <summary class="list-none cursor-pointer select-none h-9 flex items-center justify-center gap-1.5 text-xs font-bold text-[#a85a1a] dark:text-primary [&::-webkit-details-marker]:hidden">
+                        <i class="ph-bold ph-envelope-simple text-sm"></i><span data-i18n="email_sign_in">E-posta ile giriş</span><i class="ph-bold ph-caret-down text-[10px] transition-transform group-open:rotate-180"></i>
+                    </summary>
+                    <form onsubmit="app.signInEmail(event)" class="flex flex-col gap-2 pt-1">
+                        <input id="login-email" type="email" autocomplete="username" inputmode="email" required data-i18n-placeholder="email_placeholder" data-i18n-aria="email_placeholder" placeholder="E-posta" class="w-full h-11 px-3 rounded-xl border border-lightBorder dark:border-gray-700 bg-white dark:bg-surface text-[16px] text-gray-900 dark:text-white placeholder:text-gray-500 focus:outline-none focus:border-primary">
+                        <input id="login-password" type="password" autocomplete="current-password" required data-i18n-placeholder="password_placeholder" data-i18n-aria="password_placeholder" placeholder="Şifre" class="w-full h-11 px-3 rounded-xl border border-lightBorder dark:border-gray-700 bg-white dark:bg-surface text-[16px] text-gray-900 dark:text-white placeholder:text-gray-500 focus:outline-none focus:border-primary">
+                        <button type="submit" class="h-11 rounded-xl bg-gray-900 dark:bg-gray-100 text-lightBg dark:text-dark text-sm font-bold active:scale-[.98] transition-transform" data-i18n="sign_in">Giriş yap</button>
+                        <button type="button" onclick="app.resetPassword()" class="h-8 text-[11px] text-gray-600 dark:text-gray-400 underline underline-offset-2" data-i18n="forgot_password">Şifremi unuttum</button>
+                    </form>
+                </details>
             </div>
 
             <!-- GİRİŞ YAPILMIŞ DURUM -->
             <div id="auth-logged-in" class="hidden flex-col gap-4">
                 <div class="flex items-center gap-3 bg-lightBg dark:bg-darker p-3 rounded-xl border border-lightBorder dark:border-gray-800 shadow-inner">
-                    <img id="user-avatar" src="" alt="User" class="w-12 h-12 rounded-full object-cover border border-lightBorder dark:border-gray-700 shadow-sm flex-shrink-0">
+                    <!-- Profil fotoğrafı: dokununca yeni fotoğraf seçilir -->
+                    <label class="relative w-12 h-12 flex-shrink-0 cursor-pointer group" data-i18n-title="change_photo" title="Profil fotoğrafını değiştir">
+                        <img id="user-avatar" src="" alt="" class="w-12 h-12 rounded-full object-cover border border-lightBorder dark:border-gray-700 shadow-sm">
+                        <span class="absolute -right-1 -bottom-1 w-6 h-6 rounded-full bg-primary text-darker flex items-center justify-center shadow ring-2 ring-white dark:ring-surface group-hover:scale-110 transition-transform"><i class="ph-bold ph-camera text-[13px]"></i></span>
+                        <input type="file" id="avatar-upload" accept="image/*" class="sr-only" data-i18n-aria="change_photo" onchange="app.uploadAvatar(event)">
+                    </label>
                     <div class="flex flex-col min-w-0 flex-grow">
                         <span id="user-name" class="text-sm font-black text-gray-900 dark:text-white truncate">User Name</span>
                         <span id="user-email" class="text-[11px] text-gray-500 truncate">user@example.com</span>
                     </div>
                 </div>
                 
+                <!-- Uygulamada e-postayla giriş için şifre belirleme (Google hesabına bağlanır, kimlik aynı kalır) -->
+                <form id="set-password-form" onsubmit="app.setEmailPassword(event)" class="hidden flex-col gap-2 p-3 rounded-xl bg-lightBg dark:bg-darker border border-lightBorder dark:border-gray-800">
+                    <p class="text-[11px] leading-relaxed text-gray-600 dark:text-gray-400" data-i18n="set_password_hint">Uygulamada e-postayla giriş yapabilmek için bir şifre belirle.</p>
+                    <input id="new-password" type="password" autocomplete="new-password" minlength="6" required data-i18n-placeholder="new_password_placeholder" data-i18n-aria="new_password_placeholder" placeholder="Yeni şifre (en az 6 karakter)" class="w-full h-11 px-3 rounded-xl border border-lightBorder dark:border-gray-700 bg-white dark:bg-surface text-[16px] text-gray-900 dark:text-white placeholder:text-gray-500 focus:outline-none focus:border-primary">
+                    <button type="submit" class="h-10 rounded-xl bg-primary text-darker text-sm font-bold" data-i18n="set_password">Şifre belirle</button>
+                </form>
                 <button onclick="app.signOut()" class="w-full bg-white dark:bg-surfaceHover text-gray-600 dark:text-gray-400 hover:text-red-500 border border-lightBorder dark:border-gray-700 hover:border-red-200 dark:hover:border-red-900/50 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-colors active:scale-[0.98] mt-2">
                     <i class="ph-bold ph-sign-out text-lg"></i> <span data-i18n="sign_out">Çıkış Yap</span>
                 </button>

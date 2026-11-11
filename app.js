@@ -6,7 +6,11 @@ import {
     signInWithRedirect,
     GoogleAuthProvider, 
     signOut, 
-    onAuthStateChanged 
+    onAuthStateChanged,
+    signInWithEmailAndPassword,
+    sendPasswordResetEmail,
+    EmailAuthProvider,
+    linkWithCredential
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import {
     getFirestore,
@@ -17,6 +21,7 @@ import {
     collection,
     doc,
     getDocs,
+    getDoc,
     setDoc,
     deleteDoc,
     query,
@@ -214,8 +219,8 @@ const Translations = {
         rating_dist: "Rating Distribution (Tracks)",
         decade_breakdown: "Average Score by Decade",
         listening_trends: "Average Rating Trends Over Time",
-        login_prompt: "Sign in to backup and sync your library.",
-        sign_in_google: "Sign in with Google",
+        login_prompt: "View-only mode. Sign in to manage the diary.", rated_on: "Rating finished", loop_best: "Best so far", loop_next: "Up next", toast_not_admin: "This account can only view.",
+        sign_in_google: "Sign in with Google", toggle_language: "Change language", toggle_theme: "Change theme", admin_login: "Admin sign-in", change_photo: "Change profile photo", toast_photo_saved: "Profile photo updated.", toast_photo_failed: "Could not upload the photo.", email_sign_in: "Sign in with email", email_placeholder: "Email", password_placeholder: "Password", sign_in: "Sign in", forgot_password: "Forgot password", set_password_hint: "Set a password to sign in with email in the app.", new_password_placeholder: "New password (min. 6 characters)", set_password: "Set password", toast_bad_login: "Wrong email or password.", toast_too_many: "Too many attempts. Try again shortly.", toast_login_failed: "Could not sign in.", toast_enter_email: "Enter your email first.", toast_reset_sent: "If registered, a reset link was sent to your email.", toast_password_set: "Password set. You can now sign in with email too.", toast_relogin: "For security, sign out and back in with Google, then try again.", toast_weak_password: "Password must be at least 6 characters.", toast_password_exists: "This account already has a password.",
         sign_out: "Sign Out",
         nav_queue: "Up Next",
         close: "Close",
@@ -417,8 +422,8 @@ const Translations = {
         rating_dist: "Puan Dağılımı (Parçalar)",
         decade_breakdown: "Dönemlere Göre Ortalama Puan",
         listening_trends: "Aylara Göre Puanlama Eğilimi",
-        login_prompt: "Arşivinizi yedeklemek ve senkronize etmek için giriş yapın.",
-        sign_in_google: "Google ile Giriş Yap",
+        login_prompt: "Yalnızca görüntüleme modu. Günlüğü yönetmek için giriş yap.", rated_on: "Puanlama bitti", loop_best: "Şimdilik en iyisi", loop_next: "Sırada", toast_not_admin: "Bu hesap yalnızca görüntüleyebilir.",
+        sign_in_google: "Google ile Giriş Yap", toggle_language: "Dili değiştir", toggle_theme: "Temayı değiştir", admin_login: "Yönetici girişi", change_photo: "Profil fotoğrafını değiştir", toast_photo_saved: "Profil fotoğrafı güncellendi.", toast_photo_failed: "Fotoğraf yüklenemedi.", email_sign_in: "E-posta ile giriş", email_placeholder: "E-posta", password_placeholder: "Şifre", sign_in: "Giriş yap", forgot_password: "Şifremi unuttum", set_password_hint: "Uygulamada e-postayla giriş yapabilmek için bir şifre belirle.", new_password_placeholder: "Yeni şifre (en az 6 karakter)", set_password: "Şifre belirle", toast_bad_login: "E-posta ya da şifre hatalı.", toast_too_many: "Çok fazla deneme. Biraz sonra tekrar dene.", toast_login_failed: "Giriş yapılamadı.", toast_enter_email: "Önce e-posta adresini yaz.", toast_reset_sent: "Kayıtlıysa, şifre sıfırlama bağlantısı e-postana gönderildi.", toast_password_set: "Şifre belirlendi. Artık e-postanla da giriş yapabilirsin.", toast_relogin: "Güvenlik için çıkış yapıp Google ile yeniden gir, sonra tekrar dene.", toast_weak_password: "Şifre en az 6 karakter olmalı.", toast_password_exists: "Bu hesabın zaten bir şifresi var.",
         sign_out: "Çıkış Yap",
         nav_queue: "Sırada",
         close: "Kapat",
@@ -513,22 +518,47 @@ const AppState = {
     modalTrackSort: localStorage.getItem('albumDiaryModalTrackSort') || 'default', 
     queueSort: localStorage.getItem('albumDiaryQueueSort') || 'oldest',
     filterGroup: '', filterGenre: '', filterYear: '', filterLabel: '', filterStatus: '',
-    isLoading: true, isLoggedIn: false,
+    isLoading: true, isLoggedIn: false, isAdmin: false,
     summaryPeriod: 'month', summaryOffset: 0,
     currentAllNotesRawText: ''
 };
 
 function t(key) { return Translations[AppState.language][key] || key; }
 
+// Tür adları: "post rock", "Post-Rock", "postrock", "PostRock" aynı tür sayılır ve tek biçimde gösterilir
+const Genre = {
+    // Karşılaştırma anahtarı: büyük/küçük harf, boşluk, tire, nokta vb. fark etmez
+    key(g) {
+        const raw = String(g || '').trim();
+        const k = raw.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/ı/g, 'i').replace(/&/g, 'n').replace(/[^\p{L}\p{N}]+/gu, '');
+        return k || raw.toLowerCase();
+    },
+    // Görünen ad: kitaplıktaki yazımlar arasından ayraçlı olanı seçer (tire > boşluk > bitişik), kelime başlarını büyütür
+    pretty(g) {
+        const k = this.key(g);
+        const variants = {};
+        (AppState.library || []).forEach(a => (a.genres || []).forEach(v => { if (this.key(v) === k) { const t = v.trim(); variants[t] = (variants[t] || 0) + 1; } }));
+        const score = v => (/-/.test(v) ? 3 : /\s/.test(v) ? 2 : /[a-z][A-Z]/.test(v) ? 1 : 0);
+        const best = Object.keys(variants).sort((a, b) => score(b) - score(a) || variants[b] - variants[a] || a.localeCompare(b))[0] || String(g || '').trim();
+        return best
+            .replace(/([a-z])([A-Z])/g, '$1 $2')
+            .split(/(\s+|-)/)
+            .map(w => (w && w === w.toLowerCase() ? w.charAt(0).toUpperCase() + w.slice(1) : w))
+            .join('')
+            .replace(/\s+/g, ' ');
+    },
+    same(a, b) { return this.key(a) === this.key(b); }
+};
+
 function tGenre(genreString) {
     if (!genreString) return '';
-    const normalized = genreString.trim();
+    const k = Genre.key(genreString);
     for (let key in GenreTranslations) {
-        if (key.toLowerCase() === normalized.toLowerCase() || GenreTranslations[key].tr.toLowerCase() === normalized.toLowerCase()) {
+        if (Genre.key(key) === k || Genre.key(GenreTranslations[key].tr) === k) {
             return GenreTranslations[key][AppState.language];
         }
     }
-    return normalized;
+    return Genre.pretty(genreString);
 }
 
 const Utils = {
@@ -558,6 +588,12 @@ const Utils = {
 
 // --- Albüm yardımcıları: durum, kısmi ortalama, renk kademesi ---
 const AlbumUtils = {
+    // Loop'ta kartındaki albüm: elle seçilen, yoksa en son dinlenen
+    loopPick(list) {
+        return list.find(a => a.loopAt) || list
+            .filter(a => AlbumUtils.status(a) === 'listening')
+            .sort((a, b) => new Date(AlbumUtils.lastActivity(b)) - new Date(AlbumUtils.lastActivity(a)))[0] || null;
+    },
     ratedTracks(album) { return (album.tracks || []).filter(tr => tr.rating > 0); },
     // Puanlanmış parçaların ortalaması (tüm parçalar puanlanmasa da)
     runningAvg(album) {
@@ -579,17 +615,27 @@ const AlbumUtils = {
     lastActivity(album) { return album.sortAt || album.updatedAt || album.dateAdded || 0; },
     // Tek bir renk sistemi: kartlar, rozetler ve özet aynı eşikleri kullanır
     tier(score) {
-        if (score >= 4.5) return { text: 'text-blue-700 dark:text-blue-400', badge: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300' };
-        if (score >= 3.5) return { text: 'text-green-700 dark:text-green-400', badge: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300' };
-        if (score >= 3.0) return { text: 'text-yellow-700 dark:text-yellow-400', badge: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300' };
-        if (score >= 2.5) return { text: 'text-orange-700 dark:text-orange-400', badge: 'bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-300' };
-        if (score > 0) return { text: 'text-red-700 dark:text-red-400', badge: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300' };
-        return { text: 'text-gray-600 dark:text-gray-400', badge: 'bg-lightHighlight text-gray-700 dark:bg-surfaceHover dark:text-gray-300' };
+        // Puan renkleri: 5.0 lacivert → 0.5 koyu bordo (ortalamalar en yakın yarım puana yuvarlanır)
+        const P = {
+            5:   ['#1e3a8a', '#8ba3f5'], // lacivert
+            4.5: ['#047857', '#34d399'], // koyu yeşil (canlı)
+            4:   ['#4f8a5b', '#86c99a'], // yeşil (sakin)
+            3.5: ['#4d7c0f', '#a8d64a'], // sarımsı yeşil
+            3:   ['#b58105', '#f2c94c'], // sarı
+            2.5: ['#d97706', '#f5a623'], // turuncumsu sarı
+            2:   ['#ea580c', '#fb8a4c'], // turuncu
+            1.5: ['#dc2626', '#f26b6b'], // kırmızı
+            1:   ['#9f1239', '#e0607e'], // bordo
+            0.5: ['#6b0f1f', '#c0445e']  // koyu bordo
+        };
+        if (!(score > 0)) return { text: 'text-gray-600 dark:text-gray-400', badge: 'bg-lightHighlight text-gray-700 dark:bg-surfaceHover dark:text-gray-300' };
+        const [l, d] = P[Math.min(5, Math.max(0.5, Math.round(score * 2) / 2))];
+        return { text: `text-[${l}] dark:text-[${d}]`, badge: `bg-[${l}]/10 text-[${l}] dark:bg-[${d}]/15 dark:text-[${d}]` };
     },
-    // Not metnini (madde imli) paragraflara çevir
+        // Not metnini (madde imli) paragraflara çevir
     noteParagraphs(note) {
         return (note || '').split('\n').map(l => l.replace(/^\s*•\s?/, '').trim()).filter(Boolean);
-    }
+    },
 };
 
 // --- Kapak yardımcıları: kaynak seçimi ve kapak açılmazsa yedek zinciri ---
@@ -960,10 +1006,14 @@ const app = {
             const headerAvatarContainer = document.getElementById('header-user-avatar-container');
 
             if (user && user.uid !== OWNER_UID) {
-                showToast("Bu hesabın erişim yetkisi yok.", "error");
+                showToast(t('toast_not_admin'), "error");
                 await signOut(auth);
                 return;
             }
+            // Yönetici: her şeye erişir · Ziyaretçi (giriş yok): kitaplığı yalnızca görüntüler
+            AppState.isAdmin = !!user;
+            document.documentElement.classList.toggle('is-visitor', !user);
+            document.documentElement.classList.toggle('is-admin', !!user);
             if (user) {
                 AppState.isLoggedIn = true;
                 AppState.isLoading = true;
@@ -975,24 +1025,23 @@ const app = {
                     loggedInView.classList.add('flex');
                 }
 
-                const initial = encodeURIComponent((user.displayName || 'U').charAt(0));
-                const photo = user.photoURL || `https://placehold.co/100x100/d17b38/140e0a?text=${initial}`;
-                if(avatarImg) { avatarImg.src = photo; avatarImg.alt = ''; }
-                if(nameEl) nameEl.textContent = user.displayName || 'User';
+            if(nameEl) nameEl.textContent = user.displayName || user.email?.split('@')[0] || 'User';
                 if(emailEl) emailEl.textContent = user.email || '';
-
-                if(headerAvatarContainer) {
-                    headerAvatarContainer.innerHTML = `<img src="${Utils.escapeHTML(photo)}" alt="" class="w-full h-full object-cover">`;
-                }
+                this.updatePasswordForm();
+                // Profil fotoğrafı: önce Google fotoğrafı ya da baş harf, sonra kayıtlı fotoğraf
+                this.setAvatar(user.photoURL);
+                this.loadAvatar();
+                this.toggleLoginModal(false);
 
                 this.loadData();
             } else {
-                AppState.isLoggedIn = false;
-                AppState.isLoading = false;
+                // Ziyaretçi: yöneticinin kitaplığı salt okunur olarak yüklenir
+                AppState.isLoggedIn = true;
+                AppState.isLoading = true;
                 AppState.library = [];
+                if (AppState.currentView === 'search') this.showView('library');
                 this.renderLibrary();
-                this.renderStats();
-                this.renderQueue();
+                this.loadData();
 
                 if(loggedOutView) loggedOutView.classList.remove('hidden');
                 if(loggedInView) {
@@ -1001,7 +1050,9 @@ const app = {
                 }
                 
                 if(headerAvatarContainer) {
-                    headerAvatarContainer.innerHTML = `<i class="ph-bold ph-list text-xl text-primary"></i>`;
+                    // Ziyaretçi sağ üstte yöneticinin profil fotoğrafını görür (dokununca yönetici girişi açılır)
+                    this.setAvatar(null);
+                    this.loadAvatar();
                 }
             }
         });
@@ -1117,6 +1168,8 @@ const app = {
     updateLanguageUI() {
         const langIcon = document.getElementById('lang-icon');
         if (langIcon) langIcon.textContent = AppState.language === 'en' ? 'TR' : 'EN';
+        const langHead = document.getElementById('lang-icon-head');
+        if (langHead) langHead.textContent = AppState.language === 'en' ? 'TR' : 'EN';
         document.documentElement.lang = AppState.language;
         document.querySelectorAll('[data-i18n-aria]').forEach(el => el.setAttribute('aria-label', t(el.dataset.i18nAria)));
         document.querySelectorAll('[data-i18n]').forEach(el => el.innerHTML = Translations[AppState.language][el.getAttribute('data-i18n')] || el.innerHTML);
@@ -1139,13 +1192,11 @@ const app = {
     },
 
     updateThemeIcon() {
+        const dark = document.documentElement.classList.contains('dark');
         const icon = document.getElementById('theme-icon');
-        if(!icon) return;
-        if (document.documentElement.classList.contains('dark')) {
-            icon.className = 'ph-fill ph-moon text-lg px-1 text-yellow-400';
-        } else {
-            icon.className = 'ph-fill ph-sun text-lg px-1 text-amber-500';
-        }
+        if (icon) icon.className = dark ? 'ph-fill ph-moon text-lg px-1 text-yellow-400' : 'ph-fill ph-sun text-lg px-1 text-amber-500';
+        const head = document.getElementById('theme-icon-head');
+        if (head) head.className = dark ? 'ph-fill ph-moon text-base text-yellow-400' : 'ph-fill ph-sun text-base text-amber-500';
     },
 
     // --- Telefonda uygulama: kurulum, geri tuşu, arka plandan dönünce yenileme ---
@@ -1215,6 +1266,147 @@ const app = {
         }
     },
 
+    // E-posta ile giriş: uygulama olarak kullanırken Google penceresi açılamazsa
+    async signInEmail(e) {
+        e.preventDefault();
+        const email = document.getElementById('login-email')?.value.trim();
+        const pass = document.getElementById('login-password')?.value;
+        if (!email || !pass) return;
+        try {
+            await signInWithEmailAndPassword(auth, email, pass);
+            document.getElementById('login-password').value = '';
+            this.toggleSidebar(false);
+        } catch (err) {
+            console.error('E-posta girişi:', err.code);
+            const bad = ['auth/invalid-credential', 'auth/wrong-password', 'auth/user-not-found', 'auth/invalid-email', 'auth/invalid-login-credentials'];
+            showToast(t(bad.includes(err.code) ? 'toast_bad_login' : (err.code === 'auth/too-many-requests' ? 'toast_too_many' : 'toast_login_failed')), 'error');
+        }
+    },
+
+    async resetPassword() {
+        const input = document.getElementById('login-email');
+        const email = input?.value.trim();
+        if (!email) { showToast(t('toast_enter_email'), 'info'); input?.focus(); return; }
+        try { await sendPasswordResetEmail(auth, email); } catch (e) { console.error('Şifre sıfırlama:', e.code); }
+        showToast(t('toast_reset_sent'), 'success');
+    },
+
+    // Google ile girişliyken şifre belirle: e-posta/şifre aynı hesaba bağlanır (kimlik değişmez)
+    async setEmailPassword(e) {
+        e.preventDefault();
+        const user = auth.currentUser;
+        const input = document.getElementById('new-password');
+        if (!user?.email || !input?.value) return;
+        try {
+            await linkWithCredential(user, EmailAuthProvider.credential(user.email, input.value));
+            input.value = '';
+            this.updatePasswordForm();
+            showToast(t('toast_password_set'), 'success');
+        } catch (err) {
+            console.error('Şifre belirleme:', err.code);
+            const msg = { 'auth/requires-recent-login': 'toast_relogin', 'auth/weak-password': 'toast_weak_password', 'auth/provider-already-linked': 'toast_password_exists', 'auth/credential-already-in-use': 'toast_password_exists', 'auth/email-already-in-use': 'toast_password_exists' }[err.code] || 'toast_login_failed';
+            showToast(t(msg), 'error');
+        }
+    },
+
+    updatePasswordForm() {
+        const form = document.getElementById('set-password-form');
+        const user = auth.currentUser;
+        const hasPassword = !!user?.providerData?.some(p => p.providerId === 'password');
+        form?.classList.toggle('hidden', !user || hasPassword);
+        form?.classList.toggle('flex', !!user && !hasPassword);
+    },
+
+    // --- Profil fotoğrafı (Firestore'da küçük bir kopya; her cihazda aynı görünür) ---
+    avatarFallback() {
+        const u = auth.currentUser;
+        const letter = (u?.displayName || u?.email || 'R').trim().charAt(0).toLocaleUpperCase('tr-TR');
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#d17b38"/><text x="50" y="50" dy=".35em" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="48" fill="#140e0a">${letter.replace(/[<&>"]/g, '')}</text></svg>`;
+        return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    },
+
+    setAvatar(src) {
+        const fallback = this.avatarFallback();
+        const url = src || fallback;
+        const img = document.getElementById('user-avatar');
+        if (img) { img.onerror = () => { img.onerror = null; img.src = fallback; }; img.src = url; }
+        const head = document.getElementById('header-user-avatar-container');
+        if (head) {
+            head.innerHTML = '';
+            const hi = document.createElement('img');
+            hi.alt = ''; hi.className = 'w-full h-full object-cover';
+            hi.onerror = () => { hi.onerror = null; hi.src = fallback; };
+            hi.src = url;
+            head.appendChild(hi);
+        }
+    },
+
+    async loadAvatar() {
+        // Yönetici kendi fotoğrafını, ziyaretçi yöneticinin fotoğrafını görür
+        const uid = auth.currentUser?.uid || OWNER_UID;
+        try {
+            const snap = await getDoc(doc(db, 'kitaplik', `${uid}__profile`));
+            const photo = snap.exists() ? snap.data()?.profile?.photo : '';
+            if (photo && (auth.currentUser?.uid || OWNER_UID) === uid) this.setAvatar(photo);
+        } catch (e) { console.warn('Profil fotoğrafı okunamadı:', e.code || e.message); }
+    },
+
+    async uploadAvatar(e) {
+        const file = e.target.files?.[0];
+        e.target.value = '';
+        const user = auth.currentUser;
+        if (!file || !user) return;
+        if (!file.type.startsWith('image/')) { showToast(t('toast_photo_failed'), 'error'); return; }
+        try {
+            // Kare kırpıp 192 piksele küçült (Firestore için hafif kalsın)
+            const bmp = await createImageBitmap(file);
+            const side = Math.min(bmp.width, bmp.height), S = 192;
+            const canvas = document.createElement('canvas'); canvas.width = canvas.height = S;
+            canvas.getContext('2d').drawImage(bmp, (bmp.width - side) / 2, (bmp.height - side) / 2, side, side, 0, 0, S, S);
+            const photo = canvas.toDataURL('image/jpeg', 0.85);
+            this.setAvatar(photo);
+            await setDoc(doc(db, 'kitaplik', `${user.uid}__profile`), { id: '__profile', user_id: user.uid, profile: { photo, updatedAt: new Date().toISOString() } });
+            showToast(t('toast_photo_saved'), 'success');
+        } catch (err) {
+            console.error('Profil fotoğrafı:', err.message);
+            showToast(t('toast_photo_failed'), 'error');
+        }
+    },
+
+    // Yönetici girişi penceresi: kenar menüdeki giriş bölümü (Google + e-posta) buraya taşınır
+    toggleLoginModal(open) {
+        let modal = document.getElementById('login-modal');
+        if (!open) {
+            if (!modal || modal.classList.contains('hidden')) return;
+            modal.classList.add('opacity-0');
+            modal.firstElementChild?.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+            return;
+        }
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'login-modal';
+            modal.className = 'hidden opacity-0 fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-opacity duration-200';
+            modal.innerHTML = `
+                <div role="dialog" aria-modal="true" aria-labelledby="login-modal-title" class="scale-95 transition-transform duration-200 w-full max-w-sm rounded-2xl bg-lightBg dark:bg-dark border border-[#c9b8a6] dark:border-[#4a3829] shadow-2xl p-5 flex flex-col gap-4">
+                    <div class="flex items-center justify-between gap-3 pb-3 border-b-[3px] border-double border-[#241a13] dark:border-[#c9b8a6]">
+                        <h2 id="login-modal-title" class="flex items-center gap-2 text-[11px] font-bold tracking-[0.2em] uppercase text-gray-900 dark:text-white"><i class="ph-bold ph-lock-simple text-sm text-[#a85a1a] dark:text-primary"></i><span>${t('admin_login')}</span></h2>
+                        <button type="button" onclick="app.toggleLoginModal(false)" aria-label="${t('close')}" class="w-9 h-9 -mr-2 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-lightHighlight dark:hover:bg-surface"><i class="ph-bold ph-x text-lg"></i></button>
+                    </div>
+                    <div id="login-modal-body"></div>
+                </div>`;
+            modal.addEventListener('click', (e) => { if (e.target === modal) this.toggleLoginModal(false); });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.classList.contains('hidden')) { e.stopImmediatePropagation(); this.toggleLoginModal(false); } }, true);
+            document.body.appendChild(modal);
+        }
+        const form = document.getElementById('auth-logged-out');
+        if (form) document.getElementById('login-modal-body')?.appendChild(form);
+        document.getElementById('email-login')?.setAttribute('open', '');
+        modal.querySelector('#login-modal-title span').textContent = t('admin_login');
+        modal.classList.remove('hidden');
+        requestAnimationFrame(() => { modal.classList.remove('opacity-0'); modal.firstElementChild?.classList.remove('scale-95'); });
+    },
+
     async signOut() {
         await signOut(auth);
         this.toggleSidebar(false);
@@ -1223,13 +1415,15 @@ const app = {
 
 
     async loadData() {
-        const user = auth.currentUser;
-        if (!user) return;
-        const q = query(collection(db, 'kitaplik'), where('user_id', '==', user.uid));
+        // Yönetici kendi kaydını, ziyaretçi yöneticinin kitaplığını okur
+        const uid = auth.currentUser?.uid || OWNER_UID;
+        const q = query(collection(db, 'kitaplik'), where('user_id', '==', uid));
         const fill = (snap) => {
             const list = [];
             snap.forEach((docSnap) => { const data = docSnap.data(); if (data && data.album_data) list.push(data.album_data); });
-            return list;
+            // Ziyaretçi yalnızca puanlaması tamamlanmış albümleri görür; Loop'taki albüm bitmemiş olsa da kartta görünür
+            AppState.loopPick = AlbumUtils.loopPick(list);
+            return AppState.isAdmin ? list : list.filter(a => (a.averageScore || 0) > 0);
         };
         this._lastLoad = Date.now();
 
@@ -1454,7 +1648,8 @@ const app = {
             AppState.library.forEach(a => { if(a.artist) items.add(a.artist); });
             defLabel = t('all_artists');
         } else if (type === 'Genre') {
-            AppState.library.forEach(a => { if(a.genres) a.genres.forEach(g => items.add(g.trim())); });
+            const seenGenres = new Set();
+            AppState.library.forEach(a => (a.genres || []).forEach(g => { const k = Genre.key(g); if (k && !seenGenres.has(k)) { seenGenres.add(k); items.add(g.trim()); } }));
             defLabel = t('all_genres');
         } else if (type === 'Year') {
             AppState.library.forEach(a => { 
@@ -1493,7 +1688,7 @@ const app = {
         }
 
         sortedItems.forEach(item => {
-            const isSelected = currentVal === item;
+            const isSelected = type === 'Genre' ? (!!currentVal && Genre.same(currentVal, item)) : currentVal === item;
             const isDecade = type === 'Year' && item.toString().endsWith('s');
             const displayLabel = type === 'Genre' ? tGenre(item) : item;
             
@@ -1713,7 +1908,7 @@ const app = {
                     return false;
                 }
             }
-            if (fGenre && (!a.genres || !a.genres.some(g => g.toLowerCase() === fGenre.toLowerCase()))) return false;
+            if (fGenre && (!a.genres || !a.genres.some(g => Genre.same(g, fGenre)))) return false;
             if (fLabel && a.label !== fLabel) return false;
             return true;
         });
@@ -1777,6 +1972,11 @@ const app = {
                 ? `<span class="ac-status absolute bg-lightBg/95 dark:bg-dark/90 text-gray-700 dark:text-gray-300 font-bold">${t('badge_planned')}</span>`
                 : '';
 
+            // Puanlamanın bittiği tarih: kapağın sol üstünde minik etiket
+            const doneAt = avg > 0 ? (album.completedAt || album.sortAt || album.updatedAt || album.dateAdded) : '';
+            const doneLabel = doneAt ? new Date(doneAt).toLocaleDateString(AppState.language === 'en' ? 'en-GB' : 'tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+            const dateBadge = doneLabel ? `<time datetime="${Utils.escapeHTML(doneAt)}" title="${t('rated_on')}: ${doneLabel}" class="ac-date">${doneLabel}</time>` : `<span class="ac-date" aria-hidden="true">&nbsp;</span>`;
+
             const progressBar = (avg === 0 && prog.rated > 0)
                 ? `<div class="h-0.5 mt-2 bg-[#e6dbcf] dark:bg-[#3b2b20]" role="progressbar" aria-valuenow="${prog.pct}" aria-valuemin="0" aria-valuemax="100"><div class="h-full bg-[#a85a1a] dark:bg-primary" style="width:${prog.pct}%"></div></div>`
                 : '';
@@ -1793,9 +1993,9 @@ const app = {
 
 
             card.innerHTML = `
-                <div class="relative w-full pt-[100%] shrink-0 overflow-hidden bg-lightHighlight dark:bg-surface shadow-[0_10px_22px_rgba(36,26,19,0.22)] dark:shadow-[0_10px_22px_rgba(0,0,0,0.55)] transition-transform duration-300 group-hover:-translate-y-1 group-active:scale-[0.98]">
+                ${dateBadge}<div class="relative w-full pt-[100%] shrink-0 overflow-hidden bg-lightHighlight dark:bg-surface shadow-[0_10px_22px_rgba(36,26,19,0.22)] dark:shadow-[0_10px_22px_rgba(0,0,0,0.55)] transition-transform duration-300 group-hover:-translate-y-1 group-active:scale-[0.98]">
                     <img loading="lazy" ${AlbumUtils.coverAttrs(album)} alt="" class="absolute inset-0 w-full h-full object-cover object-center">
-                    ${statusBadge}
+                     
                 </div>
                 <div class="ac-body flex items-start justify-between">
                     <div class="min-w-0 flex-1">
@@ -1825,32 +2025,43 @@ const app = {
             top.classList.add('hidden'); box.innerHTML = ''; shelf.innerHTML = ''; return;
         }
 
-        const current = AppState.library.find(a => a.loopAt) || AppState.library
-            .filter(a => AlbumUtils.status(a) === 'listening')
-            .sort((a, b) => new Date(AlbumUtils.lastActivity(b)) - new Date(AlbumUtils.lastActivity(a)))[0];
+        const current = AppState.isAdmin ? AlbumUtils.loopPick(AppState.library) : AppState.loopPick;
 
         if (current) {
-            const prog = AlbumUtils.progress(current);
             const avg = AlbumUtils.runningAvg(current);
             const complete = (current.averageScore || 0) > 0;
             const shown = current.averageScore || avg;
+            // Parça parça puan şeridi: çubuğun boyu puan, rengi puan aralığı; puanlanmamışlar kesikli
+            const tracks = current.tracks || [];
+            const bars = (h, maxW = 18) => `<span class="loop-strip flex items-end gap-[3px] w-full" style="height:${h}px" aria-hidden="true">${tracks.map(tr => {
+                const r = tr.rating || 0;
+                const tip = `${Utils.escapeHTML(tr.number)}. ${Utils.escapeHTML(tr.title)}${r > 0 ? ` · ${r.toFixed(1)}` : ''}`;
+                return r > 0
+                    ? `<span class="flex-1 h-full flex items-end ${AlbumUtils.tier(r).text}" style="max-width:${maxW}px" title="${tip}"><span class="block w-full bg-current rounded-t-[2px]" style="height:${Math.max(10, r / 5 * 100)}%"></span></span>`
+                    : `<span class="flex-1 h-full flex items-end" style="max-width:${maxW}px" title="${tip}"><span class="block w-full h-[22%] border border-dashed border-[#c9b8a6] dark:border-[#5a4637] rounded-t-[2px]"></span></span>`;
+            }).join('')}</span>`;
+            // Şimdilik en iyi parça ve sıradaki (puanlanmamış ilk) parça
+            const best = tracks.filter(tr => tr.rating > 0).sort((a, b) => b.rating - a.rating || parseInt(a.number) - parseInt(b.number))[0];
+            const next = tracks.find(tr => !(tr.rating > 0));
+            const facts = [
+                best ? `<span class="truncate">${t('loop_best')}: <i class="font-bold text-gray-900 dark:text-white">${Utils.escapeHTML(best.title)}</i> <b class="${AlbumUtils.tier(best.rating).text}">${best.rating.toFixed(1)}</b></span>` : '',
+                next ? `<span class="truncate">${t('loop_next')}: <i class="text-gray-900 dark:text-white">${Utils.escapeHTML(next.number)}. ${Utils.escapeHTML(next.title)}</i></span>` : ''
+            ].filter(Boolean).join('');
             box.innerHTML = `
                 <button onclick="app.openAlbumModal('${Utils.escapeHTML(current.id)}')" class="w-full h-full text-left flex gap-4 p-3 rounded-2xl bg-white/70 dark:bg-surface border border-[#c9b8a6] dark:border-[#4a3829] hover:bg-lightHighlight dark:hover:bg-surfaceHover transition-colors">
                     <span class="relative w-24 h-24 lg:h-auto lg:w-auto lg:min-w-[96px] aspect-square self-center lg:self-stretch flex-shrink-0 shadow-[0_8px_18px_rgba(36,26,19,0.25)]"><img ${AlbumUtils.coverAttrs(current)} alt="" class="absolute inset-0 w-full h-full object-cover"></span>
-                    <span class="flex flex-col gap-1 min-w-0 flex-1 justify-center">
-                        <span class="flex items-start justify-between gap-2">
-                            <span class="flex flex-col gap-1 min-w-0">
-                                <span class="flex items-center gap-1.5 text-[11px] font-bold tracking-[0.15em] text-[#a85a1a] dark:text-primary"><i class="ph-bold ph-repeat text-sm"></i>${t('loop_title')}</span>
-                                <span class="text-lg font-black italic leading-tight text-gray-900 dark:text-white line-clamp-2">${Utils.escapeHTML(current.title)}</span>
-                            </span>
-                            <span role="img" aria-label="${t(complete ? 'album_avg' : 'so_far_avg')}: ${shown > 0 ? shown.toFixed(1) : '–'}" title="${t(complete ? 'album_avg' : 'so_far_avg')}" class="score-badge ${complete ? '' : 'is-partial'} flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center -rotate-[8deg] text-base font-black ${AlbumUtils.tier(shown).text}">${shown > 0 ? shown.toFixed(1) : '–'}</span>
-                        </span>
+                    <span class="flex flex-col gap-1 min-w-0 flex-1 lg:flex-none lg:max-w-[300px] justify-center">
+                        <span class="flex items-center gap-1.5 text-[11px] font-bold tracking-[0.15em] text-[#a85a1a] dark:text-primary"><i class="ph-bold ph-repeat text-sm"></i>${t('loop_title')}</span>
+                        <span class="text-lg font-black italic leading-tight text-gray-900 dark:text-white line-clamp-2">${Utils.escapeHTML(current.title)}</span>
                         <span class="text-sm text-gray-600 dark:text-gray-400 truncate">${Utils.escapeHTML(current.artist)} · <span class="text-[0.85em]">${Utils.escapeHTML(current.year)}</span></span>
                         ${(current.genres?.length || (current.label && current.label !== t('unknown'))) ? `<span class="text-sm text-gray-600 dark:text-gray-400 truncate">${[current.genres?.[0] ? `<span class="text-[0.75em]">${Utils.escapeHTML(tGenre(current.genres[0]))}</span>` : '', current.label && current.label !== t('unknown') ? `<span class="text-[0.5em] tracking-wide">${Utils.escapeHTML(current.label)}</span>` : ''].filter(Boolean).join(' <span class="text-[0.75em]">·</span> ')}</span>` : ''}
-                        <span class="flex items-center gap-2 mt-1">
-                            <span class="flex-1 h-1 bg-lightHighlight dark:bg-surfaceHover overflow-hidden"><span class="block h-full bg-primary" style="width:${prog.pct}%"></span></span>
-                        </span>
+                        <span class="lg:hidden mt-1">${bars(12)}</span>
                     </span>
+                    <span class="loop-extra hidden lg:flex flex-col justify-center gap-2.5 flex-1 min-w-0 pl-5 border-l border-[#e6dbcf] dark:border-[#3b2b20]">
+                        ${bars(46, 40)}
+                        ${facts ? `<span class="flex flex-wrap gap-x-5 gap-y-0.5 text-xs text-gray-600 dark:text-gray-400 min-w-0">${facts}</span>` : ''}
+                    </span>
+                    <span role="img" aria-label="${t(complete ? 'album_avg' : 'so_far_avg')}: ${shown > 0 ? shown.toFixed(1) : '–'}" title="${t(complete ? 'album_avg' : 'so_far_avg')}" class="score-badge ${complete ? '' : 'is-partial'} self-start flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center -rotate-[8deg] text-base font-black ${AlbumUtils.tier(shown).text}">${shown > 0 ? shown.toFixed(1) : '–'}</span>
                 </button>`;
             box.classList.remove('hidden');
         } else { box.classList.add('hidden'); box.innerHTML = ''; }
@@ -1865,6 +2076,8 @@ const app = {
             </button>`).join('');
         const slots = Array.from({ length: 10 - favs.length }, (_, k) => `<span class="shelf-slot" style="--i:${favs.length + k}" aria-hidden="true"></span>`).join('');
         const open = this._shelfOpen !== false;
+        // Web: raf, içindeki plak sayısı kadar yer kaplar; kalanını Loop'ta paneli alır
+        top.style.setProperty('--shelf-n', favs.length);
 
         shelf.innerHTML = `
             <div class="h-full flex flex-col rounded-2xl bg-white/70 dark:bg-surface border border-[#c9b8a6] dark:border-[#4a3829] pt-3 px-4 overflow-hidden">
@@ -2208,7 +2421,7 @@ const app = {
         
         clearTimeout(this._closeTimer); tl.innerHTML = `<div class="flex justify-center p-8"><i class="ph-bold ph-spinner-gap animate-spin text-3xl text-primary"></i></div>`;
         
-        let albumData = AppState.library.find(a => a.id === mbid);
+        let albumData = AppState.library.find(a => a.id === mbid) || (AppState.loopPick?.id === mbid ? AppState.loopPick : null);
         if (!albumData) {
             try {
                 albumData = await this.fetchAlbumData(mbid, title, artist, year, defCover);
@@ -2850,8 +3063,8 @@ const app = {
                 let added = 0;
                 
                 foundGenres.forEach(g => {
-                    const formatted = g.charAt(0).toUpperCase() + g.slice(1);
-                    if (!al.genres.includes(formatted) && al.genres.length < 3) {
+                    const formatted = tGenre(g);
+                    if (!al.genres.some(x => Genre.same(x, formatted)) && al.genres.length < 3) {
                         al.genres.push(formatted);
                         added++;
                     }
@@ -2897,8 +3110,8 @@ const app = {
         if(!AppState.currentModalAlbum.genres) AppState.currentModalAlbum.genres = [];
         
         for(let g of newGenres) {
-            let formatted = g.charAt(0).toUpperCase() + g.slice(1);
-            if(!AppState.currentModalAlbum.genres.includes(formatted) && AppState.currentModalAlbum.genres.length < 3) {
+            let formatted = tGenre(g);
+            if(!AppState.currentModalAlbum.genres.some(x => Genre.same(x, formatted)) && AppState.currentModalAlbum.genres.length < 3) {
                 AppState.currentModalAlbum.genres.push(formatted);
             }
         }
@@ -3285,18 +3498,18 @@ const app = {
                         <span data-ghost-down class="scrub-ghost scrub-ghost-down" aria-hidden="true"></span>
                     </div>
                     <button type="button" data-scrub-save onmousedown="event.preventDefault()" onclick="app.saveScrub(true)" aria-label="${t('save_rating')}" title="${t('save_rating')} (Enter)" class="scrub-save"><i class="ph-bold ph-check"></i></button>
-                    <span class="w-4 flex justify-center flex-shrink-0">${perfect}</span>
+                     
                 </div>`;
             }
 
             // Normal satır: noktalı çizgiyle puana bağlanan dergi listesi
-            return `<button type="button" onclick="app.selectTrack(${i})" data-track="${i}" aria-label="${title}: ${score} — ${t('tap_to_rate')}" class="w-full h-11 md:h-[34px] flex items-center gap-2.5 text-left rounded-lg -mx-1 px-1 hover:bg-[#ebe2d3]/70 dark:hover:bg-[#2a1f17]/70 transition-colors">
+            return `<button type="button" onclick="app.selectTrack(${i})" data-track="${i}"${r === 5 ? ' data-perfect' : ''} aria-label="${title}: ${score} — ${t('tap_to_rate')}" class="w-full h-11 md:h-[34px] flex items-center gap-2.5 text-left rounded-lg -mx-1 px-1 hover:bg-[#ebe2d3]/70 dark:hover:bg-[#2a1f17]/70 transition-colors">
                 <span class="w-5 text-xs font-bold ${muted} flex-shrink-0">${num}</span>
                 <span class="min-w-0 truncate text-[15px] italic">${title}</span>
                 ${hasNote ? `<i class="ph-fill ph-paperclip text-xs text-[#a85a1a] dark:text-primary flex-shrink-0" aria-hidden="true"></i>` : ''}
                 <span class="flex-1 min-w-[12px] border-b-2 border-dotted border-[#c9b8a6] dark:border-[#4a3829] translate-y-1" aria-hidden="true"></span>
                 <span class="w-8 text-right text-base font-black ${color} flex-shrink-0">${score}</span>
-                <span class="w-4 flex justify-center flex-shrink-0">${perfect}</span>
+                 
             </button>`;
         }).join('');
 
@@ -3504,6 +3717,9 @@ const app = {
         if (progEl) progEl.textContent = totalTracks > 0 ? `${ratedTracks.length} / ${totalTracks} ${t('tracks_rated')}` : '';
 
         al.averageScore = totalTracks > 0 && ratedTracks.length === totalTracks ? shown : 0;
+        // Puanlamanın bittiği an: ilk tamamlandığında kaydedilir (eski albümlerde son puanlama zamanı)
+        if (al.averageScore > 0) { if (!al.completedAt) al.completedAt = al.sortAt || new Date().toISOString(); }
+        else if (al.completedAt) delete al.completedAt;
     },
 
     addNewTrack() {
@@ -3733,7 +3949,7 @@ const app = {
         const reviews = albums.filter(a => a.note && a.note.trim()).length;
         const mostCommon = arr => { const c = {}; arr.forEach(x => { if (x) c[x] = (c[x] || 0) + 1; }); return Object.entries(c).sort((x, y) => y[1] - x[1])[0]?.[0]; };
         const topArtist = mostCommon(albums.map(a => a.artist));
-        const topGenre = mostCommon(albums.map(a => a.genres?.[0]));
+        const topGenre = mostCommon(albums.map(a => a.genres?.[0] ? Genre.key(a.genres[0]) : ''));
 
         const stat = (n, l) => `<div class="p-3 rounded-xl bg-lightBg dark:bg-dark flex flex-col gap-0.5"><span class="text-2xl font-black text-gray-900 dark:text-white">${n}</span><span class="text-xs text-gray-600 dark:text-gray-400">${l}</span></div>`;
         const row = (l, v, italic = false) => v ? `<div class="flex justify-between gap-3 text-sm"><span class="text-gray-600 dark:text-gray-400">${l}</span><span class="font-bold text-gray-900 dark:text-white text-right truncate ${italic ? 'italic' : ''}">${v}</span></div>` : '';
@@ -3770,7 +3986,7 @@ const app = {
                         <span class="block text-sm font-bold italic truncate text-gray-900 dark:text-white">${Utils.escapeHTML(tr.title)}</span>
                         <span class="block text-[11px] text-gray-600 dark:text-gray-400 truncate">${Utils.escapeHTML(a.artist)} · ${Utils.escapeHTML(a.title)}</span>
                     </span>
-                    <span class="text-xs font-black text-blue-700 dark:text-blue-400 flex-shrink-0">5 ★</span>
+                    <span class="text-xs font-black ${AlbumUtils.tier(5).text} flex-shrink-0">5 ★</span>
                 </button>
             </li>`).join('');
     },
@@ -3806,7 +4022,7 @@ const app = {
         lib.forEach(a => {
             if(!aStats[a.artist]) aStats[a.artist] = { c:0, s:0, rc:0 };
             aStats[a.artist].c++; if(a.averageScore > 0) { aStats[a.artist].s += a.averageScore; aStats[a.artist].rc++; }
-            if(a.genres) a.genres.forEach(g => { const ng = g.trim().toLowerCase(); if(!gStats[ng]) gStats[ng]={n:g.trim(),c:0, raw: g.trim()}; gStats[ng].c++; });
+            if(a.genres) a.genres.forEach(g => { const ng = Genre.key(g); if(!gStats[ng]) gStats[ng]={n:g.trim(),c:0, raw: g.trim()}; gStats[ng].c++; });
         });
 
         const distribution = Array(10).fill(0); // 0.5, 1, 1.5 ... 5
@@ -3930,7 +4146,7 @@ const app = {
                     window.scrollTo(0,0);
                     showToast(`${t('toast_filtered_genre')} ${Utils.escapeHTML(art)}`, "info");
                 };
-                li.innerHTML = `<div><p class="font-bold">${Utils.escapeHTML(art)}</p><p class="text-[11px] text-gray-500">${st.c} ${t('albums')}</p></div><span class="text-yellow-500 font-bold flex items-center gap-1"><i class="ph-fill ph-star"></i> ${avg}</span>`;
+                li.innerHTML = `<div><p class="font-bold">${Utils.escapeHTML(art)}</p><p class="text-[11px] text-gray-500">${st.c} ${t('albums')}</p></div><span class="${AlbumUtils.tier(parseFloat(avg)).text} font-bold flex items-center gap-1"><i class="ph-fill ph-star"></i> ${avg}</span>`;
                 alEl.appendChild(li);
             });
         }
@@ -3953,6 +4169,39 @@ const app = {
         }
     }
 };
+
+// Ziyaretçi modu: düzenleme işlevleri yalnızca yönetici girişinde çalışır
+const ADMIN_ONLY = [
+    'importData', 'uploadAvatar', 'persistIfSaved', 'saveAlbumData', 'deleteAlbumData', 'cacheCover', 'cacheMissingCovers',
+    'search', 'searchFromLink', 'addToQueue', 'startListening',
+    'toggleLoop', 'toggleShelf', 'setAlbumStatus', 'addTag', 'removeTag', 'logListen', 'deleteListen',
+    'editReviewNote', 'updateAddedDate', 'toggleEditMode', 'updateAlbumField', 'updateTrackField',
+    'toggleCoverEdit', 'applyCustomCover', 'uploadCover', 'findCover', 'pickCover',
+    'autoFetchGenres', 'promptAddGenre', 'confirmAddGenre', 'removeGenre',
+    'toggleNoteEditMode', 'saveNote',
+    'selectTrack', 'focusScrub', 'saveScrub', 'stepTrack', 'rateTrack', 'setTrackRating', 'addNewTrack', 'deleteTrack',
+    'confirmRemoveAlbum', 'removeAlbumFromLibrary'
+];
+ADMIN_ONLY.forEach(name => {
+    const fn = app[name];
+    if (typeof fn !== 'function') return;
+    app[name] = function (...args) { return AppState.isAdmin ? fn.apply(this, args) : undefined; };
+});
+{
+    // Ziyaretçide: not yalnızca okunur, parça seçilmez, arama sayfası açılmaz
+    const setNote = app.setNoteEditMode, firstUnrated = app.firstUnratedTrack, show = app.showView;
+    app.setNoteEditMode = function (isEdit) { return setNote.call(this, AppState.isAdmin ? isEdit : false); };
+    app.firstUnratedTrack = function (...args) { return AppState.isAdmin ? firstUnrated.apply(this, args) : null; };
+    app.showView = function (view, ...rest) { return show.call(this, !AppState.isAdmin && view === 'search' ? 'library' : view, ...rest); };
+    // Ziyaretçi ayarlar panelini açamaz; profil fotoğrafına dokununca yönetici girişi açılır
+    const sidebarToggle = app.toggleSidebar;
+    app.toggleSidebar = function (open) {
+        const closed = document.getElementById('right-sidebar')?.classList.contains('translate-x-full');
+        const opening = open === true || (open === undefined && closed);
+        if (opening && !AppState.isAdmin) return this.toggleLoginModal(true);
+        return sidebarToggle.call(this, open);
+    };
+}
 
 window.app = app;
 app.init();
