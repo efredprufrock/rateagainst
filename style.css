@@ -685,3 +685,77 @@ header.safe-pt { padding-top: calc(env(safe-area-inset-top) + .75rem) !important
 @media (max-width: 767px) {
     header.safe-pt { padding-top: calc(env(safe-area-inset-top) / .75 + .75rem) !important; }
 }
+
+/* Parçalar: plak grafiği (dilim = parça süresi, renk = parça puanı) */
+#modal-trackchart:not(.hidden) { flex: 1 1 auto; min-height: 300px; container-type: size; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 4px 0 2px; }
+#modal-trackchart .tc-wrap { position: relative; container-type: inline-size; width: min(100cqw, 100cqh - 30px, 600px); aspect-ratio: 1 / 1; flex-shrink: 0; }
+#modal-trackchart .tc-svg { display: block; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 14px 24px rgba(36, 26, 19, .3)); }
+.tc-disc { transform-origin: 100px 100px; animation: tc-spin 1.1s cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes tc-spin { from { transform: rotate(-140deg); opacity: 0; } to { transform: none; opacity: 1; } }
+/* Plak kendiliğinden yavaşça döner (JS); imleç ya da parmakla sürüklenerek çevrilebilir */
+#modal-trackchart .tc-svg { touch-action: none; cursor: grab; -webkit-user-select: none; user-select: none; }
+#modal-trackchart .tc-svg.is-dragging, #modal-trackchart .tc-svg.is-dragging .tc-slice { cursor: grabbing; }
+@media (prefers-reduced-motion: reduce) { .tc-disc { animation: none; } }
+.tc-vinyl { fill: #17110d; }
+.dark .tc-vinyl { fill: #0b0806; }
+.tc-slice { stroke: #17110d; stroke-width: .6; cursor: pointer; transition: transform .25s ease, opacity .25s ease; }
+.tc-slice.tc-unrated { color: #3d332c; }
+.dark .tc-slice.tc-unrated { color: #2e2620; }
+.tc-disc.has-active .tc-slice:not(.is-active) { opacity: .45; }
+.tc-slice.is-active { transform: translate(var(--dx), var(--dy)); }
+.tc-grooves circle { stroke: rgba(0, 0, 0, .22); stroke-width: .35; pointer-events: none; }
+/* Ortadaki etiket: kapak kararır, üstünde albüm puanı ve süreye göre ortalama */
+.tc-label-shade { fill: rgba(16, 11, 8, .58); }
+/* Ortadaki puan (dönmez): üstte iki simge — parça başına / süreye göre */
+.tc-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
+.tc-modes { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -10.6cqw); display: flex; justify-content: space-between; width: 19cqw; pointer-events: auto; }
+.tc-modes button { width: 4.6cqw; height: 4.6cqw; display: flex; align-items: center; justify-content: center; font-size: 2.4cqw; color: rgba(251, 246, 239, .3); background: transparent; transition: color .2s; }
+.tc-modes button:hover { color: rgba(251, 246, 239, .75); }
+.tc-modes button[aria-pressed="true"] { color: rgba(251, 246, 239, .7); }
+.tc-score { font-size: 11.5cqw; line-height: 1; transform: translate(.1cqw, .3cqw); font-weight: 900; font-style: italic; letter-spacing: -.02em; color: #fbf6ef; text-shadow: 0 1px 6px rgba(0, 0, 0, .45); }
+.tc-cap { display: none; }
+.tc-info { min-height: 1.3em; max-width: 100%; text-align: center; font-size: 13px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#btn-track-chart[aria-pressed="true"] { background: #ebe4dc; color: #a85a1a; }
+.dark #btn-track-chart[aria-pressed="true"] { background: #3b2b20; color: #e8955a; }
+/* Plak grafiği açıkken sıralama düğmeleri gizli */
+#modal-tracks-col:has(#btn-track-chart[aria-pressed="true"]) :is(#btn-track-sort-default, #btn-track-sort-rating) { display: none !important; }
+
+/* Plak görünümü: sağ üstteki puan rozeti gerekmez (puan plağın ortasında) */
+.modal-content:has(#btn-track-chart[aria-pressed="true"]) #modal-stamp { display: none; }
+/* Masaüstü: başlık satırı plağın üstüne biner, plak sütunun tüm yüksekliğini kullanır */
+@media (min-width: 768px) {
+    .modal-content:has(#btn-track-chart[aria-pressed="true"]) #modal-tracks-col { position: relative; }
+    .modal-content:has(#btn-track-chart[aria-pressed="true"]) #modal-tracks-col > div:first-child { position: absolute; top: 0; left: 0; right: 0; z-index: 2; border-bottom-color: transparent; pointer-events: none; }
+    .modal-content:has(#btn-track-chart[aria-pressed="true"]) #modal-tracks-col > div:first-child button { pointer-events: auto; }
+    .modal-content:has(#btn-track-chart[aria-pressed="true"]) #modal-trackchart { padding: 0; gap: 4px; }
+}
+
+/* Parça listesi: numaranın yanında minik, silik parça süresi */
+.tr-dur { width: 30px; flex-shrink: 0; margin-left: -4px; font-size: 10px; line-height: 1; color: rgba(117, 96, 77, .6); font-variant-numeric: tabular-nums; letter-spacing: .02em; }
+.dark .tr-dur { color: rgba(181, 161, 140, .5); }
+
+/* Kaydırarak puanlama: satır sürgüye dönüşür, soldan puan rengiyle dolar */
+.is-admin #modal-tracklist > button[data-track] { touch-action: pan-y; -webkit-user-select: none; user-select: none; }
+#modal-tracklist > button[data-track].is-sliding {
+    background-image: linear-gradient(90deg, color-mix(in srgb, var(--slide-c) 24%, transparent) var(--slide), transparent var(--slide)) !important;
+    box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--slide-c) 60%, transparent);
+    cursor: ew-resize;
+}
+.dark #modal-tracklist > button[data-track].is-sliding {
+    background-image: linear-gradient(90deg, color-mix(in srgb, var(--slide-cd) 22%, transparent) var(--slide), transparent var(--slide)) !important;
+    box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--slide-cd) 60%, transparent);
+}
+#modal-tracklist > button[data-track].is-sliding > span:last-child { transform: scale(1.25); transition: transform .12s; }
+
+/* "Geri al" çubuğu */
+#undo-bar {
+    position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom) + 92px); z-index: 200;
+    display: flex; align-items: center; gap: 14px; max-width: min(92vw, 420px);
+    padding: 10px 10px 10px 18px; border-radius: 999px;
+    background: #241a13; color: #f5efe6; font-size: 14px; box-shadow: 0 12px 30px rgba(0, 0, 0, .3);
+    transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: transform .25s ease, opacity .25s ease;
+}
+#undo-bar.is-open { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
+#undo-bar button { flex-shrink: 0; height: 34px; padding: 0 14px; border-radius: 999px; font-weight: 700; color: #e8955a; background: rgba(232, 149, 90, .12); }
+.dark #undo-bar { background: #f5efe6; color: #241a13; }
+.dark #undo-bar button { color: #a85a1a; background: rgba(168, 90, 26, .1); }
