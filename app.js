@@ -220,7 +220,7 @@ const Translations = {
         decade_breakdown: "Average Score by Decade",
         listening_trends: "Average Rating Trends Over Time",
         login_prompt: "View-only mode. Sign in to manage the diary.", rated_on: "Rating finished", loop_best: "Best so far", loop_next: "Up next", toast_not_admin: "This account can only view.",
-        sign_in_google: "Sign in with Google", toggle_language: "Change language", toggle_theme: "Change theme", admin_login: "Admin sign-in", chart_view: "Record chart", undo: "Undo", record_header: "Record", by_time: "by time", by_track: "per track", by_time_avg: "Average by time", by_track_avg: "Average per track", toast_durations: "Track lengths added to {n} albums.", list_view: "Track list", total_time: "total", track_word: "tracks", change_photo: "Change profile photo", toast_photo_saved: "Profile photo updated.", toast_photo_failed: "Could not upload the photo.", email_sign_in: "Sign in with email", email_placeholder: "Email", password_placeholder: "Password", sign_in: "Sign in", forgot_password: "Forgot password", set_password_hint: "Set a password to sign in with email in the app.", new_password_placeholder: "New password (min. 6 characters)", set_password: "Set password", toast_bad_login: "Wrong email or password.", toast_too_many: "Too many attempts. Try again shortly.", toast_login_failed: "Could not sign in.", toast_enter_email: "Enter your email first.", toast_reset_sent: "If registered, a reset link was sent to your email.", toast_password_set: "Password set. You can now sign in with email too.", toast_relogin: "For security, sign out and back in with Google, then try again.", toast_weak_password: "Password must be at least 6 characters.", toast_password_exists: "This account already has a password.",
+        sign_in_google: "Sign in with Google", toggle_language: "Change language", toggle_theme: "Change theme", admin_login: "Admin sign-in", chart_view: "Record chart", undo: "Undo", quick_rate: "Quick rate", prev: "Previous", skip: "Skip", qr_done: "Album done!", pick_rating: "Pick a rating", record_header: "Record", by_time: "by time", by_track: "per track", by_time_avg: "Average by time", by_track_avg: "Average per track", toast_durations: "Track lengths added to {n} albums.", list_view: "Track list", total_time: "total", track_word: "tracks", change_photo: "Change profile photo", toast_photo_saved: "Profile photo updated.", toast_photo_failed: "Could not upload the photo.", email_sign_in: "Sign in with email", email_placeholder: "Email", password_placeholder: "Password", sign_in: "Sign in", forgot_password: "Forgot password", set_password_hint: "Set a password to sign in with email in the app.", new_password_placeholder: "New password (min. 6 characters)", set_password: "Set password", toast_bad_login: "Wrong email or password.", toast_too_many: "Too many attempts. Try again shortly.", toast_login_failed: "Could not sign in.", toast_enter_email: "Enter your email first.", toast_reset_sent: "If registered, a reset link was sent to your email.", toast_password_set: "Password set. You can now sign in with email too.", toast_relogin: "For security, sign out and back in with Google, then try again.", toast_weak_password: "Password must be at least 6 characters.", toast_password_exists: "This account already has a password.",
         sign_out: "Sign Out",
         nav_queue: "Up Next",
         close: "Close",
@@ -423,7 +423,7 @@ const Translations = {
         decade_breakdown: "Dönemlere Göre Ortalama Puan",
         listening_trends: "Aylara Göre Puanlama Eğilimi",
         login_prompt: "Yalnızca görüntüleme modu. Günlüğü yönetmek için giriş yap.", rated_on: "Puanlama bitti", loop_best: "Şimdilik en iyisi", loop_next: "Sırada", toast_not_admin: "Bu hesap yalnızca görüntüleyebilir.",
-        sign_in_google: "Google ile Giriş Yap", toggle_language: "Dili değiştir", toggle_theme: "Temayı değiştir", admin_login: "Yönetici girişi", chart_view: "Plak grafiği", undo: "Geri al", record_header: "Plak", by_time: "süreye göre", by_track: "parça başına", by_time_avg: "Süreye göre ortalama", by_track_avg: "Parça başına ortalama", toast_durations: "{n} albüme parça süreleri eklendi.", list_view: "Parça listesi", total_time: "toplam", track_word: "parça", change_photo: "Profil fotoğrafını değiştir", toast_photo_saved: "Profil fotoğrafı güncellendi.", toast_photo_failed: "Fotoğraf yüklenemedi.", email_sign_in: "E-posta ile giriş", email_placeholder: "E-posta", password_placeholder: "Şifre", sign_in: "Giriş yap", forgot_password: "Şifremi unuttum", set_password_hint: "Uygulamada e-postayla giriş yapabilmek için bir şifre belirle.", new_password_placeholder: "Yeni şifre (en az 6 karakter)", set_password: "Şifre belirle", toast_bad_login: "E-posta ya da şifre hatalı.", toast_too_many: "Çok fazla deneme. Biraz sonra tekrar dene.", toast_login_failed: "Giriş yapılamadı.", toast_enter_email: "Önce e-posta adresini yaz.", toast_reset_sent: "Kayıtlıysa, şifre sıfırlama bağlantısı e-postana gönderildi.", toast_password_set: "Şifre belirlendi. Artık e-postanla da giriş yapabilirsin.", toast_relogin: "Güvenlik için çıkış yapıp Google ile yeniden gir, sonra tekrar dene.", toast_weak_password: "Şifre en az 6 karakter olmalı.", toast_password_exists: "Bu hesabın zaten bir şifresi var.",
+        sign_in_google: "Google ile Giriş Yap", toggle_language: "Dili değiştir", toggle_theme: "Temayı değiştir", admin_login: "Yönetici girişi", chart_view: "Plak grafiği", undo: "Geri al", quick_rate: "Hızlı puanla", prev: "Önceki", skip: "Atla", qr_done: "Albüm tamam!", pick_rating: "Puan seç", record_header: "Plak", by_time: "süreye göre", by_track: "parça başına", by_time_avg: "Süreye göre ortalama", by_track_avg: "Parça başına ortalama", toast_durations: "{n} albüme parça süreleri eklendi.", list_view: "Parça listesi", total_time: "toplam", track_word: "parça", change_photo: "Profil fotoğrafını değiştir", toast_photo_saved: "Profil fotoğrafı güncellendi.", toast_photo_failed: "Fotoğraf yüklenemedi.", email_sign_in: "E-posta ile giriş", email_placeholder: "E-posta", password_placeholder: "Şifre", sign_in: "Giriş yap", forgot_password: "Şifremi unuttum", set_password_hint: "Uygulamada e-postayla giriş yapabilmek için bir şifre belirle.", new_password_placeholder: "Yeni şifre (en az 6 karakter)", set_password: "Şifre belirle", toast_bad_login: "E-posta ya da şifre hatalı.", toast_too_many: "Çok fazla deneme. Biraz sonra tekrar dene.", toast_login_failed: "Giriş yapılamadı.", toast_enter_email: "Önce e-posta adresini yaz.", toast_reset_sent: "Kayıtlıysa, şifre sıfırlama bağlantısı e-postana gönderildi.", toast_password_set: "Şifre belirlendi. Artık e-postanla da giriş yapabilirsin.", toast_relogin: "Güvenlik için çıkış yapıp Google ile yeniden gir, sonra tekrar dene.", toast_weak_password: "Şifre en az 6 karakter olmalı.", toast_password_exists: "Bu hesabın zaten bir şifresi var.",
         sign_out: "Çıkış Yap",
         nav_queue: "Sırada",
         close: "Kapat",
@@ -1641,18 +1641,8 @@ const app = {
             s.row.classList.remove('is-sliding');
             this._swipeEnd = Date.now();
             if (!save || !s.val) { this.renderTracklist(); return; }
-            const al = AppState.currentModalAlbum, tr = al?.tracks?.[s.idx];
-            if (!tr) return;
-            const prev = tr.rating || 0, prevStatus = al.status;
-            if (prev === s.val) { this.renderTracklist(); return; }
-            this.setTrackRating(s.idx, s.val);
-            this.showUndo(`${Utils.escapeHTML(tr.title)} · <b>${s.val.toFixed(1)}</b>`, () => {
-                if (AppState.currentModalAlbum !== al) return;
-                this.setTrackRating(s.idx, prev);
-                al.status = prevStatus;
-                this.renderModalStatus();
-                this.persistIfSaved();
-            });
+            if ((AppState.currentModalAlbum?.tracks?.[s.idx]?.rating || 0) === s.val) { this.renderTracklist(); return; }
+            this.rateWithUndo(s.idx, s.val);
         };
         con.addEventListener('pointerdown', (e) => {
             if (!AppState.isAdmin || e.button > 0) return;
@@ -1697,6 +1687,151 @@ const app = {
         bar.querySelector('button').onclick = () => { bar.classList.remove('is-open'); clearTimeout(this._undoTimer); undo(); };
         requestAnimationFrame(() => bar.classList.add('is-open'));
         this._undoTimer = setTimeout(() => bar.classList.remove('is-open'), 4500);
+    },
+
+        // --- Pratik puanlama: puan + "Geri al", sıradaki parçaya geçiş, telefonda puan şeridi, hızlı puanlama modu ---
+    rateWithUndo(idx, value) {
+        const al = AppState.currentModalAlbum, tr = al?.tracks?.[idx];
+        if (!tr) return;
+        const prev = tr.rating || 0, prevStatus = al.status;
+        if (prev === value) return;
+        this.setTrackRating(idx, value);
+        this.showUndo(`${Utils.escapeHTML(tr.title)} · <b>${value > 0 ? value.toFixed(1) : '–'}</b>`, () => {
+            if (AppState.currentModalAlbum !== al) return;
+            this.setTrackRating(idx, prev);
+            al.status = prevStatus;
+            this.renderModalStatus();
+            this.persistIfSaved();
+            if (this._qr) this.renderQuickRate();
+        });
+    },
+
+    // Verilen parçadan sonraki ilk puanlanmamış parça (sona gelince başa döner)
+    nextUnrated(from) {
+        const list = AppState.currentModalAlbum?.tracks || [];
+        for (let k = 1; k <= list.length; k++) {
+            const j = (from + k) % list.length;
+            if (!(list[j].rating > 0)) return j;
+        }
+        return null;
+    },
+
+    // Telefondaki puan şeridi: puana dokun → kaydet, sıradaki puanlanmamış parçayı aç
+    chipRate(idx, value) {
+        if (this.scrub) { clearTimeout(this.scrub.blurTimer); this.scrub = null; }
+        this.rateWithUndo(idx, value);
+        this.editingTrack = this.nextUnrated(idx);
+        this.renderTracklist();
+        this.scrollSelectedTrackIntoView();
+    },
+
+    // Klavye (masaüstü): puanı kaydet ve sıradaki puanlanmamış parçaya geç
+    commitAndNext() {
+        const s = this.scrub;
+        if (!s) return;
+        clearTimeout(s.commitTimer);
+        this.saveScrub(false);
+        this.editingTrack = this.nextUnrated(s.idx);
+        this.renderTracklist();
+        this.scrollSelectedTrackIntoView();
+        this.focusScrub();
+    },
+
+    // Hızlı puanlama: tam ekran kart, her puandan sonra sıradaki parça
+    openQuickRate() {
+        const al = AppState.currentModalAlbum;
+        if (!al?.tracks?.length) return;
+        if (this.scrub) this.saveScrub(false);
+        const first = al.tracks.findIndex(tr => !(tr.rating > 0));
+        this._qr = { idx: first >= 0 ? first : 0, done: false };
+        let el = document.getElementById('quick-rate');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'quick-rate';
+            el.setAttribute('role', 'dialog');
+            el.setAttribute('aria-modal', 'true');
+            el.className = 'safe-pt fixed inset-0 z-[110] flex flex-col bg-lightBg dark:bg-dark';
+            document.body.appendChild(el);
+            document.addEventListener('keydown', (e) => {
+                if (!this._qr || !(/^(Escape|ArrowRight|ArrowLeft|[0-5])$/.test(e.key))) return;
+                e.stopPropagation(); // alttaki puan kutusu aynı tuşu ikinci kez işlemesin
+                if (e.key === 'Escape') { e.preventDefault(); e.stopImmediatePropagation(); this.closeQuickRate(); }
+                else if (e.key === 'ArrowRight') { e.preventDefault(); this.quickRateGo(1); }
+                else if (e.key === 'ArrowLeft') { e.preventDefault(); this.quickRateGo(-1); }
+                else if (/^[0-5]$/.test(e.key) && !this._qr.done) { e.preventDefault(); this.quickRatePick(e.key === '0' ? 0.5 : Number(e.key)); }
+            }, true);
+        }
+        el.classList.remove('hidden');
+        this.renderQuickRate();
+    },
+
+    renderQuickRate() {
+        const el = document.getElementById('quick-rate'), al = AppState.currentModalAlbum, q = this._qr;
+        if (!el || !al || !q) return;
+        const n = al.tracks.length;
+        const cover = document.getElementById('modal-cover')?.getAttribute('src') || '';
+        const head = `
+            <div class="flex items-center justify-between gap-3 mx-5 pt-3 pb-3 border-b-[3px] border-double border-[#241a13] dark:border-[#c9b8a6]">
+                <span class="flex items-center gap-2 text-[11px] font-bold tracking-[0.2em] uppercase"><i class="ph-bold ph-lightning text-sm text-[#a85a1a] dark:text-primary"></i>${t('quick_rate')}</span>
+                <span class="flex items-center gap-3">
+                    <span class="text-xs text-gray-600 dark:text-gray-400 tabular-nums">${q.done ? n : q.idx + 1} / ${n}</span>
+                    <button type="button" onclick="app.closeQuickRate()" aria-label="${t('close')}" class="w-10 h-10 -mr-2 rounded-full flex items-center justify-center hover:bg-lightHighlight dark:hover:bg-surface"><i class="ph-bold ph-x text-lg"></i></button>
+                </span>
+            </div>`;
+        if (q.done) {
+            const avg = al.averageScore || AlbumUtils.runningAvg(al);
+            el.innerHTML = `${head}
+                <div class="flex-1 min-h-0 flex flex-col items-center justify-center gap-5 px-6 text-center">
+                    <span class="score-badge ${al.averageScore > 0 ? '' : 'is-partial'} w-28 h-28 rounded-full flex items-center justify-center -rotate-[8deg] text-4xl font-black ${AlbumUtils.tier(avg).text}">${avg > 0 ? avg.toFixed(1) : '–'}</span>
+                    <p class="text-2xl font-black italic">${t('qr_done')}</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">${Utils.escapeHTML(al.title)} · ${Utils.escapeHTML(al.artist)}</p>
+                    <button type="button" onclick="app.closeQuickRate()" class="mt-2 h-12 px-8 rounded-full bg-gray-900 dark:bg-gray-100 text-lightBg dark:text-dark font-bold">${t('close')}</button>
+                </div>`;
+            return;
+        }
+        const tr = al.tracks[q.idx], r = tr.rating || 0;
+        const fmt = s => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
+        const chips = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map(v => `<button type="button" onclick="app.quickRatePick(${v})" aria-pressed="${r === v}" class="rate-chip qr-chip ${AlbumUtils.tier(v).text}">${v.toFixed(1)}</button>`).join('');
+        el.innerHTML = `${head}
+            <div class="flex-1 min-h-0 flex flex-col items-center justify-center gap-4 px-6 text-center">
+                ${cover ? `<img src="${Utils.escapeHTML(cover)}" alt="" class="qr-cover shadow-[0_14px_30px_rgba(36,26,19,0.3)] object-cover">` : ''}
+                <div class="flex flex-col items-center gap-1 min-w-0 max-w-full">
+                    <span class="text-xs text-gray-600 dark:text-gray-400 tabular-nums">${Utils.escapeHTML(tr.number)}.${tr.duration > 0 ? ` · ${fmt(tr.duration)}` : ''}</span>
+                    <h2 class="text-[28px] leading-tight font-black italic line-clamp-2 break-words">${Utils.escapeHTML(tr.title)}</h2>
+                    <span class="text-sm text-gray-600 dark:text-gray-400">${Utils.escapeHTML(al.artist)}</span>
+                </div>
+            </div>
+            <div class="w-full max-w-xl mx-auto px-5 pb-3">
+                <div class="grid grid-cols-5 gap-2" role="group" aria-label="${t('pick_rating')}">${chips}</div>
+                <div class="flex justify-between items-center mt-3" style="padding-bottom: env(safe-area-inset-bottom)">
+                    <button type="button" onclick="app.quickRateGo(-1)" ${q.idx === 0 ? 'disabled' : ''} class="h-11 px-4 rounded-full flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300 disabled:opacity-30 hover:bg-lightHighlight dark:hover:bg-surface"><i class="ph-bold ph-arrow-left"></i>${t('prev')}</button>
+                    <button type="button" onclick="app.quickRateGo(1)" class="h-11 px-4 rounded-full flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-lightHighlight dark:hover:bg-surface">${t('skip')}<i class="ph-bold ph-arrow-right"></i></button>
+                </div>
+            </div>`;
+    },
+
+    quickRatePick(v) {
+        const q = this._qr;
+        if (!q || q.done) return;
+        this.rateWithUndo(q.idx, v);
+        navigator.vibrate?.(8);
+        setTimeout(() => { if (this._qr === q) this.quickRateGo(1); }, 180);
+    },
+
+    quickRateGo(d) {
+        const q = this._qr, al = AppState.currentModalAlbum;
+        if (!q || !al) return;
+        if (q.done) { if (d < 0) { q.done = false; q.idx = al.tracks.length - 1; } }
+        else if (q.idx + d >= al.tracks.length) q.done = true;
+        else q.idx = Math.max(0, q.idx + d);
+        this.renderQuickRate();
+    },
+
+    closeQuickRate() {
+        this._qr = null;
+        document.getElementById('quick-rate')?.classList.add('hidden');
+        this.editingTrack = null;
+        this.renderTracklist();
     },
 
     async signOut() {
@@ -3825,10 +3960,8 @@ const app = {
                         <i class="ph-bold ph-caret-down scrub-caret" aria-hidden="true"></i>
                         <span data-ghost-up class="scrub-ghost scrub-ghost-up" aria-hidden="true"></span>
                         <span data-ghost-down class="scrub-ghost scrub-ghost-down" aria-hidden="true"></span>
-                    </div>
-                    <button type="button" data-scrub-save onmousedown="event.preventDefault()" onclick="app.saveScrub(true)" aria-label="${t('save_rating')}" title="${t('save_rating')} (Enter)" class="scrub-save"><i class="ph-bold ph-check"></i></button>
-                     
-                </div>`;
+                                    </div>
+                <div data-chips class="rate-chips md:hidden grid grid-cols-5 gap-1.5 -mx-1 px-1 pt-1.5 pb-2.5" role="group" aria-label="${t('pick_rating')}">${[0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map(v => `<button type="button" onclick="app.chipRate(${i}, ${v})" aria-pressed="${r === v}" class="rate-chip ${AlbumUtils.tier(v).text}">${v.toFixed(1)}</button>`).join('')}</div>`;
             }
 
             // Normal satır: noktalı çizgiyle puana bağlanan dergi listesi
@@ -3897,7 +4030,8 @@ const app = {
         if (!s) return;
         clearTimeout(s.blurTimer);
         this.scrub = null;
-        if (s.value !== s.orig) this.setTrackRating(s.idx, s.value);
+        clearTimeout(s.commitTimer);
+        if (s.value !== s.orig) this.rateWithUndo(s.idx, s.value);
         if (close) {
             this.editingTrack = null;
             this.renderTracklist();
@@ -3972,8 +4106,17 @@ const app = {
             if (e.key in steps) show(s.value + steps[e.key]);
             else if (e.key === 'Home') show(0);
             else if (e.key === 'End') show(5);
-            else if (/^[0-5]$/.test(e.key)) show(Number(e.key));
-            else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.saveScrub(true); return; }
+            else if (/^[0-5]$/.test(e.key)) {
+                // 4 → 4.0, hemen tekrar 4 → 4.5, 0 → 0.5; kısa bir duraksamadan sonra kaydedilip sıradaki parçaya geçilir
+                const n = Number(e.key), now = Date.now();
+                let v = n === 0 ? 0.5 : n;
+                if (s.lastKey === e.key && now - s.lastKeyAt < 1200 && n > 0 && n < 5) v = n + 0.5;
+                s.lastKey = e.key; s.lastKeyAt = now;
+                show(v);
+                clearTimeout(s.commitTimer);
+                s.commitTimer = setTimeout(() => { if (this.scrub === s) this.commitAndNext(); }, 900);
+            }
+            else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.commitAndNext(); return; }
             else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); this.cancelScrub(); return; }
             else return;
             e.preventDefault();
@@ -4502,7 +4645,7 @@ const app = {
 
 // Ziyaretçi modu: düzenleme işlevleri yalnızca yönetici girişinde çalışır
 const ADMIN_ONLY = [
-    'importData', 'uploadAvatar', 'persistIfSaved', 'saveAlbumData', 'deleteAlbumData', 'cacheCover', 'cacheMissingCovers',
+        'importData', 'uploadAvatar', 'persistIfSaved', 'openQuickRate', 'chipRate', 'rateWithUndo', 'commitAndNext', 'saveAlbumData', 'deleteAlbumData', 'cacheCover', 'cacheMissingCovers',
     'search', 'searchFromLink', 'addToQueue', 'startListening',
     'toggleLoop', 'toggleShelf', 'setAlbumStatus', 'addTag', 'removeTag', 'logListen', 'deleteListen',
     'editReviewNote', 'updateAddedDate', 'toggleEditMode', 'updateAlbumField', 'updateTrackField',

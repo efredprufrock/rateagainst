@@ -759,3 +759,24 @@ header.safe-pt { padding-top: calc(env(safe-area-inset-top) + .75rem) !important
 #undo-bar button { flex-shrink: 0; height: 34px; padding: 0 14px; border-radius: 999px; font-weight: 700; color: #e8955a; background: rgba(232, 149, 90, .12); }
 .dark #undo-bar { background: #f5efe6; color: #241a13; }
 .dark #undo-bar button { color: #a85a1a; background: rgba(168, 90, 26, .1); }
+
+/* Puan şeridi (telefon) ve hızlı puanlama düğmeleri: her düğme kendi puan renginde */
+button.rate-chip {
+    height: 42px; border-radius: 12px; font-size: 15px; font-weight: 900; font-variant-numeric: tabular-nums;
+    border: 1.5px solid color-mix(in srgb, currentColor 35%, transparent);
+    background: color-mix(in srgb, currentColor 9%, transparent);
+    transition: transform .12s ease, background .15s ease;
+}
+button.rate-chip:active { transform: scale(.94); }
+button.rate-chip[aria-pressed="true"] { background: color-mix(in srgb, currentColor 26%, transparent); border-color: currentColor; box-shadow: inset 0 0 0 1px currentColor; }
+/* Telefonda seçili satırda küçük sürükleme kutusu yerine şerit kullanılır */
+@media (max-width: 767px) {
+    #modal-tracklist [data-selected] .score-scrub, #modal-tracklist [data-selected] .scrub-save { display: none; }
+}
+/* Hızlı puanlama kartı */
+#quick-rate .qr-cover { width: min(64vw, 38vh, 340px); aspect-ratio: 1 / 1; }
+#quick-rate button.qr-chip { height: 54px; font-size: 18px; border-radius: 14px; }
+.is-visitor #btn-quick-rate { display: none !important; }
+/* Hızlı puanlamada "Geri al" çubuğu puan düğmelerinin üstüne binmesin: üstte görünür */
+body:has(#quick-rate:not(.hidden)) #undo-bar { bottom: auto; top: calc(env(safe-area-inset-top) + 72px); transform: translate(-50%, -20px); }
+body:has(#quick-rate:not(.hidden)) #undo-bar.is-open { transform: translate(-50%, 0); }
