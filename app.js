@@ -220,7 +220,7 @@ const Translations = {
         decade_breakdown: "Average Score by Decade",
         listening_trends: "Average Rating Trends Over Time",
         login_prompt: "View-only mode. Sign in to manage the diary.", rated_on: "Rating finished", loop_best: "Best so far", loop_next: "Up next", toast_not_admin: "This account can only view.",
-        sign_in_google: "Sign in with Google", toggle_language: "Change language", toggle_theme: "Change theme", admin_login: "Admin sign-in", chart_view: "Record chart", undo: "Undo", quick_rate: "Quick rate", prev: "Previous", skip: "Skip", qr_done: "Album done!", pick_rating: "Pick a rating", record_header: "Record", by_time: "by time", by_track: "per track", by_time_avg: "Average by time", by_track_avg: "Average per track", toast_durations: "Track lengths added to {n} albums.", list_view: "Track list", total_time: "total", track_word: "tracks", change_photo: "Change profile photo", toast_photo_saved: "Profile photo updated.", toast_photo_failed: "Could not upload the photo.", email_sign_in: "Sign in with email", email_placeholder: "Email", password_placeholder: "Password", sign_in: "Sign in", forgot_password: "Forgot password", set_password_hint: "Set a password to sign in with email in the app.", new_password_placeholder: "New password (min. 6 characters)", set_password: "Set password", toast_bad_login: "Wrong email or password.", toast_too_many: "Too many attempts. Try again shortly.", toast_login_failed: "Could not sign in.", toast_enter_email: "Enter your email first.", toast_reset_sent: "If registered, a reset link was sent to your email.", toast_password_set: "Password set. You can now sign in with email too.", toast_relogin: "For security, sign out and back in with Google, then try again.", toast_weak_password: "Password must be at least 6 characters.", toast_password_exists: "This account already has a password.",
+        sign_in_google: "Sign in with Google", toggle_language: "Change language", toggle_theme: "Change theme", admin_login: "Admin sign-in", chart_view: "Record chart", undo: "Undo", quick_rate: "Quick rate", prev: "Previous", next: "Next", skip: "Skip", qr_done: "Album done!", pick_rating: "Pick a rating", record_header: "Record", by_time: "by time", by_track: "per track", by_time_avg: "Average by time", by_track_avg: "Average per track", toast_durations: "Track lengths added to {n} albums.", list_view: "Track list", total_time: "total", track_word: "tracks", change_photo: "Change profile photo", toast_photo_saved: "Profile photo updated.", toast_photo_failed: "Could not upload the photo.", email_sign_in: "Sign in with email", email_placeholder: "Email", password_placeholder: "Password", sign_in: "Sign in", forgot_password: "Forgot password", set_password_hint: "Set a password to sign in with email in the app.", new_password_placeholder: "New password (min. 6 characters)", set_password: "Set password", toast_bad_login: "Wrong email or password.", toast_too_many: "Too many attempts. Try again shortly.", toast_login_failed: "Could not sign in.", toast_enter_email: "Enter your email first.", toast_reset_sent: "If registered, a reset link was sent to your email.", toast_password_set: "Password set. You can now sign in with email too.", toast_relogin: "For security, sign out and back in with Google, then try again.", toast_weak_password: "Password must be at least 6 characters.", toast_password_exists: "This account already has a password.",
         sign_out: "Sign Out",
         nav_queue: "Up Next",
         close: "Close",
@@ -423,7 +423,7 @@ const Translations = {
         decade_breakdown: "Dönemlere Göre Ortalama Puan",
         listening_trends: "Aylara Göre Puanlama Eğilimi",
         login_prompt: "Yalnızca görüntüleme modu. Günlüğü yönetmek için giriş yap.", rated_on: "Puanlama bitti", loop_best: "Şimdilik en iyisi", loop_next: "Sırada", toast_not_admin: "Bu hesap yalnızca görüntüleyebilir.",
-        sign_in_google: "Google ile Giriş Yap", toggle_language: "Dili değiştir", toggle_theme: "Temayı değiştir", admin_login: "Yönetici girişi", chart_view: "Plak grafiği", undo: "Geri al", quick_rate: "Hızlı puanla", prev: "Önceki", skip: "Atla", qr_done: "Albüm tamam!", pick_rating: "Puan seç", record_header: "Plak", by_time: "süreye göre", by_track: "parça başına", by_time_avg: "Süreye göre ortalama", by_track_avg: "Parça başına ortalama", toast_durations: "{n} albüme parça süreleri eklendi.", list_view: "Parça listesi", total_time: "toplam", track_word: "parça", change_photo: "Profil fotoğrafını değiştir", toast_photo_saved: "Profil fotoğrafı güncellendi.", toast_photo_failed: "Fotoğraf yüklenemedi.", email_sign_in: "E-posta ile giriş", email_placeholder: "E-posta", password_placeholder: "Şifre", sign_in: "Giriş yap", forgot_password: "Şifremi unuttum", set_password_hint: "Uygulamada e-postayla giriş yapabilmek için bir şifre belirle.", new_password_placeholder: "Yeni şifre (en az 6 karakter)", set_password: "Şifre belirle", toast_bad_login: "E-posta ya da şifre hatalı.", toast_too_many: "Çok fazla deneme. Biraz sonra tekrar dene.", toast_login_failed: "Giriş yapılamadı.", toast_enter_email: "Önce e-posta adresini yaz.", toast_reset_sent: "Kayıtlıysa, şifre sıfırlama bağlantısı e-postana gönderildi.", toast_password_set: "Şifre belirlendi. Artık e-postanla da giriş yapabilirsin.", toast_relogin: "Güvenlik için çıkış yapıp Google ile yeniden gir, sonra tekrar dene.", toast_weak_password: "Şifre en az 6 karakter olmalı.", toast_password_exists: "Bu hesabın zaten bir şifresi var.",
+        sign_in_google: "Google ile Giriş Yap", toggle_language: "Dili değiştir", toggle_theme: "Temayı değiştir", admin_login: "Yönetici girişi", chart_view: "Plak grafiği", undo: "Geri al", quick_rate: "Hızlı puanla", prev: "Önceki", next: "Sonraki", skip: "Atla", qr_done: "Albüm tamam!", pick_rating: "Puan seç", record_header: "Plak", by_time: "süreye göre", by_track: "parça başına", by_time_avg: "Süreye göre ortalama", by_track_avg: "Parça başına ortalama", toast_durations: "{n} albüme parça süreleri eklendi.", list_view: "Parça listesi", total_time: "toplam", track_word: "parça", change_photo: "Profil fotoğrafını değiştir", toast_photo_saved: "Profil fotoğrafı güncellendi.", toast_photo_failed: "Fotoğraf yüklenemedi.", email_sign_in: "E-posta ile giriş", email_placeholder: "E-posta", password_placeholder: "Şifre", sign_in: "Giriş yap", forgot_password: "Şifremi unuttum", set_password_hint: "Uygulamada e-postayla giriş yapabilmek için bir şifre belirle.", new_password_placeholder: "Yeni şifre (en az 6 karakter)", set_password: "Şifre belirle", toast_bad_login: "E-posta ya da şifre hatalı.", toast_too_many: "Çok fazla deneme. Biraz sonra tekrar dene.", toast_login_failed: "Giriş yapılamadı.", toast_enter_email: "Önce e-posta adresini yaz.", toast_reset_sent: "Kayıtlıysa, şifre sıfırlama bağlantısı e-postana gönderildi.", toast_password_set: "Şifre belirlendi. Artık e-postanla da giriş yapabilirsin.", toast_relogin: "Güvenlik için çıkış yapıp Google ile yeniden gir, sonra tekrar dene.", toast_weak_password: "Şifre en az 6 karakter olmalı.", toast_password_exists: "Bu hesabın zaten bir şifresi var.",
         sign_out: "Çıkış Yap",
         nav_queue: "Sırada",
         close: "Kapat",
@@ -1461,12 +1461,48 @@ const app = {
         this.applyTrackView();
     },
 
+        // Albüm kartındaki küçük plak: dilimler parça süresine göre, renkler puana göre
+    miniRecord(album, cover) {
+        const tracks = album.tracks || [];
+        if (!tracks.length) return '';
+        const known = tracks.map(tr => tr.duration || 0).filter(d => d > 0);
+        const fallback = known.length ? known.reduce((a, b) => a + b, 0) / known.length : 1;
+        const lens = tracks.map(tr => tr.duration > 0 ? tr.duration : fallback);
+        const total = lens.reduce((a, b) => a + b, 0);
+        const C = 100, R1 = 94, R0 = 40, GAP = tracks.length > 1 ? 0.012 : 0;
+        const pt = (r, a) => `${(C + r * Math.cos(a)).toFixed(2)} ${(C + r * Math.sin(a)).toFixed(2)}`;
+        let a = -Math.PI / 2;
+        const slices = tracks.map((tr, i) => {
+            const span = lens[i] / total * Math.PI * 2;
+            const a0 = a + GAP, a1 = a + span - (GAP || 0.0001);
+            a += span;
+            const large = a1 - a0 > Math.PI ? 1 : 0, r = tr.rating || 0;
+            return `<path d="M${pt(R1, a0)} A${R1} ${R1} 0 ${large} 1 ${pt(R1, a1)} L${pt(R0, a1)} A${R0} ${R0} 0 ${large} 0 ${pt(R0, a0)} Z" fill="currentColor" class="tc-slice ${r > 0 ? AlbumUtils.tier(r).text : 'tc-unrated'}"/>`;
+        }).join('');
+        const grooves = Array.from({ length: 18 }, (_, k) => `<circle cx="100" cy="100" r="${(R0 + 2 + k * 3).toFixed(1)}"/>`).join('');
+        const id = `ac-lbl-${this._acSeq = (this._acSeq || 0) + 1}`;
+        return `<svg viewBox="0 0 200 200">
+            <defs><clipPath id="${id}"><circle cx="100" cy="100" r="${R0 - 3}"/></clipPath></defs>
+            <g class="ac-spin">
+                <circle cx="100" cy="100" r="99.5" class="tc-vinyl"/>
+                ${slices}
+                <g class="tc-grooves" fill="none">${grooves}</g>
+                <circle cx="100" cy="100" r="${R0 - 1.5}" class="tc-vinyl"/>
+                ${cover ? `<image href="${Utils.escapeHTML(cover)}" x="${100 - R0 + 3}" y="${100 - R0 + 3}" width="${(R0 - 3) * 2}" height="${(R0 - 3) * 2}" preserveAspectRatio="xMidYMid slice" clip-path="url(#${id})"/>` : ''}
+                <circle cx="100" cy="100" r="2.2" fill="#17110d"/>
+            </g>
+        </svg>`;
+    },
+
     renderTrackChart() {
         const box = document.getElementById('modal-trackchart');
         const al = AppState.currentModalAlbum;
         if (!box || !al || box.classList.contains('hidden')) return;
         const tracks = al.tracks || [];
         if (!tracks.length) { box.innerHTML = ''; return; }
+        // Aynı albümde yeniden çizilirken giriş animasyonu tekrarlanmasın; albüm değişince seçili dilim sıfırlansın
+        const again = this._tcAlbum === al.id;
+        if (!again) { this._tcAlbum = al.id; this._tcPinned = -1; this._tcPend = null; }
         const known = tracks.map(tr => tr.duration || 0).filter(d => d > 0);
         const fallback = known.length ? known.reduce((a, b) => a + b, 0) / known.length : 1;
         const lens = tracks.map(tr => tr.duration > 0 ? tr.duration : fallback);
@@ -1494,13 +1530,15 @@ const app = {
         };
         const modeBtn = (m, icon) => `<button type="button" data-mode="${m}" onclick="app.setChartScoreMode('${m}')" aria-label="${t(m === 'time' ? 'by_time_avg' : 'by_track_avg')}" title="${t(m === 'time' ? 'by_time_avg' : 'by_track_avg')}"><i class="ph-bold ${icon}"></i></button>`;
         box.innerHTML = `
+            <div class="tc-row">
+            <button type="button" class="tc-nav" onclick="app.chartNav(-1)" aria-label="${t('prev')}" title="${t('prev')}"><i class="ph-bold ph-caret-left"></i></button>
             <div class="tc-wrap">
                 <svg viewBox="0 0 200 200" role="img" aria-label="${t('chart_view')}" class="tc-svg">
                     <defs>
                         <clipPath id="tc-label"><circle cx="100" cy="100" r="${R0 - 3}"/></clipPath>
                         <linearGradient id="tc-sheen" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".45" stop-color="#fff" stop-opacity=".16"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".08"/></linearGradient>
                     </defs>
-                    <g class="tc-disc" onmouseleave="app.trackChartFocus(-1)">
+                    <g class="tc-disc${again ? ' tc-static' : ''}" onmouseleave="app.trackChartFocus(-1)">
                         <circle cx="100" cy="100" r="99.5" class="tc-vinyl"/>
                         <g class="tc-rotor">
                             ${slices}
@@ -1516,13 +1554,81 @@ const app = {
                     <div class="tc-modes">${modeBtn('track', 'ph-list-numbers')}${modeBtn('time', 'ph-clock')}</div>
                     <span class="tc-score" id="tc-score"></span>
                     <span class="tc-cap" id="tc-cap"></span>
+                    <div class="tc-track" id="tc-track"></div>
                 </div>
+            </div>
+                        <button type="button" class="tc-nav" onclick="app.chartNav(1)" aria-label="${t('next')}" title="${t('next')}"><i class="ph-bold ph-caret-right"></i></button>
             </div>
             <p id="tc-info" class="tc-info" aria-live="polite"></p>`;
         this._tcLens = lens;
         this.setChartScoreMode();
-        this.trackChartFocus(-1);
+                this.trackChartFocus(-1);
+        this.renderChartTrack();
         this.bindTrackChartSpin();
+        // Plağın etrafındaki boş alana tıklanınca seçili parça bırakılır, ortada yine albüm puanı görünür
+        if (!box._tcOutside) {
+            box._tcOutside = true;
+            box.addEventListener('click', (e) => {
+                const el = e.target;
+                if ((this._tcPinned ?? -1) < 0 || !el.isConnected || Date.now() - (this._tcDragEnd || 0) < 250) return;
+                // Plağın kendisi, ‹ › düğmeleri ve ortadaki puan modülü sayılmaz (plağın kare kutusunun boş köşeleri sayılır)
+                if (el.closest('.tc-nav, .tc-track') || (el.closest('.tc-svg') && !el.matches('.tc-svg'))) return;
+                this._tcPinned = -1;
+                this._tcPend = null;
+                this.renderChartTrack();
+                this.trackChartFocus(-1);
+            });
+        }
+    },
+
+    // Plakta dilime tıklanınca ortada parçanın adı ve puan verme düğmeleri (− puan + ✓)
+    renderChartTrack() {
+        const box = document.getElementById('tc-track'), center = box?.parentElement;
+        const al = AppState.currentModalAlbum, i = this._tcPinned ?? -1, tr = al?.tracks?.[i];
+        if (!box) return;
+        center.classList.toggle('is-track', !!tr);
+        if (!tr) { box.innerHTML = ''; return; }
+        const saved = tr.rating || 0;
+        const v = this._tcPend?.i === i ? this._tcPend.v : saved;
+        const hex = v > 0 ? ((AlbumUtils.tier(v).text.match(/dark:text-\[(#[0-9a-f]{3,8})\]/i) || [])[1] || '') : '';
+        const admin = AppState.isAdmin;
+        box.innerHTML = `
+            <span class="tc-tnum">${Utils.escapeHTML(tr.number)}.</span>
+            <span class="tc-ttitle">${Utils.escapeHTML(tr.title)}</span>
+            <div class="tc-rate">
+                ${admin ? `<button type="button" onclick="app.chartStep(-1)" ${v === 0.5 ? 'disabled' : ''} aria-label="−0.5"><i class="ph-bold ph-minus"></i></button>` : ''}
+                <span class="tc-tval" style="${hex ? `color:${hex}` : ''}">${v > 0 ? v.toFixed(1) : '–'}</span>
+                ${admin ? `<button type="button" onclick="app.chartStep(1)" ${v === 5 ? 'disabled' : ''} aria-label="+0.5"><i class="ph-bold ph-plus"></i></button>` : ''}
+            </div>
+            ${admin ? `<button type="button" class="tc-tsave" onclick="app.chartSave()" ${v > 0 && v !== saved ? '' : 'disabled'} aria-label="${t('save_rating')}" title="${t('save_rating')}"><i class="ph-bold ph-check"></i></button>` : ''}`;
+    },
+
+        // Plağın yanındaki ‹ › düğmeleri: önceki / sıradaki parçayı seçer (sona gelince başa döner)
+    chartNav(d) {
+        const n = AppState.currentModalAlbum?.tracks?.length || 0;
+        if (!n) return;
+        const cur = this._tcPinned ?? -1;
+        this._tcPinned = cur < 0 ? (d > 0 ? 0 : n - 1) : (cur + d + n) % n;
+        this._tcPend = null;
+        this.renderChartTrack();
+        this.trackChartFocus(-1);
+    },
+
+    // − / +: yarım puan adımı (puanı olmayan parçada 2.5'ten başlar), ✓ ile kaydedilir
+    chartStep(d) {
+        const al = AppState.currentModalAlbum, i = this._tcPinned, tr = al?.tracks?.[i];
+        if (!tr) return;
+        const cur = this._tcPend?.i === i ? this._tcPend.v : (tr.rating || 2.5);
+        this._tcPend = { i, v: Math.min(5, Math.max(0.5, cur + d * 0.5)) };
+        this.renderChartTrack();
+    },
+
+    chartSave() {
+        const p = this._tcPend;
+        if (!p || p.i !== this._tcPinned) return;
+        this._tcPend = null;
+        this.rateWithUndo(p.i, p.v);
+        this.renderChartTrack();
     },
 
     // Plağın ortasındaki puan: parça başına ya da süreye göre (seçim hatırlanır), puan rengine boyanır
@@ -1603,7 +1709,7 @@ const app = {
         const info = document.getElementById('tc-info');
         if (!al || !info) return;
         if (sticky && Date.now() - (this._tcDragEnd || 0) < 250) return; // sürükleme bitişi dokunuş sayılmasın
-        if (sticky) this._tcPinned = this._tcPinned === i ? -1 : i;
+        if (sticky) { this._tcPinned = this._tcPinned === i ? -1 : i; this._tcPend = null; this.renderChartTrack(); }
         if (i < 0 && this._tcPinned >= 0) i = this._tcPinned;
         document.querySelectorAll('#modal-trackchart .tc-slice').forEach(p => p.classList.toggle('is-active', +p.dataset.i === i));
         document.querySelector('#modal-trackchart .tc-disc')?.classList.toggle('has-active', i >= 0);
@@ -1714,15 +1820,6 @@ const app = {
             if (!(list[j].rating > 0)) return j;
         }
         return null;
-    },
-
-    // Telefondaki puan şeridi: puana dokun → kaydet, sıradaki puanlanmamış parçayı aç
-    chipRate(idx, value) {
-        if (this.scrub) { clearTimeout(this.scrub.blurTimer); this.scrub = null; }
-        this.rateWithUndo(idx, value);
-        this.editingTrack = this.nextUnrated(idx);
-        this.renderTracklist();
-        this.scrollSelectedTrackIntoView();
     },
 
     // Klavye (masaüstü): puanı kaydet ve sıradaki puanlanmamış parçaya geç
@@ -2454,12 +2551,16 @@ const app = {
             card.tabIndex = 0; card.setAttribute('role', 'button');
             card.setAttribute('aria-label', `${album.title} — ${album.artist}`);
             card.onkeydown = (e) => { if (e.target === card && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); card.click(); } };
-
+            // İmleç kapağın üzerine ilk geldiğinde plak çizilir (sayfa açılışını yavaşlatmasın diye)
+            card.addEventListener('mouseenter', () => {
+                const rec = card.querySelector('.ac-record');
+                if (rec && !rec.dataset.ready) { rec.dataset.ready = '1'; rec.innerHTML = this.miniRecord(album, card.querySelector('img')?.currentSrc || ''); }
+            });
 
             card.innerHTML = `
                 ${dateBadge}<div class="relative w-full pt-[100%] shrink-0 overflow-hidden bg-lightHighlight dark:bg-surface shadow-[0_10px_22px_rgba(36,26,19,0.22)] dark:shadow-[0_10px_22px_rgba(0,0,0,0.55)] transition-transform duration-300 group-hover:-translate-y-1 group-active:scale-[0.98]">
                     <img loading="lazy" ${AlbumUtils.coverAttrs(album)} alt="" class="absolute inset-0 w-full h-full object-cover object-center">
-                     
+                    <div class="ac-record" aria-hidden="true"></div>                     
                 </div>
                 <div class="ac-body flex items-start justify-between">
                     <div class="min-w-0 flex-1">
@@ -3960,8 +4061,9 @@ const app = {
                         <i class="ph-bold ph-caret-down scrub-caret" aria-hidden="true"></i>
                         <span data-ghost-up class="scrub-ghost scrub-ghost-up" aria-hidden="true"></span>
                         <span data-ghost-down class="scrub-ghost scrub-ghost-down" aria-hidden="true"></span>
-                                    </div>
-                <div data-chips class="rate-chips md:hidden grid grid-cols-5 gap-1.5 -mx-1 px-1 pt-1.5 pb-2.5" role="group" aria-label="${t('pick_rating')}">${[0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map(v => `<button type="button" onclick="app.chipRate(${i}, ${v})" aria-pressed="${r === v}" class="rate-chip ${AlbumUtils.tier(v).text}">${v.toFixed(1)}</button>`).join('')}</div>`;
+                    </div>
+                    <button type="button" data-scrub-save onmousedown="event.preventDefault()" onclick="app.saveScrub(true)" aria-label="${t('save_rating')}" title="${t('save_rating')} (Enter)" class="scrub-save"><i class="ph-bold ph-check"></i></button>
+                </div>`;
             }
 
             // Normal satır: noktalı çizgiyle puana bağlanan dergi listesi
@@ -4645,7 +4747,7 @@ const app = {
 
 // Ziyaretçi modu: düzenleme işlevleri yalnızca yönetici girişinde çalışır
 const ADMIN_ONLY = [
-        'importData', 'uploadAvatar', 'persistIfSaved', 'openQuickRate', 'chipRate', 'rateWithUndo', 'commitAndNext', 'saveAlbumData', 'deleteAlbumData', 'cacheCover', 'cacheMissingCovers',
+    'importData', 'uploadAvatar', 'persistIfSaved', 'chartStep', 'chartSave', 'openQuickRate', 'rateWithUndo', 'commitAndNext', 'saveAlbumData', 'deleteAlbumData', 'cacheCover', 'cacheMissingCovers',
     'search', 'searchFromLink', 'addToQueue', 'startListening',
     'toggleLoop', 'toggleShelf', 'setAlbumStatus', 'addTag', 'removeTag', 'logListen', 'deleteListen',
     'editReviewNote', 'updateAddedDate', 'toggleEditMode', 'updateAlbumField', 'updateTrackField',
