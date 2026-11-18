@@ -220,7 +220,7 @@ const Translations = {
         decade_breakdown: "Average Score by Decade",
         listening_trends: "Average Rating Trends Over Time",
         login_prompt: "View-only mode. Sign in to manage the diary.", rated_on: "Rating finished", loop_best: "Best so far", loop_next: "Up next", toast_not_admin: "This account can only view.",
-        sign_in_google: "Sign in with Google", toggle_language: "Change language", toggle_theme: "Change theme", admin_login: "Admin sign-in", chart_view: "Record chart", undo: "Undo", quick_rate: "Quick rate", prev: "Previous", next: "Next", skip: "Skip", qr_done: "Album done!", pick_rating: "Pick a rating", record_header: "Record", by_time: "by time", by_track: "per track", by_time_avg: "Average by time", by_track_avg: "Average per track", toast_durations: "Track lengths added to {n} albums.", list_view: "Track list", total_time: "total", track_word: "tracks", change_photo: "Change profile photo", toast_photo_saved: "Profile photo updated.", toast_photo_failed: "Could not upload the photo.", email_sign_in: "Sign in with email", email_placeholder: "Email", password_placeholder: "Password", sign_in: "Sign in", forgot_password: "Forgot password", set_password_hint: "Set a password to sign in with email in the app.", new_password_placeholder: "New password (min. 6 characters)", set_password: "Set password", toast_bad_login: "Wrong email or password.", toast_too_many: "Too many attempts. Try again shortly.", toast_login_failed: "Could not sign in.", toast_enter_email: "Enter your email first.", toast_reset_sent: "If registered, a reset link was sent to your email.", toast_password_set: "Password set. You can now sign in with email too.", toast_relogin: "For security, sign out and back in with Google, then try again.", toast_weak_password: "Password must be at least 6 characters.", toast_password_exists: "This account already has a password.",
+        sign_in_google: "Sign in with Google", toggle_language: "Change language", toggle_theme: "Change theme", admin_login: "Admin sign-in", chart_view: "Record chart", undo: "Undo", pv_listen: "Listen · 30s", pv_playing: "Now playing", pv_paused: "Paused", pv_loading: "Loading", pv_preview: "Preview", pv_play: "Play preview", pv_pause: "Pause", pv_none: "No previews found for this album", pv_none_track: "No preview for this track, skipped to the next", quick_rate: "Quick rate", prev: "Previous", next: "Next", skip: "Skip", qr_done: "Album done!", pick_rating: "Pick a rating", record_header: "Record", by_time: "by time", by_track: "per track", by_time_avg: "Average by time", by_track_avg: "Average per track", toast_durations: "Track lengths added to {n} albums.", list_view: "Track list", total_time: "total", track_word: "tracks", change_photo: "Change profile photo", toast_photo_saved: "Profile photo updated.", toast_photo_failed: "Could not upload the photo.", email_sign_in: "Sign in with email", email_placeholder: "Email", password_placeholder: "Password", sign_in: "Sign in", forgot_password: "Forgot password", set_password_hint: "Set a password to sign in with email in the app.", new_password_placeholder: "New password (min. 6 characters)", set_password: "Set password", toast_bad_login: "Wrong email or password.", toast_too_many: "Too many attempts. Try again shortly.", toast_login_failed: "Could not sign in.", toast_enter_email: "Enter your email first.", toast_reset_sent: "If registered, a reset link was sent to your email.", toast_password_set: "Password set. You can now sign in with email too.", toast_relogin: "For security, sign out and back in with Google, then try again.", toast_weak_password: "Password must be at least 6 characters.", toast_password_exists: "This account already has a password.",
         sign_out: "Sign Out",
         nav_queue: "Up Next",
         close: "Close",
@@ -423,7 +423,7 @@ const Translations = {
         decade_breakdown: "Dönemlere Göre Ortalama Puan",
         listening_trends: "Aylara Göre Puanlama Eğilimi",
         login_prompt: "Yalnızca görüntüleme modu. Günlüğü yönetmek için giriş yap.", rated_on: "Puanlama bitti", loop_best: "Şimdilik en iyisi", loop_next: "Sırada", toast_not_admin: "Bu hesap yalnızca görüntüleyebilir.",
-        sign_in_google: "Google ile Giriş Yap", toggle_language: "Dili değiştir", toggle_theme: "Temayı değiştir", admin_login: "Yönetici girişi", chart_view: "Plak grafiği", undo: "Geri al", quick_rate: "Hızlı puanla", prev: "Önceki", next: "Sonraki", skip: "Atla", qr_done: "Albüm tamam!", pick_rating: "Puan seç", record_header: "Plak", by_time: "süreye göre", by_track: "parça başına", by_time_avg: "Süreye göre ortalama", by_track_avg: "Parça başına ortalama", toast_durations: "{n} albüme parça süreleri eklendi.", list_view: "Parça listesi", total_time: "toplam", track_word: "parça", change_photo: "Profil fotoğrafını değiştir", toast_photo_saved: "Profil fotoğrafı güncellendi.", toast_photo_failed: "Fotoğraf yüklenemedi.", email_sign_in: "E-posta ile giriş", email_placeholder: "E-posta", password_placeholder: "Şifre", sign_in: "Giriş yap", forgot_password: "Şifremi unuttum", set_password_hint: "Uygulamada e-postayla giriş yapabilmek için bir şifre belirle.", new_password_placeholder: "Yeni şifre (en az 6 karakter)", set_password: "Şifre belirle", toast_bad_login: "E-posta ya da şifre hatalı.", toast_too_many: "Çok fazla deneme. Biraz sonra tekrar dene.", toast_login_failed: "Giriş yapılamadı.", toast_enter_email: "Önce e-posta adresini yaz.", toast_reset_sent: "Kayıtlıysa, şifre sıfırlama bağlantısı e-postana gönderildi.", toast_password_set: "Şifre belirlendi. Artık e-postanla da giriş yapabilirsin.", toast_relogin: "Güvenlik için çıkış yapıp Google ile yeniden gir, sonra tekrar dene.", toast_weak_password: "Şifre en az 6 karakter olmalı.", toast_password_exists: "Bu hesabın zaten bir şifresi var.",
+        sign_in_google: "Google ile Giriş Yap", toggle_language: "Dili değiştir", toggle_theme: "Temayı değiştir", admin_login: "Yönetici girişi", chart_view: "Plak grafiği", undo: "Geri al", pv_listen: "Dinle · 30 sn", pv_playing: "Albüm çalıyor", pv_paused: "Duraklatıldı", pv_loading: "Yükleniyor", pv_preview: "Önizleme", pv_play: "Önizlemeyi çal", pv_pause: "Duraklat", pv_none: "Bu albüm için önizleme bulunamadı", pv_none_track: "Bu parçanın önizlemesi yok, sıradakine geçildi", quick_rate: "Hızlı puanla", prev: "Önceki", next: "Sonraki", skip: "Atla", qr_done: "Albüm tamam!", pick_rating: "Puan seç", record_header: "Plak", by_time: "süreye göre", by_track: "parça başına", by_time_avg: "Süreye göre ortalama", by_track_avg: "Parça başına ortalama", toast_durations: "{n} albüme parça süreleri eklendi.", list_view: "Parça listesi", total_time: "toplam", track_word: "parça", change_photo: "Profil fotoğrafını değiştir", toast_photo_saved: "Profil fotoğrafı güncellendi.", toast_photo_failed: "Fotoğraf yüklenemedi.", email_sign_in: "E-posta ile giriş", email_placeholder: "E-posta", password_placeholder: "Şifre", sign_in: "Giriş yap", forgot_password: "Şifremi unuttum", set_password_hint: "Uygulamada e-postayla giriş yapabilmek için bir şifre belirle.", new_password_placeholder: "Yeni şifre (en az 6 karakter)", set_password: "Şifre belirle", toast_bad_login: "E-posta ya da şifre hatalı.", toast_too_many: "Çok fazla deneme. Biraz sonra tekrar dene.", toast_login_failed: "Giriş yapılamadı.", toast_enter_email: "Önce e-posta adresini yaz.", toast_reset_sent: "Kayıtlıysa, şifre sıfırlama bağlantısı e-postana gönderildi.", toast_password_set: "Şifre belirlendi. Artık e-postanla da giriş yapabilirsin.", toast_relogin: "Güvenlik için çıkış yapıp Google ile yeniden gir, sonra tekrar dene.", toast_weak_password: "Şifre en az 6 karakter olmalı.", toast_password_exists: "Bu hesabın zaten bir şifresi var.",
         sign_out: "Çıkış Yap",
         nav_queue: "Sırada",
         close: "Kapat",
@@ -870,6 +870,36 @@ const MusicSource = {
             label: li.length ? (li[0].label?.name || t('independent')) : '',
             genres, tracks, cover: ''
         };
+    },
+
+        // Albümün 30 saniyelik önizleme adresleri (parça sırasıyla): önce Deezer, eksik kalırsa iTunes
+    async previews(al) {
+        const tracks = al.tracks || [];
+        const out = tracks.map(() => '');
+        const fill = (list, getTitle, getUrl) => {
+            const byName = new Map(list.filter(getUrl).map(x => [this.norm(getTitle(x)), getUrl(x)]));
+            tracks.forEach((tr, i) => {
+                if (out[i]) return;
+                const u = (list.length === tracks.length && getUrl(list[i])) || byName.get(this.norm(tr.title));
+                if (u) out[i] = u;
+            });
+        };
+        try {
+            let dzId = al.deezerId || (String(al.id).startsWith('dz_') ? String(al.id).slice(3) : null);
+            if (!dzId) dzId = (await this.dzMatch(al.artist, al.title))?.id;
+            if (dzId) fill((await Net.deezer(`album/${dzId}/tracks?limit=300`)).data || [], x => x.title, x => x.preview);
+        } catch (e) {}
+        if (out.some(u => !u)) {
+            try {
+                const na = this.norm(al.artist), nt = this.norm(al.title);
+                const hit = (await Net.itunes(`${al.artist} ${al.title}`)).find(r => this.norm(r.collectionName) === nt && (this.norm(r.artistName).includes(na) || na.includes(this.norm(r.artistName))));
+                if (hit) {
+                    const res = await Net.json(`https://itunes.apple.com/lookup?id=${hit.collectionId}&entity=song&limit=200`, 6000);
+                    fill((res.results || []).filter(x => x.wrapperType === 'track'), x => x.trackName, x => x.previewUrl);
+                }
+            } catch (e) {}
+        }
+        return out;
     },
 
     // Eksik parça sürelerini başka kaynağın listesinden tamamla: aynı parça sayısıysa sırayla, değilse parça adıyla
@@ -1711,6 +1741,7 @@ const app = {
         if (sticky && Date.now() - (this._tcDragEnd || 0) < 250) return; // sürükleme bitişi dokunuş sayılmasın
         if (sticky) { this._tcPinned = this._tcPinned === i ? -1 : i; this._tcPend = null; this.renderChartTrack(); }
         if (i < 0 && this._tcPinned >= 0) i = this._tcPinned;
+        if (i < 0 && this._pv?.al === al && !this._pv.loading) i = this._pv.idx; // çalan parçanın dilimi öne çıksın
         document.querySelectorAll('#modal-trackchart .tc-slice').forEach(p => p.classList.toggle('is-active', +p.dataset.i === i));
         document.querySelector('#modal-trackchart .tc-disc')?.classList.toggle('has-active', i >= 0);
         const fmt = s => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
@@ -1929,6 +1960,171 @@ const app = {
         document.getElementById('quick-rate')?.classList.add('hidden');
         this.editingTrack = null;
         this.renderTracklist();
+    },
+
+        // --- Önizleme oynatıcı: parçaların 30 saniyelik örnekleri sırayla çalar ---
+    async pvLoad(al, fresh = false) {
+        const cache = this._pvCache || (this._pvCache = new Map());
+        const hit = cache.get(al.id);
+        if (!fresh && hit && Date.now() - hit.at < 20 * 60 * 1000) return hit.list; // Deezer bağlantıları bir süre sonra geçersizleşir
+        const list = await MusicSource.previews(al);
+        cache.set(al.id, { at: Date.now(), list });
+        return list;
+    },
+
+    // Kapaktaki düğme: albümü baştan çal; çalıyorsa duraklat / sürdür
+    pvAlbum() {
+        const pv = this._pv;
+        if (pv && pv.al === AppState.currentModalAlbum) return this.pvToggle();
+        this.pvStart(null);
+    },
+
+    // Satırdaki ▶: o parçadan başlayarak çal; aynı parçaysa duraklat / sürdür
+    pvPlay(i) {
+        const pv = this._pv;
+        if (pv && pv.al === AppState.currentModalAlbum && pv.idx === i) return this.pvToggle();
+        this.pvStart(i);
+    },
+
+    async pvStart(i) {
+        const al = AppState.currentModalAlbum;
+        if (!al?.tracks?.length) return;
+        const tok = this._pvTok = {};
+        if (!this._pvAudio) this.pvInitAudio();
+        this._pvAudio.pause();
+        this._pv = { al, list: [], idx: i ?? 0, loading: true };
+        this.pvUI();
+        let list = [];
+        try { list = await this.pvLoad(al); } catch (e) {}
+        if (this._pvTok !== tok) return;
+        if (!list.some(Boolean)) { this.pvStop(); showToast(t('pv_none'), 'error'); return; }
+        Object.assign(this._pv, { list, loading: false });
+        if (i != null && !list[i]) showToast(t('pv_none_track'));
+        this.pvGo(i ?? 0, 1);
+    },
+
+    pvInitAudio() {
+        const a = this._pvAudio = new Audio();
+        a.preload = 'auto';
+        a.addEventListener('timeupdate', () => this.pvProgress());
+        a.addEventListener('play', () => this.pvUI());
+        a.addEventListener('pause', () => this.pvUI());
+        a.addEventListener('ended', () => this._pv && this.pvGo(this._pv.idx + 1, 1));
+        a.addEventListener('error', async () => {
+            const pv = this._pv;
+            if (!pv || !a.getAttribute('src')) return;
+            if (!pv.retried) { // bağlantının süresi dolmuş olabilir: listeyi tazele, aynı parçayı yeniden dene
+                pv.retried = true;
+                try { pv.list = await this.pvLoad(pv.al, true); } catch (e) {}
+                if (this._pv === pv) this.pvGo(pv.idx, 1, true);
+            } else this.pvGo(pv.idx + 1, 1);
+        });
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.setActionHandler('previoustrack', () => this.pvStep(-1));
+            navigator.mediaSession.setActionHandler('nexttrack', () => this.pvStep(1));
+        }
+    },
+
+    // Önizlemesi olan bir sonraki (ya da önceki) parçaya geç; yoksa dur
+    pvGo(i, dir = 1, keepRetry = false) {
+        const pv = this._pv, a = this._pvAudio;
+        if (!pv || !a) return;
+        const n = pv.list.length;
+        while (i >= 0 && i < n && !pv.list[i]) i += dir;
+        if (i < 0) return;
+        if (i >= n) return this.pvStop();
+        if (!keepRetry) pv.retried = false;
+        pv.idx = i;
+        a.src = pv.list[i];
+        a.play().catch(() => {});
+        const tr = pv.al.tracks[i];
+        if ('mediaSession' in navigator && window.MediaMetadata) {
+            const art = document.getElementById('modal-cover')?.currentSrc;
+            navigator.mediaSession.metadata = new MediaMetadata({ title: tr?.title || '', artist: pv.al.artist || '', album: pv.al.title || '', ...(art && !art.startsWith('data:') ? { artwork: [{ src: art }] } : {}) });
+        }
+        this.pvUI();
+    },
+
+    pvStep(d) { if (this._pv && !this._pv.loading) this.pvGo(this._pv.idx + d, d); },
+
+    pvToggle() {
+        const a = this._pvAudio;
+        if (!a || !this._pv || this._pv.loading) return;
+        if (a.paused) a.play().catch(() => {}); else a.pause();
+    },
+
+    pvStop() {
+        this._pvTok = null;
+        const a = this._pvAudio;
+        if (a) { a.pause(); a.removeAttribute('src'); a.load(); }
+        if (!this._pv) return;
+        this._pv = null;
+        this.pvUI();
+    },
+
+    // İlerleme çubuğuna tıkla / sürükle: o saniyeye atla
+    pvSeek(e) {
+        const a = this._pvAudio, bar = e.currentTarget;
+        if (!a || !(a.duration > 0)) return;
+        const set = (x) => { const r = bar.getBoundingClientRect(); a.currentTime = Math.min(1, Math.max(0, (x - r.left) / r.width)) * a.duration; this.pvProgress(); };
+        set(e.clientX);
+        const move = (ev) => set(ev.clientX);
+        const up = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); };
+        window.addEventListener('pointermove', move);
+        window.addEventListener('pointerup', up);
+    },
+
+    pvProgress() {
+        const a = this._pvAudio, bar = document.getElementById('pv-bar');
+        if (!a || !bar) return;
+        const d = a.duration > 0 ? a.duration : 30, c = Math.min(a.currentTime || 0, d);
+        const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+        bar.querySelector('.pv-fill')?.style.setProperty('width', `${(c / d) * 100}%`);
+        const cur = bar.querySelector('.pv-cur'), tot = bar.querySelector('.pv-tot');
+        if (cur) cur.textContent = fmt(c);
+        if (tot) tot.textContent = fmt(d);
+    },
+
+    // Çalan parçayı listede, kapak düğmesinde, plakta ve alttaki mini oynatıcıda göster
+    pvUI() {
+        const al = AppState.currentModalAlbum, pv = this._pv && this._pv.al === al ? this._pv : null;
+        const content = document.querySelector('#album-modal .modal-content');
+        const paused = !pv || pv.loading || !this._pvAudio || this._pvAudio.paused;
+        content?.classList.toggle('pv-paused', paused);
+        document.querySelectorAll('#modal-tracklist > button[data-track]').forEach(r => r.classList.toggle('pv-on', !!pv && !pv.loading && +r.dataset.track === pv.idx));
+        const btn = document.getElementById('pv-cover-btn');
+        if (btn) {
+            btn.classList.toggle('hidden', !al?.tracks?.length);
+            btn.innerHTML = pv
+                ? (pv.loading ? `<i class="pv-b ph-bold ph-spinner animate-spin"></i>${t('pv_loading')}` : `<span class="pv-eq" aria-hidden="true"><b></b><b></b><b></b></span>${paused ? t('pv_paused') : t('pv_playing')}`)
+                : `<i class="pv-b ph-fill ph-play"></i>${t('pv_listen')}`;
+        }
+        if (document.querySelector('#modal-trackchart .tc-slice')) this.trackChartFocus(-1);
+        let bar = document.getElementById('pv-bar');
+        if (!pv) { bar?.classList.add('hidden'); return; }
+        if (!bar && content) {
+            bar = document.createElement('div');
+            bar.id = 'pv-bar';
+            content.appendChild(bar);
+        }
+        if (!bar) return;
+        const tr = al.tracks[pv.idx], cover = document.getElementById('modal-cover')?.getAttribute('src') || '';
+        bar.style.bottom = `${(content.querySelector('footer')?.offsetHeight || 0) + 10}px`;
+        bar.classList.remove('hidden');
+        bar.innerHTML = `
+            ${cover ? `<img src="${Utils.escapeHTML(cover)}" alt="">` : ''}
+            <div class="pv-meta">
+                <div class="pv-t">${pv.loading ? t('pv_loading') : Utils.escapeHTML(tr?.title || '')}</div>
+                <div class="pv-s">${Utils.escapeHTML(al.artist || '')} · ${t('pv_preview')} ${pv.loading ? '' : `${pv.idx + 1}/${al.tracks.length}`}</div>
+                <div class="pv-prog"><span class="pv-cur">0:00</span><span class="pv-track" onpointerdown="app.pvSeek(event)"><i class="pv-fill"></i></span><span class="pv-tot">0:30</span></div>
+            </div>
+            <div class="pv-btns">
+                <button type="button" onclick="app.pvStep(-1)" aria-label="${t('prev')}"><i class="ph-fill ph-skip-back"></i></button>
+                <button type="button" class="main" onclick="app.pvToggle()" aria-label="${paused ? t('pv_play') : t('pv_pause')}"><i class="ph-fill ${paused ? 'ph-play' : 'ph-pause'}"></i></button>
+                <button type="button" onclick="app.pvStep(1)" aria-label="${t('next')}"><i class="ph-fill ph-skip-forward"></i></button>
+                <button type="button" class="x" onclick="app.pvStop()" aria-label="${t('close')}"><i class="ph-bold ph-x"></i></button>
+            </div>`;
+        this.pvProgress();
     },
 
     async signOut() {
@@ -2965,7 +3161,7 @@ const app = {
         modal.querySelector('.modal-content')?.classList.remove('is-editing'); 
         document.getElementById('cover-edit-section')?.classList.add('hidden');
         document.getElementById('cover-options')?.classList.add('hidden');
-        this._coverOptions = []; this.setModalReview(false); this.toggleModalMenu(false); this.ensureDurations(mbid);
+        this.pvStop(); this._coverOptions = []; this.setModalReview(false); this.toggleModalMenu(false); this.ensureDurations(mbid);
         document.getElementById('edit-mode-btn')?.classList.remove('bg-primary/20', 'text-primary');
         document.getElementById('auto-fetch-genre-btn')?.classList.add('hidden');
         
@@ -3036,7 +3232,7 @@ const app = {
 
         closeModal(fromHistory = false) {
         const modal = document.getElementById('album-modal');
-        if (!modal || modal.classList.contains('hidden')) return; this.saveScrub(false);
+        if (!modal || modal.classList.contains('hidden')) return; this.saveScrub(false); this.pvStop();
         if (!fromHistory && history.state?.raModal) { this._skipPop = true; history.back(); }
         const content = modal.querySelector('.modal-content');
         modal.classList.add('opacity-0');
@@ -4068,7 +4264,7 @@ const app = {
 
             // Normal satır: noktalı çizgiyle puana bağlanan dergi listesi
             return `<button type="button" onclick="app.selectTrack(${i})" data-track="${i}"${r === 5 ? ' data-perfect' : ''} aria-label="${title}: ${score} — ${t('tap_to_rate')}" class="w-full h-11 md:h-[34px] flex items-center gap-2.5 text-left rounded-lg -mx-1 px-1 hover:bg-[#ebe2d3]/70 dark:hover:bg-[#2a1f17]/70 transition-colors">
-                <span class="w-5 text-xs font-bold ${muted} flex-shrink-0">${num}</span><span class="tr-dur" aria-hidden="true">${tr.duration > 0 ? `${Math.floor(tr.duration / 60)}:${String(Math.round(tr.duration % 60)).padStart(2, '0')}` : ''}</span>
+                <span class="tr-numc w-5 text-xs font-bold ${muted} flex-shrink-0"><span class="tr-n">${num}</span><i class="tr-play ph-fill ph-play" onclick="event.stopPropagation(); app.pvPlay(${i})" title="${t('pv_play')}" aria-hidden="true"></i><span class="pv-eq" aria-hidden="true"><b></b><b></b><b></b></span></span>
                 <span class="min-w-0 truncate text-[15px] italic">${title}</span>
                 ${hasNote ? `<i class="ph-fill ph-paperclip text-xs text-[#a85a1a] dark:text-primary flex-shrink-0" aria-hidden="true"></i>` : ''}
                 <span class="flex-1 min-w-[12px] border-b-2 border-dotted border-[#c9b8a6] dark:border-[#4a3829] translate-y-1" aria-hidden="true"></span>
