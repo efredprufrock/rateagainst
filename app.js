@@ -133,7 +133,7 @@ const Translations = {
         apply_url: "Apply",
         search_itunes: "Find cover",
         choose_cover: "Pick a cover",
-        cover_selected: "Cover updated", upload_cover: "Upload from computer", install_app: "Install as app", shelf_title: "MY SHELF · ALL-TIME FAVOURITES", shelf_show: "Show shelf", shelf_hide: "Hide shelf", shelf_hint: "Tap a record to pull it out; tap again to open it.", shelf_empty: "Add your 10 favourite albums with the record button in the album panel.", shelf_add_btn: "Put on my shelf", shelf_remove_btn: "Remove from my shelf", shelf_added: "Added to your shelf", shelf_removed: "Removed from your shelf", shelf_full: "Your shelf is full (10 albums). Remove one first.", loop_title: "ON LOOP", loop_add_btn: "Put on loop", loop_remove_btn: "Take off loop", loop_added: "Now on loop", loop_removed: "Taken off loop", back_to_tracks: "Back to tracks", more_actions: "More actions", install_ios_hint: "To add it as an app, tap Share in Safari, then “Add to Home Screen”.", app_installed: "RateAgainst was added to your home screen", upload_not_image: "This file could not be read as an image",
+        cover_selected: "Cover updated", upload_cover: "Upload from computer", install_app: "Install as app", install_short: "Install", inbox_short: "Inbox", shelf_title: "MY SHELF · ALL-TIME FAVOURITES", shelf_show: "Show shelf", shelf_hide: "Hide shelf", shelf_hint: "Tap a record to pull it out; tap again to open it.", shelf_empty: "Add your 10 favourite albums with the record button in the album panel.", shelf_add_btn: "Put on my shelf", shelf_remove_btn: "Remove from my shelf", shelf_added: "Added to your shelf", shelf_removed: "Removed from your shelf", shelf_full: "Your shelf is full (10 albums). Remove one first.", loop_title: "ON LOOP", loop_add_btn: "Put on loop", loop_remove_btn: "Take off loop", loop_added: "Now on loop", loop_removed: "Taken off loop", back_to_tracks: "Back to tracks", more_actions: "More actions", install_ios_hint: "To add it as an app, tap Share in Safari, then “Add to Home Screen”.", app_installed: "RateAgainst was added to your home screen", upload_not_image: "This file could not be read as an image",
         album_avg: "Album Average",
         tracklist: "Tracklist",
         default_sort: "Default",
@@ -210,7 +210,7 @@ const Translations = {
         save_note: "Save Note",
         note_placeholder: "Write your notes here...",
         album_note: "Album Note",
-        track_note: "Track Note",
+        track_note: "Track Note", review_ph: "Start writing about the album…", fmt_bold: "Bold", fmt_italic: "Italic", fmt_heading: "Heading", fmt_quote: "Quote", fmt_list: "Bulleted list", fmt_numbered: "Numbered list", fmt_clear: "Clear formatting", saving: "Saving…", saved: "Saved", f_year: "Year", f_label: "Label", f_length: "Length", f_added: "Added", f_done: "Finished", f_listens: "Listens", f_country: "Country", review_tab: "Review", listen_later: "Listen later", later_on: "Saved to listen later", later_off: "Removed from listen later", track_name: "Track title", tracks_paste_hint: "or paste a whole tracklist into a title", selected_track: "Selected track", no_track_notes: "No track notes yet.", no_track_note: "No note for this track yet.",
         track_notes: "Track Notes",
         all_notes: "All Notes",
         copy_notes: "Copy Notes",
@@ -219,8 +219,8 @@ const Translations = {
         rating_dist: "Rating Distribution (Tracks)",
         decade_breakdown: "Average Score by Decade",
         listening_trends: "Average Rating Trends Over Time",
-        login_prompt: "View-only mode. Sign in to manage the diary.", rated_on: "Rating finished", loop_best: "Best so far", loop_next: "Up next", toast_not_admin: "This account can only view.",
-        sign_in_google: "Sign in with Google", toggle_language: "Change language", toggle_theme: "Change theme", admin_login: "Admin sign-in", chart_view: "Record chart", undo: "Undo", pv_listen: "Listen · 30s", pv_playing: "Now playing", pv_paused: "Paused", pv_loading: "Loading", pv_preview: "Preview", pv_play: "Play preview", pv_pause: "Pause", pv_none: "No previews found for this album", pv_none_track: "No preview for this track, skipped to the next", quick_rate: "Quick rate", prev: "Previous", next: "Next", skip: "Skip", qr_done: "Album done!", pick_rating: "Pick a rating", record_header: "Record", by_time: "by time", by_track: "per track", by_time_avg: "Average by time", by_track_avg: "Average per track", toast_durations: "Track lengths added to {n} albums.", list_view: "Track list", total_time: "total", track_word: "tracks", change_photo: "Change profile photo", toast_photo_saved: "Profile photo updated.", toast_photo_failed: "Could not upload the photo.", email_sign_in: "Sign in with email", email_placeholder: "Email", password_placeholder: "Password", sign_in: "Sign in", forgot_password: "Forgot password", set_password_hint: "Set a password to sign in with email in the app.", new_password_placeholder: "New password (min. 6 characters)", set_password: "Set password", toast_bad_login: "Wrong email or password.", toast_too_many: "Too many attempts. Try again shortly.", toast_login_failed: "Could not sign in.", toast_enter_email: "Enter your email first.", toast_reset_sent: "If registered, a reset link was sent to your email.", toast_password_set: "Password set. You can now sign in with email too.", toast_relogin: "For security, sign out and back in with Google, then try again.", toast_weak_password: "Password must be at least 6 characters.", toast_password_exists: "This account already has a password.",
+        login_prompt: "View-only mode. Sign in to manage the diary.", rated_on: "Rating finished", loop_best: "Fav", loop_next: "Up next", toast_not_admin: "This account can only view.",
+        sign_in_google: "Sign in with Google", toggle_language: "Change language", toggle_theme: "Change theme", admin_login: "Admin sign-in", chart_view: "Record chart", menu_theme: "Theme", menu_lang: "Language", theme_light: "Light", theme_dark: "Dark", change_log: "Change history", log_empty: "No changes recorded yet.", hide_from_visitors: "Hide from visitors", show_to_visitors: "Show to visitors", toast_hidden: "Album hidden from visitors.", toast_shown: "Album visible to visitors.", hidden_badge: "Hidden", suggest_btn: "Suggest an album", suggest_title: "Suggest an album", suggest_intro: "Is there an album you think I should hear? Tell me and I'll add it to my list.", suggest_album: "Album title", suggest_artist: "Artist / band", suggest_note: "Why this album? (optional)", your_name: "Your name (optional)", send: "Send", suggest_sent: "Thanks, your suggestion was sent!", send_failed: "Could not send, check your connection.", comments: "Comments", loading: "Loading…", comment_ph: "What do you think of this album?", comment_note: "Your comment appears after it is approved.", comment_sent: "Comment received; it will appear once approved.", comments_failed: "Could not load.", no_comments: "No comments yet.", anonymous: "Anonymous", pending: "Pending", approve: "Approve", delete: "Delete", comment_approved: "Comment published.", confirm_delete_comment: "Delete this comment?", confirm_delete_suggestion: "Delete this suggestion?", inbox: "Inbox", mark_read: "Mark read", mark_unread: "Mark unread", mark_all_read: "Mark all read", pending_comments: "Comments awaiting approval", suggestions: "Album suggestions", nothing_here: "Nothing here yet.", undo: "Undo", pv_listen: "Listen · 30s", pv_playing: "Now playing", pv_paused: "Paused", pv_loading: "Loading", pv_preview: "Preview", pv_play: "Play preview", pv_pause: "Pause", pv_none: "No previews found for this album", pv_none_track: "No preview for this track, skipped to the next", quick_rate: "Quick rate", prev: "Previous", next: "Next", skip: "Skip", qr_done: "Album done!", pick_rating: "Pick a rating", record_header: "Record", by_time: "by time", by_track: "per track", by_time_avg: "Average by time", by_track_avg: "Average per track", toast_durations: "Track lengths added to {n} albums.", list_view: "Track list", total_time: "total", track_word: "tracks", change_photo: "Change profile photo", toast_photo_saved: "Profile photo updated.", toast_photo_failed: "Could not upload the photo.", email_sign_in: "Sign in with email", email_placeholder: "Email", password_placeholder: "Password", sign_in: "Sign in", forgot_password: "Forgot password", set_password_hint: "Set a password to sign in with email in the app.", new_password_placeholder: "New password (min. 6 characters)", set_password: "Set password", toast_bad_login: "Wrong email or password.", toast_too_many: "Too many attempts. Try again shortly.", toast_login_failed: "Could not sign in.", toast_enter_email: "Enter your email first.", toast_reset_sent: "If registered, a reset link was sent to your email.", toast_password_set: "Password set. You can now sign in with email too.", toast_relogin: "For security, sign out and back in with Google, then try again.", toast_weak_password: "Password must be at least 6 characters.", toast_password_exists: "This account already has a password.",
         sign_out: "Sign Out",
         nav_queue: "Up Next",
         close: "Close",
@@ -339,7 +339,7 @@ const Translations = {
         apply_url: "Uygula",
         search_itunes: "Kapak bul",
         choose_cover: "Bir kapak seç",
-        cover_selected: "Kapak değiştirildi", upload_cover: "Bilgisayardan yükle", install_app: "Uygulama olarak yükle", shelf_title: "RAFIM · EN SEVDİKLERİM", shelf_show: "Rafı göster", shelf_hide: "Rafı gizle", shelf_hint: "Bir plağa dokun, raftan çıksın; bir daha dokun, açılsın.", shelf_empty: "En sevdiğin 10 albümü, albüm panelindeki plak düğmesiyle rafına koy.", shelf_add_btn: "Rafıma koy", shelf_remove_btn: "Raftan kaldır", shelf_added: "Rafına eklendi", shelf_removed: "Raftan kaldırıldı", shelf_full: "Rafın dolu (10 albüm). Önce birini kaldır.", loop_title: "LOOP'TA", loop_add_btn: "Loop'a al", loop_remove_btn: "Loop'tan çıkar", loop_added: "Loop'a alındı", loop_removed: "Loop'tan çıkarıldı", back_to_tracks: "Parçalara dön", more_actions: "Diğer işlemler", install_ios_hint: "Uygulama olarak eklemek için Safari'de Paylaş düğmesine, sonra “Ana Ekrana Ekle”ye dokun.", app_installed: "RateAgainst ana ekrana eklendi", upload_not_image: "Bu dosya görsel olarak okunamadı",
+        cover_selected: "Kapak değiştirildi", upload_cover: "Bilgisayardan yükle", install_app: "Uygulama olarak yükle", install_short: "Yükle", inbox_short: "Gelen", shelf_title: "RAFIM · EN SEVDİKLERİM", shelf_show: "Rafı göster", shelf_hide: "Rafı gizle", shelf_hint: "Bir plağa dokun, raftan çıksın; bir daha dokun, açılsın.", shelf_empty: "En sevdiğin 10 albümü, albüm panelindeki plak düğmesiyle rafına koy.", shelf_add_btn: "Rafıma koy", shelf_remove_btn: "Raftan kaldır", shelf_added: "Rafına eklendi", shelf_removed: "Raftan kaldırıldı", shelf_full: "Rafın dolu (10 albüm). Önce birini kaldır.", loop_title: "LOOP'TA", loop_add_btn: "Loop'a al", loop_remove_btn: "Loop'tan çıkar", loop_added: "Loop'a alındı", loop_removed: "Loop'tan çıkarıldı", back_to_tracks: "Parçalara dön", more_actions: "Diğer işlemler", install_ios_hint: "Uygulama olarak eklemek için Safari'de Paylaş düğmesine, sonra “Ana Ekrana Ekle”ye dokun.", app_installed: "RateAgainst ana ekrana eklendi", upload_not_image: "Bu dosya görsel olarak okunamadı",
         album_avg: "Albüm Ortalaması",
         tracklist: "Şarkı Listesi",
         default_sort: "Varsayılan",
@@ -412,7 +412,7 @@ const Translations = {
         save_note: "Notu Kaydet",
         note_placeholder: "Notlarınızı buraya yazın...",
         album_note: "Albüm Notu",
-        track_note: "Şarkı Notu",
+        track_note: "Şarkı Notu", review_ph: "Albüm hakkında yazmaya başla…", fmt_bold: "Kalın", fmt_italic: "İtalik", fmt_heading: "Başlık", fmt_quote: "Alıntı", fmt_list: "Madde listesi", fmt_numbered: "Numaralı liste", fmt_clear: "Biçimi temizle", saving: "Kaydediliyor…", saved: "Kaydedildi", f_year: "Yıl", f_label: "Plak şirketi", f_length: "Süre", f_added: "Eklendi", f_done: "Bitirildi", f_listens: "Dinleme", f_country: "Ülke", review_tab: "İnceleme", listen_later: "Daha sonra dinle", later_on: "Daha sonra dinlenecekler arasına eklendi", later_off: "Daha sonra dinlenecekler arasından çıkarıldı", track_name: "Parça adı", tracks_paste_hint: "ya da tüm listeyi bir parça adına yapıştır", selected_track: "Seçili parça", no_track_notes: "Henüz şarkı notu yok.", no_track_note: "Bu parça için henüz not yok.",
         track_notes: "Şarkı Notları",
         all_notes: "Tüm Notlar",
         copy_notes: "Notları Kopyala",
@@ -422,8 +422,8 @@ const Translations = {
         rating_dist: "Puan Dağılımı (Parçalar)",
         decade_breakdown: "Dönemlere Göre Ortalama Puan",
         listening_trends: "Aylara Göre Puanlama Eğilimi",
-        login_prompt: "Yalnızca görüntüleme modu. Günlüğü yönetmek için giriş yap.", rated_on: "Puanlama bitti", loop_best: "Şimdilik en iyisi", loop_next: "Sırada", toast_not_admin: "Bu hesap yalnızca görüntüleyebilir.",
-        sign_in_google: "Google ile Giriş Yap", toggle_language: "Dili değiştir", toggle_theme: "Temayı değiştir", admin_login: "Yönetici girişi", chart_view: "Plak grafiği", undo: "Geri al", pv_listen: "Dinle · 30 sn", pv_playing: "Albüm çalıyor", pv_paused: "Duraklatıldı", pv_loading: "Yükleniyor", pv_preview: "Önizleme", pv_play: "Önizlemeyi çal", pv_pause: "Duraklat", pv_none: "Bu albüm için önizleme bulunamadı", pv_none_track: "Bu parçanın önizlemesi yok, sıradakine geçildi", quick_rate: "Hızlı puanla", prev: "Önceki", next: "Sonraki", skip: "Atla", qr_done: "Albüm tamam!", pick_rating: "Puan seç", record_header: "Plak", by_time: "süreye göre", by_track: "parça başına", by_time_avg: "Süreye göre ortalama", by_track_avg: "Parça başına ortalama", toast_durations: "{n} albüme parça süreleri eklendi.", list_view: "Parça listesi", total_time: "toplam", track_word: "parça", change_photo: "Profil fotoğrafını değiştir", toast_photo_saved: "Profil fotoğrafı güncellendi.", toast_photo_failed: "Fotoğraf yüklenemedi.", email_sign_in: "E-posta ile giriş", email_placeholder: "E-posta", password_placeholder: "Şifre", sign_in: "Giriş yap", forgot_password: "Şifremi unuttum", set_password_hint: "Uygulamada e-postayla giriş yapabilmek için bir şifre belirle.", new_password_placeholder: "Yeni şifre (en az 6 karakter)", set_password: "Şifre belirle", toast_bad_login: "E-posta ya da şifre hatalı.", toast_too_many: "Çok fazla deneme. Biraz sonra tekrar dene.", toast_login_failed: "Giriş yapılamadı.", toast_enter_email: "Önce e-posta adresini yaz.", toast_reset_sent: "Kayıtlıysa, şifre sıfırlama bağlantısı e-postana gönderildi.", toast_password_set: "Şifre belirlendi. Artık e-postanla da giriş yapabilirsin.", toast_relogin: "Güvenlik için çıkış yapıp Google ile yeniden gir, sonra tekrar dene.", toast_weak_password: "Şifre en az 6 karakter olmalı.", toast_password_exists: "Bu hesabın zaten bir şifresi var.",
+        login_prompt: "Yalnızca görüntüleme modu. Günlüğü yönetmek için giriş yap.", rated_on: "Puanlama bitti", loop_best: "Fav", loop_next: "Sırada", toast_not_admin: "Bu hesap yalnızca görüntüleyebilir.",
+        sign_in_google: "Google ile Giriş Yap", toggle_language: "Dili değiştir", toggle_theme: "Temayı değiştir", admin_login: "Yönetici girişi", chart_view: "Plak grafiği", menu_theme: "Tema", menu_lang: "Dil", theme_light: "Açık", theme_dark: "Koyu", change_log: "Değişiklik geçmişi", log_empty: "Henüz kayıtlı bir değişiklik yok.", hide_from_visitors: "Ziyaretçilerden gizle", show_to_visitors: "Ziyaretçilere göster", toast_hidden: "Albüm artık ziyaretçilere görünmüyor.", toast_shown: "Albüm ziyaretçilere görünüyor.", hidden_badge: "Gizli", suggest_btn: "Albüm öner", suggest_title: "Albüm öner", suggest_intro: "Dinlememi istediğin bir albüm var mı? Yaz, listeme ekleyeyim.", suggest_album: "Albüm adı", suggest_artist: "Sanatçı / grup", suggest_note: "Neden bu albüm? (isteğe bağlı)", your_name: "Adın (isteğe bağlı)", send: "Gönder", suggest_sent: "Önerin iletildi, teşekkürler!", send_failed: "Gönderilemedi, bağlantını kontrol et.", comments: "Yorumlar", loading: "Yükleniyor…", comment_ph: "Bu albüm hakkında ne düşünüyorsun?", comment_note: "Yorumun onaylandıktan sonra yayınlanır.", comment_sent: "Yorumun alındı, onaylanınca yayınlanacak.", comments_failed: "Yüklenemedi.", no_comments: "Henüz yorum yok.", anonymous: "İsimsiz", pending: "Onay bekliyor", approve: "Onayla", delete: "Sil", comment_approved: "Yorum yayınlandı.", confirm_delete_comment: "Bu yorum silinsin mi?", confirm_delete_suggestion: "Bu öneri silinsin mi?", inbox: "Gelen kutusu", mark_read: "Okundu", mark_unread: "Okunmadı", mark_all_read: "Tümü okundu", pending_comments: "Onay bekleyen yorumlar", suggestions: "Albüm önerileri", nothing_here: "Şimdilik boş.", undo: "Geri al", pv_listen: "Dinle · 30 sn", pv_playing: "Albüm çalıyor", pv_paused: "Duraklatıldı", pv_loading: "Yükleniyor", pv_preview: "Önizleme", pv_play: "Önizlemeyi çal", pv_pause: "Duraklat", pv_none: "Bu albüm için önizleme bulunamadı", pv_none_track: "Bu parçanın önizlemesi yok, sıradakine geçildi", quick_rate: "Hızlı puanla", prev: "Önceki", next: "Sonraki", skip: "Atla", qr_done: "Albüm tamam!", pick_rating: "Puan seç", record_header: "Plak", by_time: "süreye göre", by_track: "parça başına", by_time_avg: "Süreye göre ortalama", by_track_avg: "Parça başına ortalama", toast_durations: "{n} albüme parça süreleri eklendi.", list_view: "Parça listesi", total_time: "toplam", track_word: "parça", change_photo: "Profil fotoğrafını değiştir", toast_photo_saved: "Profil fotoğrafı güncellendi.", toast_photo_failed: "Fotoğraf yüklenemedi.", email_sign_in: "E-posta ile giriş", email_placeholder: "E-posta", password_placeholder: "Şifre", sign_in: "Giriş yap", forgot_password: "Şifremi unuttum", set_password_hint: "Uygulamada e-postayla giriş yapabilmek için bir şifre belirle.", new_password_placeholder: "Yeni şifre (en az 6 karakter)", set_password: "Şifre belirle", toast_bad_login: "E-posta ya da şifre hatalı.", toast_too_many: "Çok fazla deneme. Biraz sonra tekrar dene.", toast_login_failed: "Giriş yapılamadı.", toast_enter_email: "Önce e-posta adresini yaz.", toast_reset_sent: "Kayıtlıysa, şifre sıfırlama bağlantısı e-postana gönderildi.", toast_password_set: "Şifre belirlendi. Artık e-postanla da giriş yapabilirsin.", toast_relogin: "Güvenlik için çıkış yapıp Google ile yeniden gir, sonra tekrar dene.", toast_weak_password: "Şifre en az 6 karakter olmalı.", toast_password_exists: "Bu hesabın zaten bir şifresi var.",
         sign_out: "Çıkış Yap",
         nav_queue: "Sırada",
         close: "Kapat",
@@ -572,7 +572,7 @@ const Utils = {
     formatDate(iso, opts = { day: 'numeric', month: 'long', year: 'numeric' }) {
         const d = new Date(iso);
         if (isNaN(d.getTime())) return '-';
-        return d.toLocaleDateString(AppState.language === 'en' ? 'en-US' : 'tr-TR', opts);
+        return d.toLocaleDateString(AppState.language === 'en' ? 'en-GB' : 'tr-TR', opts); // ay adları arayüz diliyle: 19 Kasım 2026 / 19 November 2026
     },
     todayISO() {
         const d = new Date();
@@ -595,11 +595,16 @@ const AlbumUtils = {
             .sort((a, b) => new Date(AlbumUtils.lastActivity(b)) - new Date(AlbumUtils.lastActivity(a)))[0] || null;
     },
     ratedTracks(album) { return (album.tracks || []).filter(tr => tr.rating > 0); },
-    // Puanlanmış parçaların ortalaması (tüm parçalar puanlanmasa da)
+    // Puanlanmış parçaların süreye göre ağırlıklı ortalaması: uzun parça daha çok sayılır (süresi bilinmeyen parça ortalama süre kadar sayılır)
     runningAvg(album) {
-        const rated = this.ratedTracks(album);
+        const tracks = album.tracks || [];
+        const rated = tracks.filter(tr => tr.rating > 0);
         if (!rated.length) return 0;
-        return Math.round((rated.reduce((s, tr) => s + tr.rating, 0) / rated.length) * 10) / 10;
+        const known = tracks.map(tr => tr.duration || 0).filter(d => d > 0);
+        const fallback = known.length ? known.reduce((a, b) => a + b, 0) / known.length : 1;
+        let w = 0, sum = 0;
+        rated.forEach(tr => { const l = tr.duration > 0 ? tr.duration : fallback; w += l; sum += tr.rating * l; });
+        return Math.round((sum / w) * 10) / 10;
     },
     progress(album) {
         const total = (album.tracks || []).length;
@@ -620,7 +625,7 @@ const AlbumUtils = {
             5:   ['#1e3a8a', '#8ba3f5'], // lacivert
             4.5: ['#047857', '#34d399'], // koyu yeşil (canlı)
             4:   ['#4f8a5b', '#86c99a'], // yeşil (sakin)
-            3.5: ['#4d7c0f', '#a8d64a'], // sarımsı yeşil
+            3.5: ['#888740', '#c0ca7a'], // 3.0 sarı ile 4.0 yeşilin tam ortası
             3:   ['#b58105', '#f2c94c'], // sarı
             2.5: ['#d97706', '#f5a623'], // turuncumsu sarı
             2:   ['#ea580c', '#fb8a4c'], // turuncu
@@ -634,7 +639,24 @@ const AlbumUtils = {
     },
         // Not metnini (madde imli) paragraflara çevir
     noteParagraphs(note) {
-        return (note || '').split('\n').map(l => l.replace(/^\s*•\s?/, '').trim()).filter(Boolean);
+        return (note || '').split('\n').map(l => l.replace(/^\s*•\s?/, '').replace(/^(#{1,6}\s+|>\s?|-\s+|\d+\.\s+)/, '').replace(/\*\*(.+?)\*\*/g, '$1').replace(/\*(.+?)\*/g, '$1').trim()).filter(Boolean);
+    },
+    // Biçimli not → HTML: ## başlık, > alıntı, - madde, 1. numaralı, **kalın**, *italik* (eski "•" satırları paragraf olur)
+    noteHTML(note) {
+        const inl = s => Utils.escapeHTML(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(\S(?:.*?\S)?)\*/g, '<em>$1</em>');
+        const lines = (note || '').split('\n').map(l => l.replace(/^\s*•\s?/, '').trim()).filter(Boolean);
+        let html = '', list = null, m;
+        const close = () => { if (list) { html += `</${list}>`; list = null; } };
+        lines.forEach(l => {
+            if ((m = l.match(/^-\s+(.*)$/))) { if (list !== 'ul') { close(); html += '<ul>'; list = 'ul'; } html += `<li>${inl(m[1])}</li>`; return; }
+            if ((m = l.match(/^\d+\.\s+(.*)$/))) { if (list !== 'ol') { close(); html += '<ol>'; list = 'ol'; } html += `<li>${inl(m[1])}</li>`; return; }
+            close();
+            if ((m = l.match(/^#{1,6}\s+(.*)$/))) html += `<h3>${inl(m[1])}</h3>`;
+            else if ((m = l.match(/^>\s?(.*)$/))) html += `<blockquote><p>${inl(m[1])}</p></blockquote>`;
+            else html += `<p>${inl(l)}</p>`;
+        });
+        close();
+        return html;
     },
 };
 
@@ -1237,7 +1259,7 @@ const app = {
         const meta = document.getElementById('meta-theme-color');
         if (html.classList.contains('dark')) {
             html.classList.remove('dark'); localStorage.setItem('theme', 'light');
-            if(meta) meta.setAttribute('content', '#f7f4f0');
+            if(meta) meta.setAttribute('content', '#f8f3ea');
         } else {
             html.classList.add('dark'); localStorage.setItem('theme', 'dark');
             if(meta) meta.setAttribute('content', '#1c140f');
@@ -1465,7 +1487,7 @@ const app = {
     // --- Plak grafiği: dilimler parça süresine orantılı, renkler parça puanına göre ---
     applyTrackView() {
         if (this._trackChart === undefined) {
-            try { this._trackChart = localStorage.getItem('ra-track-chart') === '1'; } catch (e) { this._trackChart = false; }
+            try { this._trackChart = localStorage.getItem('ra-track-view') !== 'list'; } catch (e) { this._trackChart = true; } // plak varsayılan
         }
         const on = !!this._trackChart;
         document.getElementById('modal-tracklist')?.classList.toggle('hidden', on);
@@ -1482,12 +1504,361 @@ const app = {
             btn.title = label;
             btn.innerHTML = `<i class="ph-bold ${on ? 'ph-list-dashes' : 'ph-vinyl-record'} text-base"></i>`;
         }
+         // Dar ekranda üçüncü görünüm: İnceleme (plak / liste yerine sağ sütunun sekmeleri)
+        const rv = !!this._reviewView && !this.isThreeCol();
+        document.querySelector('#album-modal .modal-content')?.classList.toggle('is-rv', rv);
+        document.querySelectorAll('#modal-tracks-col .view-seg [data-view]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view === 'review' ? rv : !rv && (b.dataset.view === 'chart') === on));
+        if (rv) this.renderModalSide();
         if (on) this.renderTrackChart();
+    },
+
+// --- Albüm paneli, geniş ekran (≥1200px): üç sütun — künye · plak ve önizleme · incelemeler ---
+    isThreeCol() { return window.matchMedia('(min-width: 1200px)').matches; },
+
+    setReviewView() { this._reviewView = true; this.applyTrackView(); },
+
+    setTrackView(on) {
+        this._trackChart = !!on;
+        this._reviewView = false;
+        try { localStorage.setItem('ra-track-view', on ? 'chart' : 'list'); } catch (e) {}
+        this.applyTrackView();
+    },
+
+// Künye: yazı yerine simgeler (simgenin üstüne gelince ne olduğu yazar) — yıl · şirket / ülke · süre / eklenme · bitiş
+    renderModalFacts() {
+        const box = document.getElementById('modal-facts'), al = AppState.currentModalAlbum;
+        if (!box || !al) return;
+        const fmt = s => s >= 3600 ? `${Math.floor(s / 3600)}:${String(Math.floor(s % 3600 / 60)).padStart(2, '0')}:${String(Math.round(s % 60)).padStart(2, '0')}` : `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
+        const n = (al.tracks || []).length, sum = (al.tracks || []).reduce((s, x) => s + (x.duration || 0), 0);
+        const label = al.label && al.label !== t('unknown') ? al.label : '';
+        const done = (al.averageScore || 0) > 0 && al.completedAt;
+        const admin = AppState.isAdmin;
+        if (this.isEditMode && admin) {
+            const iso = (() => { const d = new Date(al.dateAdded); return isNaN(d) ? '' : d.toISOString().slice(0, 10); })();
+            const inp = (icon, key, val, on, type = 'text', extra = '') => `<li class="is-edit" title="${t(key)}"><i class="ph ${icon}" aria-hidden="true"></i><input type="${type}" value="${Utils.escapeHTML(String(val || ''))}" placeholder="${t(key)}" aria-label="${t(key)}" onchange="${on}" ${extra}></li>`;
+            const ro = (icon, key, val) => `<li title="${t(key)}"><i class="ph ${icon}" aria-hidden="true"></i><span class="sr-only">${t(key)}: </span><span>${val ? Utils.escapeHTML(String(val)) : '–'}</span></li>`;
+            box.innerHTML = [
+                inp('ph-calendar-blank', 'f_year', al.year, "app.setAlbumFact('year', this.value)", 'text', 'inputmode="numeric" maxlength="4"'),
+                inp('ph-vinyl-record', 'f_label', label, "app.setAlbumFact('label', this.value)"),
+                inp('ph-globe-hemisphere-west', 'f_country', this.countryName(al.country), 'app.setCountry(this.value)'),
+                ro('ph-timer', 'f_length', n ? `${sum ? fmt(sum) + ' · ' : ''}${n} ${t('track_word')}` : ''),
+                inp('ph-calendar-plus', 'f_added', iso, 'app.updateAddedDate(this.value)', 'date'),
+                ro('ph-seal-check', 'f_done', done ? this.dmy(al.completedAt) : '')
+            ].join('');
+            return;
+        }
+        const row = (icon, key, val, click) => (val || click) ? `<li title="${t(key)}"${click ? ` class="is-click" role="button" tabindex="0" onclick="${click}"` : ''}><i class="ph ${icon}" aria-hidden="true"></i><span class="sr-only">${t(key)}: </span><span>${val ? Utils.escapeHTML(String(val)) : '–'}</span></li>` : '<li aria-hidden="true"></li>';
+        box.innerHTML = [
+            row('ph-calendar-blank', 'f_year', al.year),
+            row('ph-vinyl-record', 'f_label', label),
+            row('ph-globe-hemisphere-west', 'f_country', this.countryName(al.country), admin ? 'app.editCountry()' : ''),
+            row('ph-timer', 'f_length', n ? `${sum ? fmt(sum) + ' · ' : ''}${n} ${t('track_word')}` : ''),
+            row('ph-calendar-plus', 'f_added', this.dmy(al.dateAdded)),
+            row('ph-seal-check', 'f_done', done ? this.dmy(al.completedAt) : '')
+        ].join('');
+        if (al.country === undefined) this.fetchCountry(al);
+    },
+
+    // Künyedeki tarihler: 18.11.2026
+    dmy(d) { const x = new Date(d); return d && !isNaN(x) ? `${String(x.getDate()).padStart(2, '0')}.${String(x.getMonth() + 1).padStart(2, '0')}.${x.getFullYear()}` : ''; },
+
+    // Ülke kodu (GB) → dile göre ad (Birleşik Krallık / United Kingdom); elle yazılmış ad olduğu gibi kalır
+    countryName(c) {
+        if (!c || c === '-') return '';
+        const tr = AppState.language !== 'en';
+        // Birleşik Krallık'ın ülkeleri (MusicBrainz "GB-ENG" gibi kodlar verir)
+        const SUB = { 'GB-ENG': ['England', 'İngiltere'], 'GB-SCT': ['Scotland', 'İskoçya'], 'GB-WLS': ['Wales', 'Galler'], 'GB-NIR': ['Northern Ireland', 'Kuzey İrlanda'] };
+        let code = String(c).trim();
+        if (!/^[A-Z]{2}$/.test(code) && !SUB[code]) code = this.countryCode(code) || code; // elle yazılmış ad: koda çevrilebiliyorsa çevrilir
+        if (SUB[code]) return SUB[code][tr ? 1 : 0];
+        if (/^[A-Z]{2}$/.test(code)) { try { return new Intl.DisplayNames([tr ? 'tr' : 'en'], { type: 'region' }).of(code) || c; } catch (e) { return c; } }
+        return c;
+    },
+
+    // Ülke adı (Türkçe ya da İngilizce) → kod; bir kez hazırlanan sözlükten bakılır
+    countryCode(name) {
+        const key = s => String(s).toLocaleLowerCase('tr').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z]/g, '');
+        if (!this._ctryIdx) {
+            const idx = this._ctryIdx = new Map([['england', 'GB-ENG'], ['ingiltere', 'GB-ENG'], ['scotland', 'GB-SCT'], ['iskocya', 'GB-SCT'], ['wales', 'GB-WLS'], ['galler', 'GB-WLS'], ['northernireland', 'GB-NIR'], ['kuzeyirlanda', 'GB-NIR'], ['uk', 'GB'], ['usa', 'US'], ['abd', 'US'], ['turkey', 'TR'], ['holland', 'NL'], ['hollanda', 'NL']]);
+            try {
+                const dn = ['en', 'tr'].map(l => new Intl.DisplayNames([l], { type: 'region' }));
+                for (let a = 65; a <= 90; a++) for (let b = 65; b <= 90; b++) {
+                    const cc = String.fromCharCode(a, b);
+                    dn.forEach(d => { let v; try { v = d.of(cc); } catch (e) {} if (v && v !== cc && !idx.has(key(v))) idx.set(key(v), cc); });
+                }
+            } catch (e) {}
+        }
+        return this._ctryIdx.get(key(name)) || '';
+    },
+
+    // Sanatçının ülkesi MusicBrainz'den bir kez alınır (bulunamazsa "-" kaydedilir, bir daha sorulmaz)
+    async fetchCountry(al) {
+        const busy = this._ctryBusy || (this._ctryBusy = new Set());
+        if (!al?.artist || busy.has(al.id)) return;
+        busy.add(al.id);
+        let code = '-';
+        try {
+            const name = al.artist.trim();
+            const r = await fetch(`https://musicbrainz.org/ws/2/artist/?query=${encodeURIComponent(`artist:"${name.replace(/"/g, '')}"`)}&fmt=json&limit=5`);
+            const hit = (await r.json())?.artists?.find(x => (x.score ?? 0) >= 90 && x.name?.toLowerCase() === name.toLowerCase());
+            code = hit?.country || hit?.area?.['iso-3166-1-codes']?.[0] || hit?.area?.['iso-3166-2-codes']?.[0] || '-';
+        } catch (e) { return; } // bağlantı yoksa sayfa yeniden açılınca tekrar denenir
+        al.country = code;
+        // Albümün tarihi değişmesin: kayıt doğrudan güncellenir
+        const lib = AppState.library.find(a => a.id === al.id);
+        if (lib && lib !== al) lib.country = code;
+        if (AppState.isAdmin && lib) this.saveAlbumData(lib);
+        if (AppState.currentModalAlbum === al) this.renderModalFacts();
+    },
+
+    editCountry() {
+        const al = AppState.currentModalAlbum;
+        if (!al) return;
+        const v = prompt(t('f_country'), this.countryName(al.country));
+        if (v === null) return;
+        al.country = v.trim() || '-';
+        this.renderModalFacts();
+        this.persistIfSaved();
+    },
+
+    // Düzenleme modunda künye alanları (kaydet düğmesiyle kaydedilir)
+    setCountry(v) {
+        const al = AppState.currentModalAlbum;
+        if (!al) return;
+        al.country = String(v).trim() || '-';
+        this.updateModalButtons();
+    },
+
+    setAlbumFact(field, v) {
+        const al = AppState.currentModalAlbum;
+        if (!al) return;
+        al[field] = String(v).trim();
+        const span = document.getElementById(field === 'year' ? 'modal-date' : 'modal-label');
+        if (span) span.textContent = al[field];
+        this.updateModalButtons();
+    },
+
+    // Plağın altındaki önizleme kutusu: hep görünür; boştayken "Dinle", çalarken parça, ilerleme ve düğmeler
+    renderPvBox() {
+        const box = document.getElementById('pv-box'), al = AppState.currentModalAlbum;
+        if (!box || !al) return;
+        const pv = this._pv && this._pv.al === al ? this._pv : null;
+        const paused = !pv || pv.loading || !this._pvAudio || this._pvAudio.paused;
+        const cover = this.chartCoverSrc();
+        const img = cover ? `<img src="${Utils.escapeHTML(cover)}" alt="" onerror="this.remove()">` : '';
+        if (!pv) {
+            box.innerHTML = `${img}
+                <div class="pvb-meta"><div class="pvb-t">${t('pv_listen')}</div><div class="pvb-s">${Utils.escapeHTML(al.title || '')} · ${Utils.escapeHTML(al.artist || '')}</div></div>
+                <div class="pvb-btns"><button type="button" class="main" onclick="app.pvAlbum()" aria-label="${t('pv_play')}"><i class="ph-fill ph-play"></i></button></div>`;
+            return;
+        }
+        const tr = al.tracks[pv.idx];
+        box.innerHTML = `${img}
+            <div class="pvb-meta">
+                <div class="pvb-t">${pv.loading ? t('pv_loading') : `<span class="pvb-n">${Utils.escapeHTML(tr?.number || '')}.</span> ${Utils.escapeHTML(tr?.title || '')}`}</div>
+                <div class="pv-prog"><span class="pv-cur">0:00</span><span class="pv-track" onpointerdown="app.pvSeek(event)"><i class="pv-fill"></i></span><span class="pv-tot">0:30</span></div>
+            </div>
+            <div class="pvb-btns">
+                <button type="button" onclick="app.pvStep(-1)" aria-label="${t('prev')}" ${pv.loading ? 'disabled' : ''}><i class="ph-fill ph-skip-back"></i></button>
+                <button type="button" class="main" onclick="app.pvToggle()" aria-label="${paused ? t('pv_play') : t('pv_pause')}" ${pv.loading ? 'disabled' : ''}><i class="${pv.loading ? 'ph-bold ph-spinner animate-spin' : `ph-fill ${paused ? 'ph-play' : 'ph-pause'}`}"></i></button>
+                <button type="button" onclick="app.pvStep(1)" aria-label="${t('next')}" ${pv.loading ? 'disabled' : ''}><i class="ph-fill ph-skip-forward"></i></button>
+                <button type="button" class="x" onclick="app.pvStop()" aria-label="${t('close')}"><i class="ph-bold ph-x"></i></button>
+            </div>`;
+        this.pvProgress();
+    },
+
+    // Sağ sütun: İnceleme · Şarkı notları · Yorumlar (yorumlar sekme ilk açıldığında yüklenir)
+    setSideTab(tab) { this._sideTab = tab; this.renderModalSide(); },
+
+    renderModalSide() {
+        const box = document.getElementById('modal-side'), al = AppState.currentModalAlbum;
+        if (!box || !al) return;
+        if (box.dataset.album !== String(al.id) || !box.firstElementChild) {
+            box.dataset.album = String(al.id);
+            box.innerHTML = `
+                <div class="side-tabs" role="tablist">
+                    <button type="button" role="tab" data-tab="review" onclick="app.setSideTab('review')"></button>
+                    <button type="button" role="tab" data-tab="notes" onclick="app.setSideTab('notes')"></button>
+                    <button type="button" role="tab" data-tab="cmts" onclick="app.setSideTab('cmts')"></button>
+                </div>
+                <div class="side-pane" id="side-review" role="tabpanel"></div>
+                <div class="side-pane" id="side-notes" role="tabpanel"></div>
+                <div class="side-pane" id="side-cmts" role="tabpanel"></div>`;
+        }
+        const tab = this._sideTab || 'review', admin = AppState.isAdmin;
+        const notes = (al.tracks || []).map((tr, i) => ({ tr, i })).filter(x => x.tr.note && x.tr.note.trim());
+        const labels = { review: t('review_label'), notes: `${t('track_notes')}${notes.length ? ` · ${notes.length}` : ''}`, cmts: t('comments') };
+        box.querySelectorAll('.side-tabs [data-tab]').forEach(b => { b.textContent = labels[b.dataset.tab]; b.setAttribute('aria-selected', b.dataset.tab === tab); });
+        box.querySelectorAll('.side-pane').forEach(p => p.hidden = p.id !== `side-${tab}`);
+        const rv = document.getElementById('side-review');
+        if (rv.dataset.album !== String(al.id) || !rv.firstElementChild) {
+            rv.dataset.album = String(al.id);
+            this._rvEdit = false;
+            rv.innerHTML = `<div id="rv-head"></div><div id="side-review-body"></div><div id="side-sel"></div>`;
+            this.renderReviewHead();
+        }
+        this.renderReviewBody();
+        document.getElementById('side-notes').innerHTML = notes.length
+            ? notes.map(({ tr, i }) => this.sideNoteHTML(tr, i)).join('')
+            : `<p class="side-empty">${t('no_track_notes')}</p>`;
+        const c = document.getElementById('side-cmts');
+        if (tab === 'cmts' && c.dataset.album !== String(al.id)) {
+            c.dataset.album = String(al.id);
+            c.innerHTML = this.commentsHTML('side');
+            this.loadComments('side');
+        }
+        this.renderSideSel();
+    },
+
+    sideNoteHTML(tr, i, withEmpty) {
+        const r = tr.rating || 0, has = !!(tr.note || '').trim();
+        return `<div class="side-note">
+            <div class="side-note-h">
+                <span class="min-w-0 truncate"><span class="side-no">${Utils.escapeHTML(tr.number ?? i + 1)}.</span> <i>${Utils.escapeHTML(tr.title)}</i></span>
+                <span class="flex items-center gap-1 flex-shrink-0">
+                    ${AppState.isAdmin ? `<button type="button" class="side-edit" onclick="app.openNotePanel('track', ${i}); app.setNoteEditMode(true)" aria-label="${t('edit')}" title="${t('edit')}"><i class="ph-bold ph-pencil-simple"></i></button>` : ''}
+                    <b class="${r > 0 ? AlbumUtils.tier(r).text : 'text-gray-500'}">${r > 0 ? r.toFixed(1) : '–'}</b>
+                </span>
+            </div>
+            ${has ? `<div class="side-prose is-small">${AlbumUtils.noteHTML(tr.note)}</div>` : (withEmpty ? `<p class="side-empty">${t('no_track_note')}</p>` : '')}
+        </div>`;
+    },
+
+    // İnceleme doğrudan panelde yazılır: biçim düğmeleri (kalın, italik, başlık, alıntı, listeler), yazarken kendiliğinden kaydedilir
+    // Kalem: yazma modunu açar (biçim çubuğu görünür); ✓ kaydedip okuma görünümüne döner
+    renderReviewHead() {
+        const head = document.getElementById('rv-head');
+        if (!head) return;
+        if (!AppState.isAdmin) { head.innerHTML = ''; return; }
+        if (!this._rvEdit) {
+            head.innerHTML = `<button type="button" class="side-edit rv-pen" onclick="app.toggleReviewEdit()" aria-label="${t('edit')}" title="${t('edit')}"><i class="ph-bold ph-pencil-simple"></i></button>`;
+            return;
+        }
+        const b = (cmd, icon, key) => `<button type="button" onmousedown="event.preventDefault()" onclick="app.reviewCmd('${cmd}')" data-cmd="${cmd}" aria-label="${t(key)}" title="${t(key)}"><i class="ph-bold ${icon}"></i></button>`;
+        head.innerHTML = `<div class="rv-bar" role="toolbar" aria-label="${t('review_label')}">
+            ${b('bold', 'ph-text-b', 'fmt_bold')}${b('italic', 'ph-text-italic', 'fmt_italic')}<span class="rv-sep"></span>
+            ${b('h', 'ph-text-h', 'fmt_heading')}${b('quote', 'ph-quotes', 'fmt_quote')}${b('ul', 'ph-list-bullets', 'fmt_list')}${b('ol', 'ph-list-numbers', 'fmt_numbered')}<span class="rv-sep"></span>
+            ${b('clear', 'ph-text-t-slash', 'fmt_clear')}<span id="rv-state" class="rv-state" aria-live="polite"></span>
+            <button type="button" class="rv-done" onmousedown="event.preventDefault()" onclick="app.toggleReviewEdit()" aria-label="${t('saved')}" title="${t('saved')}"><i class="ph-bold ph-check"></i></button>
+        </div>`;
+    },
+
+    toggleReviewEdit() {
+        if (this._rvEdit) this.reviewSave();
+        this._rvEdit = !this._rvEdit;
+        const body = document.getElementById('side-review-body');
+        if (body) { document.activeElement?.blur?.(); body._note = null; }
+        this.renderReviewHead();
+        this.renderReviewBody();
+        const ed = document.getElementById('side-editor');
+        if (ed) {
+            ed.focus();
+            const r = document.createRange(); r.selectNodeContents(ed); r.collapse(false);
+            const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+        }
+    },
+
+    renderReviewBody() {
+        const body = document.getElementById('side-review-body'), al = AppState.currentModalAlbum;
+        if (!body || !al) return;
+        const note = al.note || '';
+        if (body._album === al.id && body._note === note) return;
+        if (body.contains(document.activeElement)) return; // yazarken dokunma
+        body._album = al.id; body._note = note;
+        body.innerHTML = AppState.isAdmin && this._rvEdit
+            ? `<div id="side-editor" class="side-prose side-editor" contenteditable="true" role="textbox" aria-multiline="true" aria-label="${t('review_label')}" data-ph="${Utils.escapeHTML(t('review_ph'))}" oninput="app.reviewInput()" onblur="app.reviewSave()" onpaste="app.reviewPaste(event)" onfocus="document.execCommand('defaultParagraphSeparator', false, 'p'); document.execCommand('styleWithCSS', false, false)">${AlbumUtils.noteHTML(note)}</div>`
+            : `<div class="side-prose">${note.trim() ? AlbumUtils.noteHTML(note) : `<p class="side-empty">${t('review_empty')}</p>`}</div>`;
+    },
+
+    reviewCmd(c) {
+        const ed = document.getElementById('side-editor');
+        if (!ed) return;
+        if (!ed.contains(document.getSelection()?.anchorNode)) ed.focus();
+        const blk = () => { let n = document.getSelection()?.anchorNode; while (n && n !== ed) { if (n.nodeType === 1 && /^(H[1-6]|BLOCKQUOTE)$/.test(n.nodeName)) return n.nodeName; n = n.parentNode; } return ''; };
+        if (c === 'bold' || c === 'italic') document.execCommand(c);
+        else if (c === 'h') document.execCommand('formatBlock', false, /^H/.test(blk()) ? 'p' : 'h3');
+        else if (c === 'quote') document.execCommand('formatBlock', false, blk() === 'BLOCKQUOTE' ? 'p' : 'blockquote');
+        else if (c === 'ul') document.execCommand('insertUnorderedList');
+        else if (c === 'ol') document.execCommand('insertOrderedList');
+        else if (c === 'clear') { document.execCommand('removeFormat'); document.execCommand('formatBlock', false, 'p'); }
+        this.reviewInput();
+    },
+
+    reviewPaste(e) {
+        e.preventDefault();
+        document.execCommand('insertText', false, e.clipboardData?.getData('text/plain') || '');
+    },
+
+    reviewInput() {
+        const st = document.getElementById('rv-state');
+        if (st) st.textContent = t('saving');
+        clearTimeout(this._rvTimer);
+        this._rvTimer = setTimeout(() => this.reviewSave(), 2000);
+    },
+
+    reviewSave() {
+        clearTimeout(this._rvTimer);
+        const ed = document.getElementById('side-editor'), body = document.getElementById('side-review-body'), al = AppState.currentModalAlbum;
+        if (!ed || !al || body?._album !== al.id || !this._rvEdit) return;
+        const md = this.editorToMd(ed);
+        if (md !== (al.note || '')) {
+            al.note = md;
+            body._note = md;
+            this.updateAlbumNoteIcon();
+            this.persistIfSaved();
+        }
+        const st = document.getElementById('rv-state');
+        if (st) st.textContent = t('saved');
+    },
+
+    // Yazı alanını sade bir biçime çevirir: ## başlık, > alıntı, - madde, 1. numara, **kalın**, *italik*
+    editorToMd(ed) {
+        const BLOCK = /^(P|DIV|UL|OL|H[1-6]|BLOCKQUOTE|LI)$/;
+        const inl = (n) => {
+            if (n.nodeType === 3) return n.nodeValue.replace(/\n/g, ' ');
+            if (n.nodeType !== 1) return '';
+            if (n.nodeName === 'BR') return '\n';
+            const inner = [...n.childNodes].map(inl).join('');
+            const wrap = (m) => inner.trim() ? inner.replace(/^(\s*)([\s\S]*?)(\s*)$/, `$1${m}$2${m}$3`) : inner;
+            const fw = n.style?.fontWeight;
+            if (/^(B|STRONG)$/.test(n.nodeName) || fw === 'bold' || +fw >= 600) return wrap('**');
+            if (/^(I|EM)$/.test(n.nodeName) || n.style?.fontStyle === 'italic') return wrap('*');
+            return inner;
+        };
+        const out = [];
+        const push = (pre, s) => s.split('\n').map(x => x.replace(/\s+/g, ' ').trim()).filter(x => x && x !== '**' && x !== '*').forEach(x => out.push(pre + x));
+        const walk = (parent, pre = '') => {
+            let buf = '';
+            const flush = () => { push(pre, buf); buf = ''; };
+            parent.childNodes.forEach(n => {
+                if (n.nodeType !== 1 || !BLOCK.test(n.nodeName)) { buf += inl(n); return; }
+                flush();
+                const tag = n.nodeName;
+                if (/^H[1-6]$/.test(tag)) push('## ', inl(n));
+                else if (tag === 'BLOCKQUOTE') walk(n, '> ');
+                else if (tag === 'UL' || tag === 'OL') [...n.children].forEach((li, k) => push(tag === 'UL' ? '- ' : `${k + 1}. `, inl(li)));
+                else if ([...n.children].some(c => BLOCK.test(c.nodeName))) walk(n, pre);
+                else push(pre, inl(n));
+            });
+            flush();
+        };
+        walk(ed);
+        return out.join('\n');
+    },
+
+    // İnceleme sekmesinin altında: plakta seçilen ya da çalan parçanın notu
+    renderSideSel() {
+        const box = document.getElementById('side-sel'), al = AppState.currentModalAlbum;
+        if (!box || !al) return;
+        let i = this._tcPinned ?? -1;
+        if (i < 0 && this._pv?.al === al && !this._pv.loading) i = this._pv.idx;
+        const tr = al.tracks?.[i];
+        box.innerHTML = tr ? `<h4 class="side-h">${t('selected_track')}</h4>${this.sideNoteHTML(tr, i, true)}` : '';
     },
 
     toggleTrackChart() {
         this._trackChart = !this._trackChart;
-        try { localStorage.setItem('ra-track-chart', this._trackChart ? '1' : '0'); } catch (e) {}
+        try { localStorage.setItem('ra-track-view', this._trackChart ? 'chart' : 'list'); } catch (e) {}
         this.applyTrackView();
     },
 
@@ -1507,9 +1878,10 @@ const app = {
             const a0 = a + GAP, a1 = a + span - (GAP || 0.0001);
             a += span;
             const large = a1 - a0 > Math.PI ? 1 : 0, r = tr.rating || 0;
-            return `<path d="M${pt(R1, a0)} A${R1} ${R1} 0 ${large} 1 ${pt(R1, a1)} L${pt(R0, a1)} A${R0} ${R0} 0 ${large} 0 ${pt(R0, a0)} Z" fill="currentColor" class="tc-slice ${r > 0 ? AlbumUtils.tier(r).text : 'tc-unrated'}"/>`;
+            const seg = (q0, q1) => `M${pt(q1, a0)} A${q1} ${q1} 0 ${large} 1 ${pt(q1, a1)} L${pt(q0, a1)} A${q0} ${q0} 0 ${large} 0 ${pt(q0, a0)} Z`;
+            return `<g class="tc-slice ${r > 0 ? AlbumUtils.tier(r).text : 'tc-unrated'}"><path d="${seg(R0, R1)}" class="tc-seg"/><path d="${seg(R1 - 8, R1)}" fill="currentColor" class="tc-band"/></g>`;
         }).join('');
-        const grooves = Array.from({ length: 18 }, (_, k) => `<circle cx="100" cy="100" r="${(R0 + 2 + k * 3).toFixed(1)}"/>`).join('');
+        const grooves = Array.from({ length: 14 }, (_, k) => `<circle cx="100" cy="100" r="${(R0 + 2 + k * 3).toFixed(1)}"/>`).join('');
         const id = `ac-lbl-${this._acSeq = (this._acSeq || 0) + 1}`;
         return `<svg viewBox="0 0 200 200">
             <defs><clipPath id="${id}"><circle cx="100" cy="100" r="${R0 - 3}"/></clipPath></defs>
@@ -1537,28 +1909,35 @@ const app = {
         const fallback = known.length ? known.reduce((a, b) => a + b, 0) / known.length : 1;
         const lens = tracks.map(tr => tr.duration > 0 ? tr.duration : fallback);
         const total = lens.reduce((a, b) => a + b, 0);
-        const C = 100, R1 = 94, R0 = 40, GAP = 0.012;
+        const C = 100, R1 = 92, R0 = 40, GAP = 0.012, RN = 95.8; // RN: kenardaki siyah şeritte parça numaralarının yarıçapı
         const pt = (r, a) => `${(C + r * Math.cos(a)).toFixed(2)} ${(C + r * Math.sin(a)).toFixed(2)}`;
         let a = -Math.PI / 2;
+        const nums = []; // dilimin dış kenarında parça numarası
         const slices = tracks.map((tr, i) => {
             const span = lens[i] / total * Math.PI * 2;
             const a0 = a + (tracks.length > 1 ? GAP : 0), a1 = a + span - (tracks.length > 1 ? GAP : 0.0001);
             a += span;
             const large = a1 - a0 > Math.PI ? 1 : 0, mid = (a0 + a1) / 2;
             const r = tr.rating || 0;
-            const d = `M${pt(R1, a0)} A${R1} ${R1} 0 ${large} 1 ${pt(R1, a1)} L${pt(R0, a1)} A${R0} ${R0} 0 ${large} 0 ${pt(R0, a0)} Z`;
-            return `<path data-i="${i}" d="${d}" fill="currentColor" style="--dx:${(Math.cos(mid) * 4).toFixed(2)}px;--dy:${(Math.sin(mid) * 4).toFixed(2)}px" class="tc-slice ${r > 0 ? AlbumUtils.tier(r).text : 'tc-unrated'}" onmouseenter="app.trackChartFocus(${i})" onclick="app.trackChartFocus(${i}, true)"><title>${Utils.escapeHTML(tr.number)}. ${Utils.escapeHTML(tr.title)}</title></path>`;
+            if ((a1 - a0 + 2 * GAP) * RN > 5.2) {
+                const nx = (C + RN * Math.cos(mid)).toFixed(2), ny = (C + RN * Math.sin(mid)).toFixed(2);
+                nums.push(`<text x="${nx}" y="${ny}" class="tc-num">${Utils.escapeHTML(tr.number ?? i + 1)}</text>`);
+            }
+                        const seg = (q0, q1) => `M${pt(q1, a0)} A${q1} ${q1} 0 ${large} 1 ${pt(q1, a1)} L${pt(q0, a1)} A${q0} ${q0} 0 ${large} 0 ${pt(q0, a0)} Z`;
+            return `<g data-i="${i}" style="--dx:${(Math.cos(mid) * 4).toFixed(2)}px;--dy:${(Math.sin(mid) * 4).toFixed(2)}px" class="tc-slice ${r > 0 ? AlbumUtils.tier(r).text : 'tc-unrated'}" onmouseenter="app.trackChartFocus(${i})" onclick="app.trackChartFocus(${i}, true)"><title>${Utils.escapeHTML(tr.number)}. ${Utils.escapeHTML(tr.title)}</title><path d="${seg(R0, R1)}" class="tc-seg"/><path d="${seg(R1 - 8, R1)}" fill="currentColor" class="tc-band"/></g>`;
         }).join('');
-        const grooves = Array.from({ length: 18 }, (_, k) => `<circle cx="100" cy="100" r="${(R0 + 2 + k * 3).toFixed(1)}"/>`).join('');
-        const cover = document.getElementById('modal-cover')?.getAttribute('src') || '';
-        // İki ortalama: parça başına (albüm puanı) ve süreye göre (uzun parça daha çok sayılır)
-        const rated = tracks.map((tr, i) => [tr.rating || 0, lens[i]]).filter(([r]) => r > 0);
-        const wSum = rated.reduce((s, [, l]) => s + l, 0);
-        this._tcScores = {
-            track: al.averageScore || AlbumUtils.runningAvg(al),
-            time: wSum ? rated.reduce((s, [r, l]) => s + r * l, 0) / wSum : 0
-        };
-        const modeBtn = (m, icon) => `<button type="button" data-mode="${m}" onclick="app.setChartScoreMode('${m}')" aria-label="${t(m === 'time' ? 'by_time_avg' : 'by_track_avg')}" title="${t(m === 'time' ? 'by_time_avg' : 'by_track_avg')}"><i class="ph-bold ${icon}"></i></button>`;
+        const grooves = Array.from({ length: 14 }, (_, k) => `<circle cx="100" cy="100" r="${(R0 + 2 + k * 3).toFixed(1)}"/>`).join('');
+        // Etiketteki kapak: soldaki kapak hangi adresten yüklendiyse o (ilk adres açılmayıp yedeğe geçtiyse yedek)
+        const cover = this.chartCoverSrc();
+        const coverImg = document.getElementById('modal-cover');
+        if (coverImg && !coverImg._tcBound) {
+            coverImg._tcBound = true;
+            coverImg.addEventListener('load', () => {
+                const lbl = document.getElementById('tc-cover'), src = coverImg.currentSrc || coverImg.src;
+                if (lbl && src && lbl.getAttribute('href') !== src) lbl.setAttribute('href', src);
+                else if (!lbl && src && document.querySelector('#modal-trackchart .tc-svg')) this.renderTrackChart();
+            });
+        }
         box.innerHTML = `
             <div class="tc-row">
             <button type="button" class="tc-nav" onclick="app.chartNav(-1)" aria-label="${t('prev')}" title="${t('prev')}"><i class="ph-bold ph-caret-left"></i></button>
@@ -1573,28 +1952,28 @@ const app = {
                         <g class="tc-rotor">
                             ${slices}
                             <g class="tc-grooves" fill="none">${grooves}</g>
+                            <g class="tc-nums" aria-hidden="true">${nums.join('')}</g>
                             <circle cx="100" cy="100" r="${R0 - 1.5}" class="tc-vinyl"/>
-                            ${cover ? `<image href="${Utils.escapeHTML(cover)}" x="${100 - R0 + 3}" y="${100 - R0 + 3}" width="${(R0 - 3) * 2}" height="${(R0 - 3) * 2}" preserveAspectRatio="xMidYMid slice" clip-path="url(#tc-label)"/>` : ''}
+                            ${cover ? `<image id="tc-cover" onerror="this.remove()" href="${Utils.escapeHTML(cover)}" x="${100 - R0 + 3}" y="${100 - R0 + 3}" width="${(R0 - 3) * 2}" height="${(R0 - 3) * 2}" preserveAspectRatio="xMidYMid slice" clip-path="url(#tc-label)"/>` : ''}
                         </g>
                         <circle cx="100" cy="100" r="97" fill="url(#tc-sheen)" pointer-events="none"/>
                         <circle cx="100" cy="100" r="${R0 - 3}" class="tc-label-shade" pointer-events="none"/>
                     </g>
                 </svg>
                 <div class="tc-center">
-                    <div class="tc-modes">${modeBtn('track', 'ph-list-numbers')}${modeBtn('time', 'ph-clock')}</div>
-                    <span class="tc-score" id="tc-score"></span>
-                    <span class="tc-cap" id="tc-cap"></span>
+                    <div class="tc-ring" id="tc-ring" aria-hidden="true"></div>
+                    <div class="tc-player" id="tc-player"></div>
                     <div class="tc-track" id="tc-track"></div>
                 </div>
             </div>
-                        <button type="button" class="tc-nav" onclick="app.chartNav(1)" aria-label="${t('next')}" title="${t('next')}"><i class="ph-bold ph-caret-right"></i></button>
+            <button type="button" class="tc-nav" onclick="app.chartNav(1)" aria-label="${t('next')}" title="${t('next')}"><i class="ph-bold ph-caret-right"></i></button>
             </div>
             <p id="tc-info" class="tc-info" aria-live="polite"></p>`;
         this._tcLens = lens;
-        this.setChartScoreMode();
-                this.trackChartFocus(-1);
+        this.trackChartFocus(-1);
         this.renderChartTrack();
         this.bindTrackChartSpin();
+        this.pvProgress();
         // Plağın etrafındaki boş alana tıklanınca seçili parça bırakılır, ortada yine albüm puanı görünür
         if (!box._tcOutside) {
             box._tcOutside = true;
@@ -1602,7 +1981,7 @@ const app = {
                 const el = e.target;
                 if ((this._tcPinned ?? -1) < 0 || !el.isConnected || Date.now() - (this._tcDragEnd || 0) < 250) return;
                 // Plağın kendisi, ‹ › düğmeleri ve ortadaki puan modülü sayılmaz (plağın kare kutusunun boş köşeleri sayılır)
-                if (el.closest('.tc-nav, .tc-track') || (el.closest('.tc-svg') && !el.matches('.tc-svg'))) return;
+                if (el.closest('.tc-nav, .tc-track, .tc-player') || (el.closest('.tc-svg') && !el.matches('.tc-svg'))) return;
                 this._tcPinned = -1;
                 this._tcPend = null;
                 this.renderChartTrack();
@@ -1611,12 +1990,46 @@ const app = {
         }
     },
 
+    // Plağın ortası: ziyaretçide 30 saniyelik önizleme çalar; çalarken etiketin çevresinde ilerleme halkası döner
+    renderChartPlayer() {
+        const box = document.getElementById('tc-player'), center = box?.parentElement;
+        if (!box) return;
+        const al = AppState.currentModalAlbum, pv = this._pv && this._pv.al === al ? this._pv : null;
+        const pinned = center.classList.contains('is-track');
+        const show = !AppState.isAdmin && !pinned && !this.isThreeCol();
+        center.classList.toggle('is-player', show);
+        center.classList.toggle('is-playing', !!pv && !pv.loading);
+        center.closest('.tc-wrap')?.classList.toggle('is-bare', !pinned && !show);
+        if (!show) { box.innerHTML = ''; return; }
+        if (!pv) {
+            box.innerHTML = `<button type="button" class="tc-pbig" onclick="app.pvAlbum()" aria-label="${t('pv_play')}"><i class="ph-fill ph-play"></i></button><span class="tc-pcap">${t('pv_listen')}</span>`;
+            return;
+        }
+        if (pv.loading) { box.innerHTML = `<i class="ph-bold ph-spinner tc-pspin animate-spin" role="img" aria-label="${t('pv_loading')}"></i>`; return; }
+        const tr = al.tracks[pv.idx], paused = !this._pvAudio || this._pvAudio.paused;
+        box.innerHTML = `
+            <span class="tc-tnum">${Utils.escapeHTML(tr?.number || '')}.</span>
+            <span class="tc-ttitle">${Utils.escapeHTML(tr?.title || '')}</span>
+            <div class="tc-pbtns">
+                <button type="button" onclick="app.pvStep(-1)" aria-label="${t('prev')}"><i class="ph-fill ph-skip-back"></i></button>
+                <button type="button" class="main" onclick="app.pvToggle()" aria-label="${paused ? t('pv_play') : t('pv_pause')}"><i class="ph-fill ${paused ? 'ph-play' : 'ph-pause'}"></i></button>
+                <button type="button" onclick="app.pvStep(1)" aria-label="${t('next')}"><i class="ph-fill ph-skip-forward"></i></button>
+            </div>`;
+    },
+
+    chartCoverSrc() {
+        const img = document.getElementById('modal-cover'), al = AppState.currentModalAlbum;
+        if (img?.complete && img.naturalWidth > 0) return img.currentSrc || img.src;
+        return al?.coverData || '';
+    },
+
     // Plakta dilime tıklanınca ortada parçanın adı ve puan verme düğmeleri (− puan + ✓)
     renderChartTrack() {
         const box = document.getElementById('tc-track'), center = box?.parentElement;
         const al = AppState.currentModalAlbum, i = this._tcPinned ?? -1, tr = al?.tracks?.[i];
         if (!box) return;
         center.classList.toggle('is-track', !!tr);
+        this.renderChartPlayer();
         if (!tr) { box.innerHTML = ''; return; }
         const saved = tr.rating || 0;
         const v = this._tcPend?.i === i ? this._tcPend.v : saved;
@@ -1637,6 +2050,11 @@ const app = {
     chartNav(d) {
         const n = AppState.currentModalAlbum?.tracks?.length || 0;
         if (!n) return;
+        if (!AppState.isAdmin) {
+            const pv = this._pv && this._pv.al === AppState.currentModalAlbum ? this._pv : null;
+            if (!pv) this.pvStart(d > 0 ? 0 : n - 1); else if (!pv.loading) this.pvStep(d);
+            return;
+        }
         const cur = this._tcPinned ?? -1;
         this._tcPinned = cur < 0 ? (d > 0 ? 0 : n - 1) : (cur + d + n) % n;
         this._tcPend = null;
@@ -1729,6 +2147,7 @@ const app = {
                 st.angle += st.vel * dt;
             }
             rotor.setAttribute('transform', `rotate(${(st.angle % 360).toFixed(2)} 100 100)`);
+            rotor.style.setProperty('--rot', `${(st.angle % 360).toFixed(2)}deg`); // parça numaraları dik kalsın
             this._tcRaf = requestAnimationFrame(tick);
         };
         this._tcRaf = requestAnimationFrame(tick);
@@ -1739,11 +2158,15 @@ const app = {
         const info = document.getElementById('tc-info');
         if (!al || !info) return;
         if (sticky && Date.now() - (this._tcDragEnd || 0) < 250) return; // sürükleme bitişi dokunuş sayılmasın
-        if (sticky) { this._tcPinned = this._tcPinned === i ? -1 : i; this._tcPend = null; this.renderChartTrack(); }
+        if (sticky) {
+            if (AppState.isAdmin) { this._tcPinned = this._tcPinned === i ? -1 : i; this._tcPend = null; this.renderChartTrack(); }
+            this.pvPlay(i); // dilime dokununca o parçanın 30 saniyelik önizlemesi çalar
+        }
         if (i < 0 && this._tcPinned >= 0) i = this._tcPinned;
         if (i < 0 && this._pv?.al === al && !this._pv.loading) i = this._pv.idx; // çalan parçanın dilimi öne çıksın
         document.querySelectorAll('#modal-trackchart .tc-slice').forEach(p => p.classList.toggle('is-active', +p.dataset.i === i));
         document.querySelector('#modal-trackchart .tc-disc')?.classList.toggle('has-active', i >= 0);
+        this.renderSideSel();
         const fmt = s => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
         const tr = al.tracks?.[i];
         if (tr) {
@@ -1839,7 +2262,6 @@ const app = {
             al.status = prevStatus;
             this.renderModalStatus();
             this.persistIfSaved();
-            if (this._qr) this.renderQuickRate();
         });
     },
 
@@ -1863,103 +2285,6 @@ const app = {
         this.renderTracklist();
         this.scrollSelectedTrackIntoView();
         this.focusScrub();
-    },
-
-    // Hızlı puanlama: tam ekran kart, her puandan sonra sıradaki parça
-    openQuickRate() {
-        const al = AppState.currentModalAlbum;
-        if (!al?.tracks?.length) return;
-        if (this.scrub) this.saveScrub(false);
-        const first = al.tracks.findIndex(tr => !(tr.rating > 0));
-        this._qr = { idx: first >= 0 ? first : 0, done: false };
-        let el = document.getElementById('quick-rate');
-        if (!el) {
-            el = document.createElement('div');
-            el.id = 'quick-rate';
-            el.setAttribute('role', 'dialog');
-            el.setAttribute('aria-modal', 'true');
-            el.className = 'safe-pt fixed inset-0 z-[110] flex flex-col bg-lightBg dark:bg-dark';
-            document.body.appendChild(el);
-            document.addEventListener('keydown', (e) => {
-                if (!this._qr || !(/^(Escape|ArrowRight|ArrowLeft|[0-5])$/.test(e.key))) return;
-                e.stopPropagation(); // alttaki puan kutusu aynı tuşu ikinci kez işlemesin
-                if (e.key === 'Escape') { e.preventDefault(); e.stopImmediatePropagation(); this.closeQuickRate(); }
-                else if (e.key === 'ArrowRight') { e.preventDefault(); this.quickRateGo(1); }
-                else if (e.key === 'ArrowLeft') { e.preventDefault(); this.quickRateGo(-1); }
-                else if (/^[0-5]$/.test(e.key) && !this._qr.done) { e.preventDefault(); this.quickRatePick(e.key === '0' ? 0.5 : Number(e.key)); }
-            }, true);
-        }
-        el.classList.remove('hidden');
-        this.renderQuickRate();
-    },
-
-    renderQuickRate() {
-        const el = document.getElementById('quick-rate'), al = AppState.currentModalAlbum, q = this._qr;
-        if (!el || !al || !q) return;
-        const n = al.tracks.length;
-        const cover = document.getElementById('modal-cover')?.getAttribute('src') || '';
-        const head = `
-            <div class="flex items-center justify-between gap-3 mx-5 pt-3 pb-3 border-b-[3px] border-double border-[#241a13] dark:border-[#c9b8a6]">
-                <span class="flex items-center gap-2 text-[11px] font-bold tracking-[0.2em] uppercase"><i class="ph-bold ph-lightning text-sm text-[#a85a1a] dark:text-primary"></i>${t('quick_rate')}</span>
-                <span class="flex items-center gap-3">
-                    <span class="text-xs text-gray-600 dark:text-gray-400 tabular-nums">${q.done ? n : q.idx + 1} / ${n}</span>
-                    <button type="button" onclick="app.closeQuickRate()" aria-label="${t('close')}" class="w-10 h-10 -mr-2 rounded-full flex items-center justify-center hover:bg-lightHighlight dark:hover:bg-surface"><i class="ph-bold ph-x text-lg"></i></button>
-                </span>
-            </div>`;
-        if (q.done) {
-            const avg = al.averageScore || AlbumUtils.runningAvg(al);
-            el.innerHTML = `${head}
-                <div class="flex-1 min-h-0 flex flex-col items-center justify-center gap-5 px-6 text-center">
-                    <span class="score-badge ${al.averageScore > 0 ? '' : 'is-partial'} w-28 h-28 rounded-full flex items-center justify-center -rotate-[8deg] text-4xl font-black ${AlbumUtils.tier(avg).text}">${avg > 0 ? avg.toFixed(1) : '–'}</span>
-                    <p class="text-2xl font-black italic">${t('qr_done')}</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">${Utils.escapeHTML(al.title)} · ${Utils.escapeHTML(al.artist)}</p>
-                    <button type="button" onclick="app.closeQuickRate()" class="mt-2 h-12 px-8 rounded-full bg-gray-900 dark:bg-gray-100 text-lightBg dark:text-dark font-bold">${t('close')}</button>
-                </div>`;
-            return;
-        }
-        const tr = al.tracks[q.idx], r = tr.rating || 0;
-        const fmt = s => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
-        const chips = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map(v => `<button type="button" onclick="app.quickRatePick(${v})" aria-pressed="${r === v}" class="rate-chip qr-chip ${AlbumUtils.tier(v).text}">${v.toFixed(1)}</button>`).join('');
-        el.innerHTML = `${head}
-            <div class="flex-1 min-h-0 flex flex-col items-center justify-center gap-4 px-6 text-center">
-                ${cover ? `<img src="${Utils.escapeHTML(cover)}" alt="" class="qr-cover shadow-[0_14px_30px_rgba(36,26,19,0.3)] object-cover">` : ''}
-                <div class="flex flex-col items-center gap-1 min-w-0 max-w-full">
-                    <span class="text-xs text-gray-600 dark:text-gray-400 tabular-nums">${Utils.escapeHTML(tr.number)}.${tr.duration > 0 ? ` · ${fmt(tr.duration)}` : ''}</span>
-                    <h2 class="text-[28px] leading-tight font-black italic line-clamp-2 break-words">${Utils.escapeHTML(tr.title)}</h2>
-                    <span class="text-sm text-gray-600 dark:text-gray-400">${Utils.escapeHTML(al.artist)}</span>
-                </div>
-            </div>
-            <div class="w-full max-w-xl mx-auto px-5 pb-3">
-                <div class="grid grid-cols-5 gap-2" role="group" aria-label="${t('pick_rating')}">${chips}</div>
-                <div class="flex justify-between items-center mt-3" style="padding-bottom: env(safe-area-inset-bottom)">
-                    <button type="button" onclick="app.quickRateGo(-1)" ${q.idx === 0 ? 'disabled' : ''} class="h-11 px-4 rounded-full flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300 disabled:opacity-30 hover:bg-lightHighlight dark:hover:bg-surface"><i class="ph-bold ph-arrow-left"></i>${t('prev')}</button>
-                    <button type="button" onclick="app.quickRateGo(1)" class="h-11 px-4 rounded-full flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-lightHighlight dark:hover:bg-surface">${t('skip')}<i class="ph-bold ph-arrow-right"></i></button>
-                </div>
-            </div>`;
-    },
-
-    quickRatePick(v) {
-        const q = this._qr;
-        if (!q || q.done) return;
-        this.rateWithUndo(q.idx, v);
-        navigator.vibrate?.(8);
-        setTimeout(() => { if (this._qr === q) this.quickRateGo(1); }, 180);
-    },
-
-    quickRateGo(d) {
-        const q = this._qr, al = AppState.currentModalAlbum;
-        if (!q || !al) return;
-        if (q.done) { if (d < 0) { q.done = false; q.idx = al.tracks.length - 1; } }
-        else if (q.idx + d >= al.tracks.length) q.done = true;
-        else q.idx = Math.max(0, q.idx + d);
-        this.renderQuickRate();
-    },
-
-    closeQuickRate() {
-        this._qr = null;
-        document.getElementById('quick-rate')?.classList.add('hidden');
-        this.editingTrack = null;
-        this.renderTracklist();
     },
 
         // --- Önizleme oynatıcı: parçaların 30 saniyelik örnekleri sırayla çalar ---
@@ -2075,14 +2400,17 @@ const app = {
     },
 
     pvProgress() {
-        const a = this._pvAudio, bar = document.getElementById('pv-bar');
-        if (!a || !bar) return;
+        const a = this._pvAudio;
+        if (!a) return;
         const d = a.duration > 0 ? a.duration : 30, c = Math.min(a.currentTime || 0, d);
+        document.getElementById('tc-ring')?.style.setProperty('--p', (c / d).toFixed(4));
         const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
-        bar.querySelector('.pv-fill')?.style.setProperty('width', `${(c / d) * 100}%`);
-        const cur = bar.querySelector('.pv-cur'), tot = bar.querySelector('.pv-tot');
-        if (cur) cur.textContent = fmt(c);
-        if (tot) tot.textContent = fmt(d);
+        document.querySelectorAll('#pv-bar, #pv-box').forEach(bar => {
+            bar.querySelector('.pv-fill')?.style.setProperty('width', `${(c / d) * 100}%`);
+            const cur = bar.querySelector('.pv-cur'), tot = bar.querySelector('.pv-tot');
+            if (cur) cur.textContent = fmt(c);
+            if (tot) tot.textContent = fmt(d);
+        });
     },
 
     // Çalan parçayı listede, kapak düğmesinde, plakta ve alttaki mini oynatıcıda göster
@@ -2092,16 +2420,12 @@ const app = {
         const paused = !pv || pv.loading || !this._pvAudio || this._pvAudio.paused;
         content?.classList.toggle('pv-paused', paused);
         document.querySelectorAll('#modal-tracklist > button[data-track]').forEach(r => r.classList.toggle('pv-on', !!pv && !pv.loading && +r.dataset.track === pv.idx));
-        const btn = document.getElementById('pv-cover-btn');
-        if (btn) {
-            btn.classList.toggle('hidden', !al?.tracks?.length);
-            btn.innerHTML = pv
-                ? (pv.loading ? `<i class="pv-b ph-bold ph-spinner animate-spin"></i>${t('pv_loading')}` : `<span class="pv-eq" aria-hidden="true"><b></b><b></b><b></b></span>${paused ? t('pv_paused') : t('pv_playing')}`)
-                : `<i class="pv-b ph-fill ph-play"></i>${t('pv_listen')}`;
-        }
         if (document.querySelector('#modal-trackchart .tc-slice')) this.trackChartFocus(-1);
+        this.renderChartPlayer();
         let bar = document.getElementById('pv-bar');
-        if (!pv) { bar?.classList.add('hidden'); return; }
+        // Ziyaretçi plak görünümündeyken oynatıcı plağın ortasındadır, alttaki şerit gösterilmez
+        this.renderPvBox();
+        if (!pv || this.isThreeCol() || (!AppState.isAdmin && this._trackChart)) { bar?.classList.add('hidden'); return; }
         if (!bar && content) {
             bar = document.createElement('div');
             bar.id = 'pv-bar';
@@ -2127,6 +2451,429 @@ const app = {
         this.pvProgress();
     },
 
+    // --- Değişiklik günlüğü: kaydedilen her sürüm bir öncekiyle karşılaştırılır, farklar albümün günlüğüne yazılır ---
+    logSnap(al) {
+        return {
+            title: al.title || '', artist: al.artist || '', year: String(al.year ?? ''), label: al.label || '', cover: al.cover || '',
+            status: AlbumUtils.status(al), hidden: !!al.hidden, shelf: !!al.shelfAt, loop: !!al.loopAt, note: al.note || '',
+            genres: [...(al.genres || [])], tags: [...(al.tags || [])], listens: (al.listens || []).length,
+            tracks: (al.tracks || []).map((tr, i) => ({ id: String(tr.id ?? `#${i}`), title: tr.title || '', rating: tr.rating || 0, note: tr.note || '' }))
+        };
+    },
+
+    logDiff(a, b) {
+        const out = [];
+        const add = (k, x, y, w) => out.push({ k, ...(x !== undefined ? { a: String(x) } : {}), ...(y !== undefined ? { b: String(y) } : {}), ...(w !== undefined ? { w: String(w) } : {}) });
+        if (!a) { add('added'); return out; }
+        ['title', 'artist', 'year', 'label'].forEach(f => { if (a[f] !== b[f]) add(f, a[f], b[f]); });
+        if (a.cover !== b.cover) add('cover');
+        if (a.status !== b.status) add('status', a.status, b.status);
+        if (a.hidden !== b.hidden) add(b.hidden ? 'hidden_on' : 'hidden_off');
+        if (a.shelf !== b.shelf) add(b.shelf ? 'shelf_on' : 'shelf_off');
+        if (a.loop !== b.loop) add(b.loop ? 'loop_on' : 'loop_off');
+        if (a.note !== b.note) add('note');
+        const sets = (k, x, y) => { y.filter(v => !x.includes(v)).forEach(v => add(`${k}_add`, undefined, v)); x.filter(v => !y.includes(v)).forEach(v => add(`${k}_del`, v)); };
+        sets('genre', a.genres, b.genres);
+        sets('tag', a.tags, b.tags);
+        if (b.listens > a.listens) add('listen'); else if (b.listens < a.listens) add('listen_del');
+        const old = new Map(a.tracks.map(tr => [tr.id, tr]));
+        b.tracks.forEach(tr => {
+            const o = old.get(tr.id);
+            if (!o) { add('track_add', undefined, tr.title); return; }
+            old.delete(tr.id);
+            if (o.title !== tr.title) add('track_title', o.title, tr.title);
+            if (o.rating !== tr.rating) add('rate', o.rating, tr.rating, tr.title);
+            if (o.note !== tr.note) add('track_note', undefined, undefined, tr.title);
+        });
+        old.forEach(o => add('track_del', o.title));
+        return out;
+    },
+
+    // Kaydetmeden hemen önce çağrılır: farkları hem kaydedilen kopyaya hem açık penceredeki albüme ekler
+    logChanges(album) {
+        const base = this._logBase || (this._logBase = new Map());
+        const snap = this.logSnap(album);
+        const entries = this.logDiff(base.get(album.id), snap);
+        base.set(album.id, snap);
+        if (!entries.length) return;
+        const at = new Date().toISOString();
+        const push = (obj) => {
+            const log = obj.log || (obj.log = []);
+            entries.forEach(e => log.push({ t: at, ...e }));
+            if (log.length > 400) log.splice(0, log.length - 400);
+        };
+        push(album);
+        const lib = AppState.library.find(a => a.id === album.id), cur = AppState.currentModalAlbum;
+        if (lib && lib !== album) push(lib);
+        if (cur && cur.id === album.id && cur !== album) push(cur);
+    },
+
+    logText(e) {
+        const en = AppState.language === 'en';
+        const q = s => `<i>${Utils.escapeHTML(s ?? '')}</i>`;
+        const sc = v => (+v > 0 ? (+v).toFixed(1) : '–');
+        const st = v => Utils.escapeHTML(t(`status_${v}`) || v || '');
+        const T = en ? {
+            added: 'Added to the library', title: `Title: ${q(e.a)} → ${q(e.b)}`, artist: `Artist: ${q(e.a)} → ${q(e.b)}`, year: `Year: ${q(e.a)} → ${q(e.b)}`, label: `Label: ${q(e.a)} → ${q(e.b)}`,
+            cover: 'Cover changed', status: `Status: ${st(e.a)} → ${st(e.b)}`, hidden_on: 'Hidden from visitors', hidden_off: 'Shown to visitors',
+            shelf_on: 'Added to the shelf', shelf_off: 'Removed from the shelf', loop_on: 'Put on loop', loop_off: 'Taken off loop', note: 'Review edited',
+            genre_add: `Genre added: ${q(e.b)}`, genre_del: `Genre removed: ${q(e.a)}`, tag_add: `Tag added: #${q(e.b)}`, tag_del: `Tag removed: #${q(e.a)}`,
+            listen: 'Listen logged', listen_del: 'Listen deleted', track_add: `Track added: ${q(e.b)}`, track_del: `Track removed: ${q(e.a)}`,
+            track_title: `Track renamed: ${q(e.a)} → ${q(e.b)}`, rate: `${q(e.w)}: ${sc(e.a)} → <b>${sc(e.b)}</b>`, track_note: `Track note edited: ${q(e.w)}`
+        } : {
+            added: 'Kitaplığa eklendi', title: `Albüm adı: ${q(e.a)} → ${q(e.b)}`, artist: `Sanatçı: ${q(e.a)} → ${q(e.b)}`, year: `Yıl: ${q(e.a)} → ${q(e.b)}`, label: `Plak şirketi: ${q(e.a)} → ${q(e.b)}`,
+            cover: 'Kapak değişti', status: `Durum: ${st(e.a)} → ${st(e.b)}`, hidden_on: 'Ziyaretçilerden gizlendi', hidden_off: 'Ziyaretçilere açıldı',
+            shelf_on: 'Rafa eklendi', shelf_off: 'Raftan çıkarıldı', loop_on: "Loop'a alındı", loop_off: "Loop'tan çıkarıldı", note: 'İnceleme düzenlendi',
+            genre_add: `Tür eklendi: ${q(e.b)}`, genre_del: `Tür silindi: ${q(e.a)}`, tag_add: `Etiket eklendi: #${q(e.b)}`, tag_del: `Etiket silindi: #${q(e.a)}`,
+            listen: 'Dinleyiş kaydedildi', listen_del: 'Dinleyiş silindi', track_add: `Parça eklendi: ${q(e.b)}`, track_del: `Parça silindi: ${q(e.a)}`,
+            track_title: `Parça adı: ${q(e.a)} → ${q(e.b)}`, rate: `${q(e.w)}: ${sc(e.a)} → <b>${sc(e.b)}</b>`, track_note: `Parça notu düzenlendi: ${q(e.w)}`
+        };
+        return T[e.k] || Utils.escapeHTML(e.k);
+    },
+
+    openLog() {
+        const al = AppState.currentModalAlbum;
+        if (!al) return;
+        this.toggleModalMenu(false);
+        const log = (al.log || []).slice().reverse();
+        const time = iso => { const d = new Date(iso); return isNaN(d) ? '' : `${Utils.formatDate(iso)} · ${d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}`; };
+        let last = '';
+        const rows = log.map(e => {
+            const day = Utils.formatDate(e.t);
+            const head = day !== last ? `<h3 class="ra-log-day">${Utils.escapeHTML(day)}</h3>` : '';
+            last = day;
+            return `${head}<div class="ra-log-row"><span class="ra-log-time">${Utils.escapeHTML(time(e.t).split(' · ')[1] || '')}</span><span class="min-w-0">${this.logText(e)}</span></div>`;
+        }).join('');
+        this.openSheet('log', `${t('change_log')} · ${Utils.escapeHTML(al.title)}`, rows || `<p class="text-sm italic text-gray-600 dark:text-gray-400">${t('log_empty')}</p>`);
+    },
+
+    // Albümü ziyaretçilere göster / gizle
+    toggleHidden() {
+        const al = AppState.currentModalAlbum;
+        if (!al) return;
+        this.toggleModalMenu(false);
+        if (al.hidden) delete al.hidden; else al.hidden = true;
+        this.updateHiddenButton();
+        if (!this.persistIfSaved()) this.updateModalButtons();
+        showToast(t(al.hidden ? 'toast_hidden' : 'toast_shown'), 'info');
+    },
+
+    updateHiddenButton() {
+        const btn = document.getElementById('hidden-btn'), al = AppState.currentModalAlbum;
+        if (!btn || !al) return;
+        const label = t(al.hidden ? 'show_to_visitors' : 'hide_from_visitors');
+        btn.setAttribute('aria-label', label);
+        btn.title = label;
+        btn.setAttribute('aria-pressed', !!al.hidden);
+        btn.innerHTML = `<i class="ph-bold ${al.hidden ? 'ph-eye-slash' : 'ph-eye'} text-lg"></i>`;
+    },
+
+    // --- Ortak panel (günlük, öneri formu, gelen kutusu) ---
+    openSheet(id, title, html) {
+        let el = document.getElementById('ra-sheet');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'ra-sheet';
+            el.className = 'fixed inset-0 z-[160] hidden items-end md:items-center justify-center bg-black/60 backdrop-blur-sm';
+            el.addEventListener('click', e => { if (e.target === el) this.closeSheet(); });
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape' && !el.classList.contains('hidden')) { e.preventDefault(); e.stopImmediatePropagation(); this.closeSheet(); }
+            }, true);
+            document.body.appendChild(el);
+        }
+        this._sheetReturn = document.activeElement;
+        el.dataset.sheet = id;
+        el.innerHTML = `
+            <div role="dialog" aria-modal="true" aria-labelledby="ra-sheet-title" class="ra-sheet-card">
+                <div class="flex items-center justify-between gap-3 pb-2 border-b-[3px] border-double border-gray-900 dark:border-[#6b5442] flex-shrink-0">
+                    <h2 id="ra-sheet-title" class="text-xs tracking-[0.2em] font-bold uppercase truncate">${title}</h2>
+                    <button type="button" onclick="app.closeSheet()" aria-label="${t('close')}" class="w-10 h-10 -mr-2 rounded-full flex items-center justify-center flex-shrink-0 hover:bg-lightHighlight dark:hover:bg-surface"><i class="ph-bold ph-x text-lg"></i></button>
+                </div>
+                <div id="ra-sheet-body" class="ra-sheet-body">${html}</div>
+            </div>`;
+        el.classList.remove('hidden');
+        el.classList.add('flex');
+        (el.querySelector('#ra-sheet-body input:not(.ra-hp), #ra-sheet-body textarea') || el.querySelector('button'))?.focus({ preventScroll: true });
+    },
+
+    closeSheet() {
+        const el = document.getElementById('ra-sheet');
+        if (!el || el.classList.contains('hidden')) return;
+        el.classList.add('hidden');
+        el.classList.remove('flex');
+        el.innerHTML = '';
+        this._sheetReturn?.focus?.({ preventScroll: true });
+    },
+
+    // --- Ziyaretçi önerileri ---
+    openSuggest() {
+        this.openSheet('suggest', t('suggest_title'), `
+            <form onsubmit="app.sendSuggestion(event)" class="flex flex-col gap-3">
+                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">${t('suggest_intro')}</p>
+                <input name="album" required maxlength="120" autocomplete="off" placeholder="${t('suggest_album')}" aria-label="${t('suggest_album')}" class="ra-input">
+                <input name="artist" required maxlength="120" autocomplete="off" placeholder="${t('suggest_artist')}" aria-label="${t('suggest_artist')}" class="ra-input">
+                <textarea name="note" maxlength="600" rows="3" placeholder="${t('suggest_note')}" aria-label="${t('suggest_note')}" class="ra-input"></textarea>
+                <input name="name" maxlength="60" autocomplete="nickname" placeholder="${t('your_name')}" aria-label="${t('your_name')}" class="ra-input">
+                <input name="website" tabindex="-1" autocomplete="off" class="ra-hp" aria-hidden="true">
+                <button type="submit" class="h-12 rounded-full bg-gray-900 dark:bg-gray-100 text-lightBg dark:text-dark text-sm font-bold active:scale-[.98] transition-transform">${t('send')}</button>
+            </form>`);
+    },
+
+    async sendSuggestion(e) {
+        e.preventDefault();
+        const f = e.target, v = n => (f.elements[n]?.value || '').trim();
+        if (v('website')) { this.closeSheet(); return; } // otomatik doldurulmuş: bot
+        const btn = f.querySelector('[type=submit]');
+        btn.disabled = true;
+        try {
+            await setDoc(doc(collection(db, 'oneriler')), {
+                owner: OWNER_UID, album: v('album').slice(0, 120), artist: v('artist').slice(0, 120),
+                note: v('note').slice(0, 600), name: v('name').slice(0, 60), createdAt: new Date().toISOString()
+            });
+            this.closeSheet();
+            showToast(t('suggest_sent'), 'success');
+        } catch (err) {
+            btn.disabled = false;
+            showToast(t('send_failed'), 'error');
+        }
+    },
+
+    // --- Yorumlar: ziyaretçi yazar, yönetici onaylayınca görünür ---
+    commentsHTML(ctx) {
+        return `<section class="ra-comments" aria-labelledby="cmt-h-${ctx}">
+            <h4 id="cmt-h-${ctx}" class="ra-cmt-head">${t('comments').toUpperCase()}</h4>
+            <div id="cmt-list-${ctx}" class="flex flex-col gap-3"><p class="text-sm text-gray-600 dark:text-gray-400">${t('loading')}</p></div>
+            ${AppState.isAdmin ? '' : `<form onsubmit="app.sendComment(event)" class="flex flex-col gap-2 mt-3">
+                <textarea name="text" required maxlength="1000" rows="3" placeholder="${t('comment_ph')}" aria-label="${t('comment_ph')}" class="ra-input"></textarea>
+                <div class="flex gap-2">
+                    <input name="name" maxlength="60" autocomplete="nickname" placeholder="${t('your_name')}" aria-label="${t('your_name')}" class="ra-input flex-1 min-w-0">
+                    <input name="website" tabindex="-1" autocomplete="off" class="ra-hp" aria-hidden="true">
+                    <button type="submit" class="h-11 px-5 rounded-full bg-gray-900 dark:bg-gray-100 text-lightBg dark:text-dark text-sm font-bold flex-shrink-0">${t('send')}</button>
+                </div>
+                <p class="text-[11px] text-gray-600 dark:text-gray-400">${t('comment_note')}</p>
+            </form>`}
+        </section>`;
+    },
+
+    commentItem(c, inbox = false) {
+        const admin = AppState.isAdmin;
+        const name = (c.name || '').trim() || t('anonymous');
+        return `<article class="ra-cmt${c.approved ? '' : ' is-pending'}${inbox ? (this.isInboxRead(c.id) ? ' is-read' : ' is-unread') : ''}">
+            <div class="flex items-baseline justify-between gap-3">
+                <span class="text-sm font-bold">${Utils.escapeHTML(name)}${inbox && c.albumTitle ? ` <span class="font-normal text-gray-600 dark:text-gray-400">· </span><button type="button" onclick="app.closeSheet(); app.openAlbumModal('${Utils.escapeHTML(c.albumId)}')" class="album-name italic font-bold hover:underline">${Utils.escapeHTML(c.albumTitle)}</button>` : ''}</span>
+                <time class="text-[11px] text-gray-600 dark:text-gray-400 flex-shrink-0">${Utils.escapeHTML(Utils.formatDate(c.createdAt))}</time>
+            </div>
+            <p class="mt-1 text-[15px] leading-relaxed whitespace-pre-line">${Utils.escapeHTML(c.text || '')}</p>
+            ${admin ? `<div class="flex flex-wrap items-center gap-2 mt-2">${inbox ? this.inboxReadBtn(c.id) : ''}
+                ${c.approved ? '' : `<span class="ra-pill">${t('pending')}</span><button type="button" onclick="app.approveComment('${Utils.escapeHTML(c.id)}')" class="ra-mini is-ok"><i class="ph-bold ph-check"></i>${t('approve')}</button>`}
+                <button type="button" onclick="app.deleteComment('${Utils.escapeHTML(c.id)}')" class="ra-mini is-del"><i class="ph-bold ph-trash"></i>${t('delete')}</button>
+            </div>` : ''}
+        </article>`;
+    },
+
+    async loadComments(ctx) {
+        const al = AppState.currentModalAlbum, box = document.getElementById(`cmt-list-${ctx}`);
+        if (!al || !box) return;
+        const list = [];
+        try {
+            const col = collection(db, 'yorumlar');
+            const sets = [query(col, where('albumId', '==', al.id), where('approved', '==', true))];
+            if (AppState.isAdmin) sets.push(query(col, where('albumId', '==', al.id), where('approved', '==', false)));
+            for (const q of sets) (await getDocs(q)).forEach(d => list.push({ id: d.id, ...d.data() }));
+        } catch (e) {
+            box.innerHTML = `<p class="text-sm text-gray-600 dark:text-gray-400">${t('comments_failed')}</p>`;
+            return;
+        }
+        if (AppState.currentModalAlbum?.id !== al.id) return;
+        list.sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)));
+        box.innerHTML = list.length ? list.map(c => this.commentItem(c)).join('') : `<p class="text-sm italic text-gray-600 dark:text-gray-400">${t('no_comments')}</p>`;
+    },
+
+    refreshComments() {
+        document.querySelectorAll('[id^="cmt-list-"]').forEach(el => this.loadComments(el.id.slice(9)));
+        if (document.getElementById('ra-sheet')?.dataset.sheet === 'inbox' && !document.getElementById('ra-sheet').classList.contains('hidden')) this.openInbox();
+        this.refreshInboxCount();
+    },
+
+    async sendComment(e) {
+        e.preventDefault();
+        const al = AppState.currentModalAlbum, f = e.target, v = n => (f.elements[n]?.value || '').trim();
+        if (!al) return;
+        if (v('website')) { f.reset(); return; }
+        const btn = f.querySelector('[type=submit]');
+        btn.disabled = true;
+        try {
+            await setDoc(doc(collection(db, 'yorumlar')), {
+                owner: OWNER_UID, albumId: String(al.id), albumTitle: String(al.title || '').slice(0, 200),
+                name: v('name').slice(0, 60), text: v('text').slice(0, 1000), createdAt: new Date().toISOString(), approved: false
+            });
+            f.reset();
+            showToast(t('comment_sent'), 'success');
+        } catch (err) {
+            showToast(t('send_failed'), 'error');
+        }
+        btn.disabled = false;
+    },
+
+    async approveComment(id) {
+        try { await setDoc(doc(db, 'yorumlar', id), { approved: true }, { merge: true }); showToast(t('comment_approved'), 'success'); }
+        catch (e) { showToast(t('send_failed'), 'error'); }
+        this.refreshComments();
+    },
+
+    async deleteComment(id) {
+        if (!confirm(t('confirm_delete_comment'))) return;
+        try { await deleteDoc(doc(db, 'yorumlar', id)); } catch (e) { showToast(t('send_failed'), 'error'); }
+        this.refreshComments();
+    },
+
+    // --- Yönetici gelen kutusu: onay bekleyen yorumlar ve albüm önerileri ---
+    async fetchInbox() {
+        const sug = [], pend = [];
+        (await getDocs(collection(db, 'oneriler'))).forEach(d => sug.push({ id: d.id, ...d.data() }));
+        (await getDocs(query(collection(db, 'yorumlar'), where('approved', '==', false)))).forEach(d => pend.push({ id: d.id, ...d.data() }));
+        const byDate = (a, b) => String(b.createdAt).localeCompare(String(a.createdAt));
+        await this.loadInboxRead();
+        return { sug: sug.sort(byDate), pend: pend.sort(byDate) };
+    },
+
+    // Okundu bilgisi: yöneticinin kitaplığında ayrı bir kayıt (albüm değil, listede görünmez)
+    async loadInboxRead() {
+        if (this._inboxRead) return this._inboxRead;
+        this._inboxRead = new Set();
+        const uid = auth.currentUser?.uid;
+        if (!uid) return this._inboxRead;
+        try {
+            const snap = await getDoc(doc(db, 'kitaplik', `${uid}__inbox`));
+            (snap.exists() ? snap.data()?.inbox?.read || [] : []).forEach(id => this._inboxRead.add(id));
+        } catch (e) {}
+        return this._inboxRead;
+    },
+
+    isInboxRead(id) { return !!this._inboxRead?.has(id); },
+
+    async setInboxRead(ids, read) {
+        const uid = auth.currentUser?.uid;
+        if (!uid) return;
+        const set = await this.loadInboxRead();
+        ids.forEach(id => read ? set.add(id) : set.delete(id));
+        // Silinmiş girdilerin izini tutma
+        const alive = new Set([...(this._inboxSug || []), ...(this._inboxPend || [])].map(x => x.id));
+        if (alive.size) [...set].forEach(id => { if (!alive.has(id)) set.delete(id); });
+        this.openInbox();
+        this.updateInboxBadge();
+        try { await setDoc(doc(db, 'kitaplik', `${uid}__inbox`), { id: '__inbox', user_id: uid, inbox: { read: [...set], updatedAt: new Date().toISOString() } }); }
+        catch (e) { showToast(t('send_failed'), 'error'); }
+    },
+
+    toggleInboxRead(id) { this.setInboxRead([id], !this.isInboxRead(id)); },
+
+    markAllInboxRead() { this.setInboxRead([...(this._inboxSug || []), ...(this._inboxPend || [])].map(x => x.id), true); },
+
+    inboxReadBtn(id) {
+        const read = this.isInboxRead(id);
+        return `<button type="button" onclick="app.toggleInboxRead('${Utils.escapeHTML(id)}')" class="ra-mini" aria-pressed="${read}"><i class="ph-bold ${read ? 'ph-envelope-simple' : 'ph-envelope-open'}"></i>${t(read ? 'mark_unread' : 'mark_read')}</button>`;
+    },
+
+    // Rozet ve başlıktaki nokta yalnız okunmamış girdi varken görünür
+    updateInboxBadge() {
+        const n = [...(this._inboxSug || []), ...(this._inboxPend || [])].filter(x => !this.isInboxRead(x.id)).length;
+        const badge = document.getElementById('inbox-count'), dot = document.getElementById('inbox-dot');
+        if (badge) { badge.textContent = n; badge.classList.toggle('hidden', !n); }
+        dot?.classList.toggle('hidden', !n);
+    },
+
+    async refreshInboxCount() {
+        if (!AppState.isAdmin) return;
+        try { const { sug, pend } = await this.fetchInbox(); this._inboxSug = sug; this._inboxPend = pend; } catch (e) { return; }
+        this.updateInboxBadge();
+    },
+
+    async openInbox() {
+        if (document.getElementById('right-sidebar') && !document.getElementById('right-sidebar').classList.contains('translate-x-full')) this.toggleSidebar(false);
+        if (document.getElementById('ra-sheet')?.dataset.sheet !== 'inbox' || document.getElementById('ra-sheet').classList.contains('hidden')) this.openSheet('inbox', t('inbox'), `<p class="text-sm text-gray-600 dark:text-gray-400">${t('loading')}</p>`);
+        let data;
+        try { data = await this.fetchInbox(); } catch (e) {
+            const body = document.getElementById('ra-sheet-body');
+            if (body) body.innerHTML = `<p class="text-sm text-gray-600 dark:text-gray-400">${t('comments_failed')}</p>`;
+            return;
+        }
+        const body = document.getElementById('ra-sheet-body');
+        if (!body) return;
+        const sug = data.sug.map(s => `<article class="ra-cmt${this.isInboxRead(s.id) ? ' is-read' : ' is-unread'}">
+            <div class="flex items-baseline justify-between gap-3">
+                <span class="min-w-0"><span class="album-name italic font-bold">${Utils.escapeHTML(s.album)}</span> <span class="text-gray-700 dark:text-gray-300">· ${Utils.escapeHTML(s.artist)}</span></span>
+                <time class="text-[11px] text-gray-600 dark:text-gray-400 flex-shrink-0">${Utils.escapeHTML(Utils.formatDate(s.createdAt))}</time>
+            </div>
+            ${s.note ? `<p class="mt-1 text-[15px] leading-relaxed whitespace-pre-line">${Utils.escapeHTML(s.note)}</p>` : ''}
+            <div class="flex flex-wrap items-center gap-2 mt-2">
+                <span class="text-[12px] text-gray-600 dark:text-gray-400 mr-auto">— ${Utils.escapeHTML((s.name || '').trim() || t('anonymous'))}</span>
+                ${this.inboxReadBtn(s.id)}
+                <button type="button" onclick="app.searchSuggestion('${Utils.escapeHTML(s.id)}')" class="ra-mini is-ok"><i class="ph-bold ph-magnifying-glass"></i>${t('search_btn')}</button>
+                <button type="button" onclick="app.deleteSuggestion('${Utils.escapeHTML(s.id)}')" class="ra-mini is-del"><i class="ph-bold ph-trash"></i>${t('delete')}</button>
+            </div>
+        </article>`).join('');
+        this._inboxSug = data.sug;
+        this._inboxPend = data.pend;
+        const unread = [...data.sug, ...data.pend].filter(x => !this.isInboxRead(x.id)).length;
+        body.innerHTML = `
+            ${unread ? `<div class="flex justify-end -mt-1 mb-3"><button type="button" onclick="app.markAllInboxRead()" class="ra-mini"><i class="ph-bold ph-checks"></i>${t('mark_all_read')}</button></div>` : ''}
+            <h3 class="ra-cmt-head">${t('pending_comments')} · ${data.pend.length}</h3>
+            <div class="flex flex-col gap-3 mb-6">${data.pend.length ? data.pend.map(c => this.commentItem(c, true)).join('') : `<p class="text-sm italic text-gray-600 dark:text-gray-400">${t('nothing_here')}</p>`}</div>
+            <h3 class="ra-cmt-head">${t('suggestions')} · ${data.sug.length}</h3>
+            <div class="flex flex-col gap-3">${sug || `<p class="text-sm italic text-gray-600 dark:text-gray-400">${t('nothing_here')}</p>`}</div>`;
+        this.updateInboxBadge();
+    },
+
+    searchSuggestion(id) {
+        const s = (this._inboxSug || []).find(x => x.id === id);
+        if (!s) return;
+        this.closeSheet();
+        this.showView('search');
+        const input = document.getElementById('search-input');
+        if (input) { input.value = `${s.artist} ${s.album}`.trim(); this.search(); }
+    },
+
+    async deleteSuggestion(id) {
+        if (!confirm(t('confirm_delete_suggestion'))) return;
+        try { await deleteDoc(doc(db, 'oneriler', id)); } catch (e) { showToast(t('send_failed'), 'error'); }
+        this.openInbox();
+        this.refreshInboxCount();
+    },
+
+    // Ziyaretçi menüsü (avatarın altında açılır): albüm öner, tema, dil, özet, yönetici girişi
+    toggleVisitorMenu(force) {
+        const menu = document.getElementById('visitor-menu'), btn = document.getElementById('header-user-btn');
+        if (!menu) return;
+        const open = typeof force === 'boolean' ? force : menu.classList.contains('hidden');
+        menu.classList.toggle('hidden', !open);
+        btn?.setAttribute('aria-expanded', open);
+        if (open) this.updateVisitorMenu();
+        if (open && !this._vmBound) {
+            this._vmBound = true;
+            document.addEventListener('click', (e) => { if (!menu.classList.contains('hidden') && !e.target.closest('#user-menu-wrap')) this.toggleVisitorMenu(false); }, true);
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.classList.contains('hidden')) { this.toggleVisitorMenu(false); btn?.focus(); } }, true);
+        }
+    },
+
+    updateVisitorMenu() {
+        const dark = document.documentElement.classList.contains('dark');
+        const tv = document.getElementById('vm-theme-val'), ti = document.getElementById('vm-theme-icon'), lv = document.getElementById('vm-lang-val');
+        if (tv) tv.textContent = t(dark ? 'theme_dark' : 'theme_light');
+        if (ti) ti.className = `ph-bold ${dark ? 'ph-moon' : 'ph-sun'}`;
+        if (lv) lv.textContent = AppState.language === 'en' ? 'English' : 'Türkçe';
+    },
+
+    // Döngü kartının çerçevesi iki kartın tam ortasından geçsin: ızgaranın boşlukları CSS'e aktarılır
+    syncGridGaps() {
+        const grid = document.getElementById('library-grid');
+        if (!grid) return;
+        const cs = getComputedStyle(grid);
+        grid.style.setProperty('--gx', cs.columnGap);
+        grid.style.setProperty('--gy', cs.rowGap);
+        if (!this._gapBound) { this._gapBound = true; window.addEventListener('resize', () => { clearTimeout(this._gapT); this._gapT = setTimeout(() => this.syncGridGaps(), 120); }); }
+    },
+
     async signOut() {
         await signOut(auth);
         this.toggleSidebar(false);
@@ -2142,8 +2889,14 @@ const app = {
             const list = [];
             snap.forEach((docSnap) => { const data = docSnap.data(); if (data && data.album_data) list.push(data.album_data); });
             // Ziyaretçi yalnızca puanlaması tamamlanmış albümleri görür; Loop'taki albüm bitmemiş olsa da kartta görünür
-            AppState.loopPick = AlbumUtils.loopPick(list);
-            return AppState.isAdmin ? list : list.filter(a => (a.averageScore || 0) > 0);
+            // Albüm puanı süreye göre ağırlıklı: eski kayıtlar da ekranda bu hesapla gösterilir
+            list.forEach(a => { if ((a.averageScore || 0) > 0) { a.averageScore = AlbumUtils.runningAvg(a); if (!a.completedAt) a.completedAt = a.sortAt || a.updatedAt || a.dateAdded; } });
+            // Değişiklik günlüğü için her albümün kayıtlı hali
+            this._logBase = new Map(list.map(a => [a.id, this.logSnap(a)]));
+            const pick = AlbumUtils.loopPick(list);
+            AppState.loopPick = pick && !pick.hidden ? pick : null;
+            // Ziyaretçi: yalnızca puanlaması bitmiş ve gizlenmemiş albümler
+            return AppState.isAdmin ? list : list.filter(a => (a.averageScore || 0) > 0 && !a.hidden);
         };
         this._lastLoad = Date.now();
 
@@ -2169,6 +2922,7 @@ const app = {
             if (AppState.currentView === 'stats') this.renderStats();
             this.cacheMissingCovers();
             this.backfillDurations();
+            this.refreshInboxCount();
         }
     },
 
@@ -2271,6 +3025,7 @@ const app = {
     async saveAlbumData(album, opts = {}) {
         const user = auth.currentUser;
         if (!user) return;
+        this.logChanges(album);
         try {
             await setDoc(doc(db, 'kitaplik', `${user.uid}_${album.id}`), {
                 id: album.id.toString(),
@@ -2705,6 +3460,10 @@ const app = {
 
         const fragment = document.createDocumentFragment();
 
+        // Döngüdeki albüm her zaman ilk sırada, iki kart genişliğinde (filtre yokken)
+        const loop = this._loopCard && !(fGroup || fYear || fGenre || fLabel || fStatus) ? this._loopCard : null;
+        if (loop) filtered = [AppState.library.find(a => a.id === loop.id) || loop.album, ...filtered.filter(a => a.id !== loop.id)];
+
         const isXSmall = AppState.gridSize === 'xsmall';
         const isSmall = AppState.gridSize === 'small';
 
@@ -2731,10 +3490,12 @@ const app = {
 
             // Puanlamanın bittiği tarih: kapağın sol üstünde minik etiket
             const doneAt = avg > 0 ? (album.completedAt || album.sortAt || album.updatedAt || album.dateAdded) : '';
-            const doneLabel = doneAt ? new Date(doneAt).toLocaleDateString(AppState.language === 'en' ? 'en-GB' : 'tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
-            const dateBadge = doneLabel ? `<time datetime="${Utils.escapeHTML(doneAt)}" title="${t('rated_on')}: ${doneLabel}" class="ac-date">${doneLabel}</time>` : `<span class="ac-date" aria-hidden="true">&nbsp;</span>`;
+            const doneLabel = doneAt ? new Date(doneAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+            const isLoop = !!loop && album.id === loop.id;
+            const fav = isLoop ? (album.tracks || []).filter(tr => tr.rating > 0).sort((a, b) => b.rating - a.rating || parseInt(a.number) - parseInt(b.number))[0] : null;
+            const dateBadge = isLoop ? `<span class="ac-date loop-date"><i class="ph-bold ph-repeat"></i>${t('loop_title')}</span>` : doneLabel ? `<time datetime="${Utils.escapeHTML(doneAt)}" title="${t('rated_on')}: ${doneLabel}" class="ac-date">${doneLabel}</time>` : `<span class="ac-date" aria-hidden="true">&nbsp;</span>`;
 
-            const progressBar = (avg === 0 && prog.rated > 0)
+            const progressBar = (!isLoop && avg === 0 && prog.rated > 0)
                 ? `<div class="h-0.5 mt-2 bg-[#e6dbcf] dark:bg-[#3b2b20]" role="progressbar" aria-valuenow="${prog.pct}" aria-valuemin="0" aria-valuemax="100"><div class="h-full bg-[#a85a1a] dark:bg-primary" style="width:${prog.pct}%"></div></div>`
                 : '';
 
@@ -2756,11 +3517,12 @@ const app = {
             card.innerHTML = `
                 ${dateBadge}<div class="relative w-full pt-[100%] shrink-0 overflow-hidden bg-lightHighlight dark:bg-surface shadow-[0_10px_22px_rgba(36,26,19,0.22)] dark:shadow-[0_10px_22px_rgba(0,0,0,0.55)] transition-transform duration-300 group-hover:-translate-y-1 group-active:scale-[0.98]">
                     <img loading="lazy" ${AlbumUtils.coverAttrs(album)} alt="" class="absolute inset-0 w-full h-full object-cover object-center">
-                    <div class="ac-record" aria-hidden="true"></div>                     
+                    <div class="ac-record" aria-hidden="true"></div>
+                    ${AppState.isAdmin && album.hidden ? `<span class="ac-hidden" title="${t('hidden_badge')}" aria-label="${t('hidden_badge')}"><i class="ph-bold ph-eye-slash"></i></span>` : ''}                     
                 </div>
                 <div class="ac-body flex items-start justify-between">
                     <div class="min-w-0 flex-1">
-                        <h3 class="ac-title font-black italic leading-tight break-words text-gray-900 dark:text-white" title="${title}">${title}</h3>
+                        <h3 class="ac-title album-name font-black italic leading-tight break-words" title="${title}">${title}</h3>
                                                 <p class="ac-meta text-gray-600 dark:text-gray-400 min-w-0">
                             <button onclick="event.stopPropagation(); app.searchFromLink(this.textContent)" class="block max-w-full break-words hover:underline text-left">${artist}</button>
                         </p>
@@ -2769,21 +3531,45 @@ const app = {
                     ${badge}
                 </div>
                 ${progressBar}
+                ${isLoop && fav ? `<p class="ac-sub loop-fav truncate">${t('loop_best')}: <i class="font-bold text-gray-900 dark:text-white">${Utils.escapeHTML(fav.title)}</i> <b class="${AlbumUtils.tier(fav.rating).text}">${fav.rating.toFixed(1)}</b></p>` : ''}
             `;
+            if (isLoop) {
+                // Döngüdeki albüm: normal kart boyunda, turuncu çerçeveli, en sevilen parçası altında
+                const wrap = document.createElement('div');
+                wrap.className = 'loop-card';
+                wrap.appendChild(card);
+                fragment.appendChild(wrap);
+                return;
+            }
             fragment.appendChild(card);
         });
         grid.appendChild(fragment);
+        this.syncGridGaps();
     },
 
     // "Şu an dinliyorum" kartı: durumu "listening" olan en son güncellenen albüm
         // Kitaplığın üstü: solda "şu an dinliyorum", sağda en sevilen 10 albümün rafı
+    // Geniş ekranda favori rafı başlığın sağında: tahta rafın üstünde küçük kapaklar
+    renderHeadShelf() {
+        const hs = document.getElementById('head-shelf');
+        if (!hs) return;
+        const favs = AppState.isLoading ? [] : AppState.library.filter(a => a.shelfAt).sort((a, b) => a.shelfAt.localeCompare(b.shelfAt)).slice(0, 10);
+        hs.classList.toggle('has-recs', favs.length > 0);
+        hs.innerHTML = favs.length ? `
+            <span class="hs-row"><span class="hs-end" aria-hidden="true" title="${t('shelf_title')}"><i class="ph-fill ph-star"></i></span>${favs.map(a => `<button type="button" onclick="app.openAlbumModal('${Utils.escapeHTML(a.id)}')" class="hs-rec" data-tip="${Utils.escapeHTML(a.title)} — ${Utils.escapeHTML(a.artist)}" aria-label="${Utils.escapeHTML(a.title)} — ${Utils.escapeHTML(a.artist)}"><img ${AlbumUtils.coverAttrs(a)} alt="" loading="lazy"></button>`).join('')}</span>
+            <span class="hs-board" aria-hidden="true"></span>` : '';
+    },
+
     renderNowListening() {
         const top = document.getElementById('library-top');
         const box = document.getElementById('now-listening');
         const shelf = document.getElementById('shelf');
         if (!top || !box || !shelf) return;
+        this.renderHeadShelf();
+        this._loopCard = null;
+        box.classList.add('hidden'); box.innerHTML = ''; // "Loop'ta" artık kitaplık ızgarasının ilk kartı
         if (AppState.isLoading || !AppState.isLoggedIn || AppState.filterStatus || AppState.library.length === 0) {
-            top.classList.add('hidden'); box.innerHTML = ''; shelf.innerHTML = ''; return;
+            top.classList.add('hidden'); shelf.innerHTML = ''; return;
         }
 
         const current = AppState.isAdmin ? AlbumUtils.loopPick(AppState.library) : AppState.loopPick;
@@ -2808,26 +3594,13 @@ const app = {
                 best ? `<span class="truncate">${t('loop_best')}: <i class="font-bold text-gray-900 dark:text-white">${Utils.escapeHTML(best.title)}</i> <b class="${AlbumUtils.tier(best.rating).text}">${best.rating.toFixed(1)}</b></span>` : '',
                 next ? `<span class="truncate">${t('loop_next')}: <i class="text-gray-900 dark:text-white">${Utils.escapeHTML(next.number)}. ${Utils.escapeHTML(next.title)}</i></span>` : ''
             ].filter(Boolean).join('');
-            box.innerHTML = `
-                <button onclick="app.openAlbumModal('${Utils.escapeHTML(current.id)}')" class="w-full h-full text-left flex gap-4 p-3 rounded-2xl bg-white/70 dark:bg-surface border border-[#c9b8a6] dark:border-[#4a3829] hover:bg-lightHighlight dark:hover:bg-surfaceHover transition-colors">
-                    <span class="relative w-24 h-24 lg:h-auto lg:w-auto lg:min-w-[96px] aspect-square self-center lg:self-stretch flex-shrink-0 shadow-[0_8px_18px_rgba(36,26,19,0.25)]"><img ${AlbumUtils.coverAttrs(current)} alt="" class="absolute inset-0 w-full h-full object-cover"></span>
-                    <span class="flex flex-col gap-1 min-w-0 flex-1 lg:flex-none lg:max-w-[300px] justify-center">
-                        <span class="flex items-center gap-1.5 text-[11px] font-bold tracking-[0.15em] text-[#a85a1a] dark:text-primary"><i class="ph-bold ph-repeat text-sm"></i>${t('loop_title')}</span>
-                        <span class="text-lg font-black italic leading-tight text-gray-900 dark:text-white line-clamp-2">${Utils.escapeHTML(current.title)}</span>
-                        <span class="text-sm text-gray-600 dark:text-gray-400 truncate">${Utils.escapeHTML(current.artist)} · <span class="text-[0.85em]">${Utils.escapeHTML(current.year)}</span></span>
-                        ${(current.genres?.length || (current.label && current.label !== t('unknown'))) ? `<span class="text-sm text-gray-600 dark:text-gray-400 truncate">${[current.genres?.[0] ? `<span class="text-[0.75em]">${Utils.escapeHTML(tGenre(current.genres[0]))}</span>` : '', current.label && current.label !== t('unknown') ? `<span class="text-[0.5em] tracking-wide">${Utils.escapeHTML(current.label)}</span>` : ''].filter(Boolean).join(' <span class="text-[0.75em]">·</span> ')}</span>` : ''}
-                        <span class="lg:hidden mt-1">${bars(12)}</span>
-                    </span>
-                    <span class="loop-extra hidden lg:flex flex-col justify-center gap-2.5 flex-1 min-w-0 pl-5 border-l border-[#e6dbcf] dark:border-[#3b2b20]">
-                        ${bars(46, 40)}
-                        ${facts ? `<span class="flex flex-wrap gap-x-5 gap-y-0.5 text-xs text-gray-600 dark:text-gray-400 min-w-0">${facts}</span>` : ''}
-                    </span>
-                    <span role="img" aria-label="${t(complete ? 'album_avg' : 'so_far_avg')}: ${shown > 0 ? shown.toFixed(1) : '–'}" title="${t(complete ? 'album_avg' : 'so_far_avg')}" class="score-badge ${complete ? '' : 'is-partial'} self-start flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center -rotate-[8deg] text-base font-black ${AlbumUtils.tier(shown).text}">${shown > 0 ? shown.toFixed(1) : '–'}</span>
-                </button>`;
-            box.classList.remove('hidden');
-        } else { box.classList.add('hidden'); box.innerHTML = ''; }
+            const prog = AlbumUtils.progress(current);
+            const meta2 = [current.genres?.[0] ? Utils.escapeHTML(tGenre(current.genres[0])) : '', current.label && current.label !== t('unknown') ? `<span class="text-[0.8em] tracking-wide">${Utils.escapeHTML(current.label)}</span>` : ''].filter(Boolean).join(' · ');
+            // Izgaranın ilk kartı: kitaplık listesinde döngüdeki albüm en başa alınır
+            this._loopCard = { id: current.id, album: current };
+        }
 
-        // Raf: en fazla 10 plak, eklenme sırasıyla soldan sağa
+        // Raf (telefon ve dar ekran): en fazla 10 plak, eklenme sırasıyla soldan sağa
         const favs = AppState.library.filter(a => a.shelfAt).sort((a, b) => a.shelfAt.localeCompare(b.shelfAt)).slice(0, 10);
         const tilts = [-2.5, 1.5, -1, 2, -1.5, 1, -2, 2.5, -0.5, 1.5];
         const records = favs.map((a, i) => `
@@ -3017,7 +3790,7 @@ const app = {
         // Masaüstü: yan yana çipler · Telefon: seçili durum tek düğmede, diğerleri altında açılan listede
         const pills = chips.map(([val, label, n, icon]) => {
             const active = AppState.filterStatus === val;
-            return `<button onclick="app.setStatusFilter('${val}')" aria-pressed="${active}" aria-label="${label}: ${n}" title="${label}" class="hidden sm:inline-flex h-9 px-4 items-center gap-1.5 rounded-full text-xs font-bold whitespace-nowrap flex-shrink-0 border transition-colors ${active ? 'bg-gray-900 border-gray-900 text-lightBg dark:bg-gray-100 dark:border-gray-100 dark:text-dark' : 'bg-transparent border-[#c9b8a6] dark:border-[#4a3829] text-gray-800 dark:text-gray-200 hover:bg-lightHighlight dark:hover:bg-surface'}"><i class="${active ? 'ph-fill' : 'ph-bold'} ${icon} text-base" aria-hidden="true"></i><span>${label}</span><span class="${active ? 'opacity-70' : 'text-gray-600 dark:text-gray-400'}">${n}</span></button>`;
+            return `<button onclick="app.setStatusFilter('${val}')" aria-pressed="${active}" aria-label="${label}: ${n}" title="${label}" class="hidden sm:inline-flex h-9 px-3.5 items-center gap-1.5 rounded-full text-xs font-bold whitespace-nowrap flex-shrink-0 border transition-colors ${active ? 'bg-gray-900 border-gray-900 text-lightBg dark:bg-gray-100 dark:border-gray-100 dark:text-dark' : 'bg-transparent border-[#c9b8a6] dark:border-[#4a3829] text-gray-800 dark:text-gray-200 hover:bg-lightHighlight dark:hover:bg-surface'}"><i class="${active ? 'ph-fill' : 'ph-bold'} ${icon} text-base" aria-hidden="true"></i><span class="${active ? 'opacity-70' : 'text-gray-600 dark:text-gray-400'}">${n}</span></button>`;
         }).join('');
         const cur = chips.find(c => c[0] === AppState.filterStatus) || chips[0];
         const items = chips.map(([val, label, n, icon]) => {
@@ -3027,7 +3800,7 @@ const app = {
         box.innerHTML = `${pills}
             <div class="status-menu sm:hidden relative">
                 <button type="button" id="status-menu-btn" onclick="app.toggleStatusMenu()" aria-haspopup="true" aria-expanded="false" aria-controls="status-menu-list" aria-label="${cur[1]}: ${cur[2]}" class="h-9 pl-2.5 pr-2 inline-flex items-center gap-1 rounded-full text-xs font-bold whitespace-nowrap border bg-gray-900 border-gray-900 text-lightBg dark:bg-gray-100 dark:border-gray-100 dark:text-dark"><i class="ph-fill ${cur[3]} text-base" aria-hidden="true"></i><span class="opacity-80">${cur[2]}</span><i class="ph-bold ph-caret-down text-[11px] opacity-70 status-caret" aria-hidden="true"></i></button>
-                <div id="status-menu-list" role="menu" class="status-menu-list hidden absolute left-0 top-full mt-2 z-50 w-56 p-1.5 rounded-2xl bg-[#fbf8f4] dark:bg-surface border border-[#c9b8a6] dark:border-[#4a3829] shadow-[0_16px_40px_rgba(36,26,19,0.25)]">${items}</div>
+                <div id="status-menu-list" role="menu" class="status-menu-list hidden absolute left-0 top-full mt-2 z-50 w-56 p-1.5 rounded-2xl bg-[#fcf8f1] dark:bg-surface border border-[#c9b8a6] dark:border-[#4a3829] shadow-[0_16px_40px_rgba(36,26,19,0.25)]">${items}</div>
             </div>`;
     },
 
@@ -3136,7 +3909,7 @@ const app = {
             card.innerHTML = `
                 <img loading="lazy" src="${Utils.escapeHTML(it.cover || AlbumUtils.NO_COVER)}" alt="" onerror="app.coverFallback(this)" class="w-20 h-20 bg-lightHighlight rounded-lg object-cover flex-shrink-0">
                 <div class="flex flex-col justify-center overflow-hidden flex-grow">
-                    <h4 class="font-bold text-gray-900 dark:text-white truncate text-sm md:text-base italic">${title}</h4>
+                    <h4 class="album-name font-bold truncate text-sm md:text-base italic">${title}</h4>
                     <p class="text-xs text-gray-600 dark:text-gray-400 truncate mb-1">${artist}</p>
                     <div class="flex gap-1.5 mt-1 flex-wrap">
                         ${year ? `<span class="text-[11px] bg-lightBg dark:bg-darker px-2 py-0.5 rounded text-gray-700 dark:text-gray-300 font-bold">${Utils.escapeHTML(year)}</span>` : ''}
@@ -3232,7 +4005,7 @@ const app = {
 
         closeModal(fromHistory = false) {
         const modal = document.getElementById('album-modal');
-        if (!modal || modal.classList.contains('hidden')) return; this.saveScrub(false); this.pvStop();
+        if (!modal || modal.classList.contains('hidden')) return; this.saveScrub(false); this.pvStop(); this._reviewView = false;
         if (!fromHistory && history.state?.raModal) { this._skipPop = true; history.back(); }
         const content = modal.querySelector('.modal-content');
         modal.classList.add('opacity-0');
@@ -3248,7 +4021,7 @@ const app = {
         }, 300);
     },
 
-    updateModalUI() { this.updateShelfButton(); this.updateLoopButton(); if (this._reviewMode) this.renderReviewPanel();
+    updateModalUI() { this.updateHiddenButton(); this.updateShelfButton(); this.updateLoopButton(); if (this._reviewMode) this.renderReviewPanel();
         const al = AppState.currentModalAlbum;
         if(!al) return;
 
@@ -3265,7 +4038,7 @@ const app = {
         const issueNo = pos === -1 ? AppState.library.length + 1 : pos + 1;
         const lang = AppState.language === 'en' ? 'en-US' : 'tr-TR';
         const issueEl = document.getElementById('modal-issue');
-        if (issueEl) issueEl.innerHTML = `<span class="hidden md:inline">RATEAGAINST · ${Utils.escapeHTML(t('issue_label').toLocaleUpperCase(lang))} </span>№ ${issueNo} · ${Utils.escapeHTML(Utils.formatDate(al.updatedAt || al.dateAdded).toLocaleUpperCase(lang))}`;
+        if (issueEl) issueEl.innerHTML = `<span class="hidden md:inline">RATEAGAINST · ${Utils.escapeHTML(t('issue_label').toLocaleUpperCase(lang))} </span>№ ${issueNo} · ${Utils.escapeHTML(Utils.formatDate(((al.averageScore || 0) > 0 && al.completedAt) || al.updatedAt || al.dateAdded).toLocaleUpperCase(lang))}`;
 
         const artistEl = document.getElementById('modal-artist');
         if (artistEl) {
@@ -3289,7 +4062,7 @@ const app = {
         }
 
         this.renderTracklist(); this.renderGenres(); this.calculateAverageScore();
-        this.renderModalStatus(); this.renderModalTags(); this.renderListenLog();
+        this.renderModalStatus(); this.renderModalTags(); this.renderListenLog(); this.renderPvBox();
         this.updateModalButtons();
         requestAnimationFrame(() => this.scrollSelectedTrackIntoView(true));
     },
@@ -3304,6 +4077,30 @@ const app = {
             return `<button role="radio" aria-checked="${on}" onclick="app.setAlbumStatus('${val}')" class="flex-1 h-10 rounded-lg text-xs font-bold transition-colors ${on ? 'bg-primary text-darker' : 'text-gray-700 dark:text-gray-300 hover:bg-lightHighlight dark:hover:bg-surfaceHover'}">${label}</button>`;
         }).join('');
         document.querySelectorAll('#album-modal .modal-status-group').forEach(box => { box.innerHTML = html; });
+        this.updateLaterButton();
+    },
+
+    
+    // Sağ üstteki yer imi: "daha sonra dinleyeceğim" (Dinlenecek). Kaldırınca durum puanlamaya göre belirlenir
+    toggleListenLater() {
+        const al = AppState.currentModalAlbum;
+        if (!al) return;
+        if (AlbumUtils.status(al) === 'planned') {
+            const p = AlbumUtils.progress(al);
+            al.status = p.total > 0 && p.rated === p.total ? 'done' : 'listening';
+        } else al.status = 'planned';
+        this.renderModalStatus();
+        this.persistIfSaved();
+        this.updateModalButtons();
+        showToast(t(al.status === 'planned' ? 'later_on' : 'later_off'), 'success');
+    },
+
+    updateLaterButton() {
+        const btn = document.getElementById('later-btn'), al = AppState.currentModalAlbum;
+        if (!btn || !al) return;
+        const on = AlbumUtils.status(al) === 'planned';
+        btn.setAttribute('aria-pressed', on);
+        btn.innerHTML = `<i class="ph-${on ? 'fill' : 'bold'} ph-bookmark-simple text-lg"></i>`;
     },
 
     setAlbumStatus(status) {
@@ -3448,7 +4245,7 @@ const app = {
         if (meta) meta.innerHTML = `
             <span role="img" aria-label="${t('album_avg')}: ${avg > 0 ? avg.toFixed(1) : '–'}" class="score-badge ${complete ? '' : 'is-partial'} flex-shrink-0 w-[54px] h-[54px] rounded-full flex items-center justify-center -rotate-[8deg] text-[19px] font-black ${AlbumUtils.tier(avg).text}">${avg > 0 ? avg.toFixed(1) : '–'}</span>
             <div class="min-w-0">
-                <p class="text-[23px] font-black italic leading-[1.05] tracking-tight text-gray-900 dark:text-white truncate" title="${Utils.escapeHTML(al.title)}">${Utils.escapeHTML(al.title)}</p>
+                <p class="album-name text-[23px] font-black italic leading-[1.05] tracking-tight truncate" title="${Utils.escapeHTML(al.title)}">${Utils.escapeHTML(al.title)}</p>
                 <p class="mt-0.5 text-[15px] text-gray-700 dark:text-gray-300 flex items-baseline gap-x-1.5 min-w-0 whitespace-nowrap">
                     <span class="truncate">${Utils.escapeHTML(al.artist)}</span>
                     <span class="text-[#a85a1a] dark:text-[#e8955a]" aria-hidden="true">·</span>
@@ -3467,7 +4264,7 @@ const app = {
             </div>
             <article class="review-scroll flex-1 min-h-0 overflow-y-auto pt-4 pr-2 flex flex-col gap-4">
                 <div class="flex flex-col gap-4 text-[16px] leading-[1.85] text-gray-900 dark:text-gray-100">
-                    ${paragraphs.length ? paragraphs.map(p => `<p>${Utils.escapeHTML(p)}</p>`).join('') : `<p class="italic text-gray-600 dark:text-gray-400">${t('review_empty')}</p>`}
+                    ${paragraphs.length ? AlbumUtils.noteHTML(al.note) : `<p class="italic text-gray-600 dark:text-gray-400">${t('review_empty')}</p>`}
                 </div>
                 ${favs.length ? `<section class="pt-3 border-t border-[#c9b8a6] dark:border-[#4a3829] flex flex-col gap-2">
                     <h4 class="text-[11px] font-bold tracking-[0.2em] text-gray-600 dark:text-gray-400">${t('favorite_tracks').toUpperCase()}</h4>
@@ -3477,7 +4274,9 @@ const app = {
                     <h4 class="text-[11px] font-bold tracking-[0.2em] text-gray-600 dark:text-gray-400">${t('track_notes').toUpperCase()}</h4>
                     ${trackNotes.map(tr => `<div class="pl-3 border-l-[3px] border-[#a85a1a] dark:border-[#e8955a]"><p class="font-bold italic text-gray-900 dark:text-white mb-1">${Utils.escapeHTML(tr.number)}. ${Utils.escapeHTML(tr.title)}</p>${AlbumUtils.noteParagraphs(tr.note).map(p => `<p class="text-[15px] leading-relaxed text-gray-700 dark:text-gray-300">${Utils.escapeHTML(p)}</p>`).join('')}</div>`).join('')}
                 </section>` : ''}
+                ${this.commentsHTML('panel')}
             </article>`;
+        this.loadComments('panel');
     },
 
     openReview() {
@@ -3522,7 +4321,7 @@ const app = {
             <div class="flex items-center gap-3.5">
                 <img ${AlbumUtils.coverAttrs(al)} alt="" class="w-[88px] h-[88px] md:w-32 md:h-32 rounded-xl object-cover shadow-lg flex-shrink-0">
                 <header class="flex-1 min-w-0 flex flex-col gap-1">
-                    <h1 id="review-title" class="text-[24px] md:text-4xl font-black italic leading-[1.1] tracking-tight text-gray-900 dark:text-white line-clamp-2 break-words">${Utils.escapeHTML(al.title)}</h1>
+                    <h1 id="review-title" class="album-name text-[24px] md:text-4xl font-black italic leading-[1.1] tracking-tight line-clamp-2 break-words">${Utils.escapeHTML(al.title)}</h1>
                     <p class="text-[15px] md:text-lg text-gray-700 dark:text-gray-300 flex flex-wrap items-baseline gap-x-1.5">
                         <span>${Utils.escapeHTML(al.artist)}</span>
                         <span class="text-[#a85a1a] dark:text-[#e8955a]" aria-hidden="true">·</span>
@@ -3538,7 +4337,7 @@ const app = {
             </div>` : ''}
             <hr class="border-lightBorder dark:border-gray-800">
             <div class="flex flex-col gap-4 text-[17px] leading-[1.8] text-gray-900 dark:text-gray-100">
-                ${paragraphs.length ? paragraphs.map(p => `<p>${Utils.escapeHTML(p)}</p>`).join('') : `<p class="text-base italic text-gray-600 dark:text-gray-400">${t('review_empty')}</p>`}
+                ${paragraphs.length ? AlbumUtils.noteHTML(al.note) : `<p class="text-base italic text-gray-600 dark:text-gray-400">${t('review_empty')}</p>`}
             </div>
             ${favs.length ? `<section class="p-4 rounded-2xl bg-white dark:bg-surface border border-lightBorder dark:border-gray-800 flex flex-col gap-2.5">
                 <h2 class="text-[11px] font-black tracking-widest text-gray-600 dark:text-gray-400">${t('favorite_tracks').toUpperCase()}</h2>
@@ -3548,7 +4347,9 @@ const app = {
                 <h2 class="text-[11px] font-black tracking-widest text-gray-600 dark:text-gray-400">${t('track_notes').toUpperCase()}</h2>
                 ${trackNotes.map(tr => `<div class="pl-4 border-l-2 border-primary/50"><p class="font-bold italic text-gray-900 dark:text-white mb-1">${Utils.escapeHTML(tr.number)}. ${Utils.escapeHTML(tr.title)}</p>${AlbumUtils.noteParagraphs(tr.note).map(p => `<p class="text-base leading-relaxed text-gray-700 dark:text-gray-300">${Utils.escapeHTML(p)}</p>`).join('')}</div>`).join('')}
             </section>` : ''}
+            ${this.commentsHTML('page')}
         `;
+        this.loadComments('page');
     },
 
     copyReviewMarkdown() {
@@ -3596,6 +4397,7 @@ const app = {
 
     toggleEditMode() {
         this.isEditMode = !this.isEditMode;
+        if (this.isEditMode) this._reviewView = false;
         document.querySelector('#album-modal .modal-content')?.classList.toggle('is-editing', this.isEditMode);
         const btn = document.getElementById('edit-mode-btn');
         const aBtn = document.getElementById('auto-fetch-genre-btn');
@@ -3631,6 +4433,10 @@ const app = {
         this.renderDateAdded();
         this.renderTracklist(); 
         this.renderGenres();
+        this.renderModalFacts();
+        // Parçalar plak görünümünde düzenlenemez: düzenlemede listeye geçilir, bitince plağa dönülür
+        if (this.isEditMode && this._trackChart) { this._editFromChart = true; this.setTrackView(false); }
+        else if (!this.isEditMode && this._editFromChart) { this._editFromChart = false; this.setTrackView(true); }
     },
 
     updateAlbumField(field, val) { if(AppState.currentModalAlbum) { AppState.currentModalAlbum[field] = val.trim(); this.updateModalButtons(); } },
@@ -4039,6 +4845,7 @@ const app = {
         
         this.updateModalButtons();
         if (type === 'track') this.renderTracklist();
+        this.renderModalSide();
         
         textarea.value = text;
         if(display) display.textContent = text;
@@ -4063,7 +4870,7 @@ const app = {
         html += `<div class="flex items-center gap-4 mb-5 pb-4 border-b border-lightBorder dark:border-gray-800">
             <img ${AlbumUtils.coverAttrs(album)} alt="" class="w-16 h-16 rounded-xl shadow-md object-cover border border-lightBorder dark:border-gray-800 flex-shrink-0">
             <div class="min-w-0">
-                <h2 class="text-xl md:text-2xl font-black text-gray-900 dark:text-white italic leading-tight truncate">${Utils.escapeHTML(album.title)}</h2>
+                <h2 class="album-name text-xl md:text-2xl font-black italic leading-tight truncate">${Utils.escapeHTML(album.title)}</h2>
                 <p class="text-sm md:text-base font-semibold text-gray-500 dark:text-gray-400 truncate mt-0.5">${Utils.escapeHTML(album.artist)}</p>
             </div>
         </div>`;
@@ -4216,7 +5023,7 @@ const app = {
         // Telefonda parçalar 13'e kadar kaydırmadan sığacak şekilde ölçeklenir
         con.closest('.modal-content')?.style.setProperty('--m-rows', Math.min(Math.max((al.tracks || []).length, 1), 13));
 
-        if (!al.tracks || al.tracks.length === 0) { con.innerHTML = `<p class="text-sm text-gray-600 dark:text-gray-400 py-4">${t('no_tracks')}</p>`; return; }
+        if (!al.tracks || al.tracks.length === 0) { con.innerHTML = this.isEditMode ? `<button type="button" onclick="app.addNewTrack()" class="tre-add"><i class="ph-bold ph-plus"></i> ${t('add_new_track')}<span class="tre-hint">${t('tracks_paste_hint')}</span></button>` : `<p class="text-sm text-gray-600 dark:text-gray-400 py-4">${t('no_tracks')}</p>`; return; }
 
         let rows = al.tracks.map((tr, idx) => ({ ...tr, originalIndex: idx }));
         if (AppState.modalTrackSort === 'rating') {
@@ -4238,10 +5045,12 @@ const app = {
 
             // Düzenleme modu: parça adı/numarası ve silme
             if (this.isEditMode) {
-                return `<div class="flex items-center gap-2 py-1.5">
-                    <input type="text" aria-label="#" value="${num}" onblur="app.updateTrackField(${i},'number',this.value)" class="w-10 h-10 text-xs text-center font-bold bg-white dark:bg-surface border border-lightBorder dark:border-gray-800 rounded-lg outline-none focus:border-primary text-gray-800 dark:text-gray-200">
-                    <input type="text" aria-label="${t('tracklist')}" value="${title}" onblur="app.updateTrackField(${i},'title',this.value)" class="flex-1 min-w-0 h-10 px-3 text-sm italic font-bold bg-white dark:bg-surface border border-lightBorder dark:border-gray-800 rounded-lg outline-none focus:border-primary text-gray-800 dark:text-gray-200">
-                    <button onclick="app.deleteTrack(${i})" aria-label="${title} — ${t('remove')}" class="w-10 h-10 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 flex items-center justify-center flex-shrink-0"><i class="ph-bold ph-trash"></i></button>
+                const dur = tr.duration > 0 ? `${Math.floor(tr.duration / 60)}:${String(Math.round(tr.duration % 60)).padStart(2, '0')}` : '';
+                return `<div class="tr-edit" data-edit-row="${i}">
+                    <input type="text" class="tre-num" aria-label="#" value="${num}" onchange="app.updateTrackField(${i},'number',this.value)" onkeydown="app.trackEditKey(event, ${i})">
+                    <input type="text" class="tre-title" aria-label="${t('track_name')}" placeholder="${t('track_name')}" value="${title}" onchange="app.updateTrackField(${i},'title',this.value)" onkeydown="app.trackEditKey(event, ${i})" onpaste="app.trackEditPaste(event, ${i})">
+                    <input type="text" class="tre-dur" inputmode="numeric" aria-label="${t('f_length')}" placeholder="0:00" value="${dur}" onchange="app.updateTrackDuration(${i}, this.value)" onkeydown="app.trackEditKey(event, ${i})">
+                    <button type="button" class="tre-del" onclick="app.deleteTrack(${i})" aria-label="${title} — ${t('remove')}" title="${t('remove')}"><i class="ph-bold ph-x"></i></button>
                 </div>`;
             }
 
@@ -4274,7 +5083,7 @@ const app = {
         }).join('');
 
         if (this.isEditMode) {
-            html += `<button onclick="app.addNewTrack()" class="w-full h-11 mt-2 border-2 border-dashed border-[#c9b8a6] dark:border-[#4a3829] rounded-xl text-gray-700 dark:text-gray-300 font-bold flex items-center justify-center gap-2 hover:bg-[#ebe2d3]/60 dark:hover:bg-[#2a1f17]/60"><i class="ph-bold ph-plus text-lg"></i> ${t('add_new_track')}</button>`;
+            html += `<button type="button" onclick="app.addNewTrack()" class="tre-add"><i class="ph-bold ph-plus"></i> ${t('add_new_track')}<span class="tre-hint">${t('tracks_paste_hint')}</span></button>`;
         }
 
         con.innerHTML = html; this.bindScrub();
@@ -4449,7 +5258,11 @@ const app = {
     setTrackRating(idx, value) {
         const al = AppState.currentModalAlbum;
         if (!al?.tracks?.[idx]) return;
-        al.tracks[idx].rating = value; al.sortAt = new Date().toISOString();
+        const p0 = AlbumUtils.progress(al), wasDone = p0.total > 0 && p0.rated === p0.total;
+        al.tracks[idx].rating = value;
+        // Puanlaması bitmiş albümde puan değişirse albüm öne taşınmaz, paylaşım tarihi değişmez
+        if (!wasDone) al.sortAt = new Date().toISOString();
+        else if (!al.completedAt) al.completedAt = al.sortAt || al.updatedAt || new Date().toISOString();
         this.renderTracklist();
         this.calculateAverageScore();
 
@@ -4470,8 +5283,7 @@ const app = {
 
         const totalTracks = al.tracks ? al.tracks.length : 0;
         const ratedTracks = al.tracks ? al.tracks.filter(tr => tr.rating > 0) : [];
-        const runningAvg = ratedTracks.length ? ratedTracks.reduce((s, tr) => s + tr.rating, 0) / ratedTracks.length : 0;
-        const shown = Math.round(runningAvg * 10) / 10;
+        const shown = AlbumUtils.runningAvg(al); // süreye göre ağırlıklı
 
         const avgEl = document.getElementById('modal-avg-score');
         if (avgEl) avgEl.textContent = shown > 0 ? shown.toFixed(1) : '–';
@@ -4489,15 +5301,72 @@ const app = {
 
         al.averageScore = totalTracks > 0 && ratedTracks.length === totalTracks ? shown : 0;
         // Puanlamanın bittiği an: ilk tamamlandığında kaydedilir (eski albümlerde son puanlama zamanı)
-        if (al.averageScore > 0) { if (!al.completedAt) al.completedAt = al.sortAt || new Date().toISOString(); }
-        else if (al.completedAt) delete al.completedAt;
+        // Puanlamanın bittiği an bir kez kaydedilir; sonradan bir parçanın puanı değişse de bu tarih değişmez
+        if (al.averageScore > 0 && !al.completedAt) al.completedAt = al.sortAt || al.updatedAt || new Date().toISOString();
+        this.renderModalFacts(); this.renderModalSide();
     },
 
-    addNewTrack() {
+addNewTrack() {
         if (!AppState.currentModalAlbum) return;
         if (!AppState.currentModalAlbum.tracks) AppState.currentModalAlbum.tracks = [];
         const tracks = AppState.currentModalAlbum.tracks;
-        tracks.push({ id: 'manual_' + Date.now(), title: t('add_new_track'), number: String(tracks.length + 1), rating: 0 });
+        tracks.push({ id: 'manual_' + Date.now(), title: '', number: String(tracks.length + 1), rating: 0 });
+        this.renderTracklist();
+        this.calculateAverageScore();
+        this.updateModalButtons();
+        const rows = document.querySelectorAll('#modal-tracklist .tre-title');
+        rows[rows.length - 1]?.focus();
+    },
+
+    // Parça numaraları 1, 2, 3… ise ekleme / silme sonrası yeniden sıralanır ("A1" gibi numaralara dokunulmaz)
+    renumberTracks() {
+        const tr = AppState.currentModalAlbum?.tracks || [];
+        if (tr.every(x => /^\d*$/.test(String(x.number ?? '')))) tr.forEach((x, k) => { x.number = String(k + 1); });
+    },
+
+    updateTrackDuration(idx, val) {
+        const tr = AppState.currentModalAlbum?.tracks?.[idx];
+        if (!tr) return;
+        const m = String(val).trim().match(/^(?:(\d+):)?(\d{1,2})(?::(\d{2}))?$/);
+        const secs = !m ? 0 : m[3] !== undefined ? (+m[1] || 0) * 3600 + +m[2] * 60 + +m[3] : m[1] !== undefined ? +m[1] * 60 + +m[2] : +m[2];
+        if (secs > 0) tr.duration = secs; else delete tr.duration;
+        this.updateModalButtons();
+        this.renderModalFacts();
+    },
+
+    // Düzenlemede klavye: Enter → alttaki parça (sondaysa yeni parça), ↑ ↓ → satırlar arasında gezinme
+    trackEditKey(e, idx) {
+        const el = e.target, row = el.closest('.tr-edit');
+        if (!row) return;
+        const cls = [...el.classList].find(c => c.startsWith('tre-'));
+        const go = (r) => r?.querySelector('.' + cls)?.focus();
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const next = row.nextElementSibling;
+            if (next?.matches('.tr-edit')) go(next);
+            else { el.blur(); this.addNewTrack(); }
+        } else if (e.key === 'ArrowDown' && row.nextElementSibling?.matches('.tr-edit')) { e.preventDefault(); go(row.nextElementSibling); }
+        else if (e.key === 'ArrowUp' && row.previousElementSibling?.matches('.tr-edit')) { e.preventDefault(); go(row.previousElementSibling); }
+    },
+
+    // Birden çok satır yapıştırılırsa her satır bir parça olur ("1. Ad 3:45" gibi numara ve süreler ayrıştırılır)
+    trackEditPaste(e, idx) {
+        const lines = (e.clipboardData?.getData('text/plain') || '').split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+        const al = AppState.currentModalAlbum;
+        if (lines.length < 2 || !al?.tracks?.[idx]) return;
+        e.preventDefault();
+        const parse = (l) => {
+            let d = 0;
+            l = l.replace(/^\s*\d{1,3}\s*[.)\-–:]?\s+/, '');
+            l = l.replace(/[\s\-–(]*(\d{1,2}):(\d{2})\)?\s*$/, (_, m, s2) => { d = +m * 60 + +s2; return ''; }).trim();
+            return { title: l, d };
+        };
+        const items = lines.map(parse).filter(x => x.title);
+        if (!items.length) return;
+        const first = al.tracks[idx];
+        first.title = items[0].title; if (items[0].d) first.duration = items[0].d;
+        al.tracks.splice(idx + 1, 0, ...items.slice(1).map((x, k) => ({ id: `manual_${Date.now()}_${k}`, title: x.title, number: '', rating: 0, ...(x.d ? { duration: x.d } : {}) })));
+        this.renumberTracks();
         this.renderTracklist();
         this.calculateAverageScore();
         this.updateModalButtons();
@@ -4506,6 +5375,7 @@ const app = {
     deleteTrack(idx) {
         if (!AppState.currentModalAlbum || !AppState.currentModalAlbum.tracks) return;
         AppState.currentModalAlbum.tracks.splice(idx, 1);
+        this.renumberTracks();
         this.editingTrack = null;
         this.renderTracklist();
         this.calculateAverageScore();
@@ -4630,7 +5500,7 @@ const app = {
                 <button onclick="app.openAlbumModal('${Utils.escapeHTML(a.id)}')" class="flex gap-3 items-center flex-1 min-w-0 text-left rounded-xl">
                     <img ${AlbumUtils.coverAttrs(a)} alt="" loading="lazy" class="w-16 h-16 rounded-lg object-cover flex-shrink-0">
                     <span class="flex flex-col gap-0.5 min-w-0">
-                        <span class="text-sm font-bold italic text-gray-900 dark:text-white truncate">${Utils.escapeHTML(a.title)}</span>
+                        <span class="album-name text-sm font-bold italic truncate">${Utils.escapeHTML(a.title)}</span>
                         <span class="text-xs text-gray-700 dark:text-gray-300 truncate">${Utils.escapeHTML(a.artist)} · ${Utils.escapeHTML(a.year)}</span>
                         <span class="text-[11px] text-gray-600 dark:text-gray-400">${this.relativeTime(a.dateAdded)}</span>
                     </span>
@@ -4675,7 +5545,7 @@ const app = {
         }
         const start = new Date(now.getFullYear(), now.getMonth() + AppState.summaryOffset, 1);
         const end = new Date(start.getFullYear(), start.getMonth() + 1, 1);
-        const label = start.toLocaleDateString(AppState.language === 'en' ? 'en-US' : 'tr-TR', { month: 'long', year: 'numeric' });
+        const label = start.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
         return { start, end, label };
     },
 
@@ -4755,7 +5625,7 @@ const app = {
                     <img ${AlbumUtils.coverAttrs(a)} alt="" loading="lazy" class="w-10 h-10 rounded object-cover flex-shrink-0">
                     <span class="flex-1 min-w-0">
                         <span class="block text-sm font-bold italic truncate text-gray-900 dark:text-white">${Utils.escapeHTML(tr.title)}</span>
-                        <span class="block text-[11px] text-gray-600 dark:text-gray-400 truncate">${Utils.escapeHTML(a.artist)} · ${Utils.escapeHTML(a.title)}</span>
+                        <span class="block text-[11px] text-gray-600 dark:text-gray-400 truncate">${Utils.escapeHTML(a.artist)} · <span class="album-name">${Utils.escapeHTML(a.title)}</span></span>
                     </span>
                     <span class="text-xs font-black ${AlbumUtils.tier(5).text} flex-shrink-0">5 ★</span>
                 </button>
@@ -4877,7 +5747,7 @@ const app = {
             tl.innerHTML = '';
             [...rated].sort((a,b)=>b.averageScore-a.averageScore).slice(0,5).forEach((al, i) => {
                 const el = document.createElement('div'); el.className = 'flex items-center gap-3 p-2 bg-lightBg dark:bg-surface rounded-xl cursor-pointer active:scale-95 transition-transform hover:bg-lightHighlight dark:hover:bg-surfaceHover'; el.onclick = () => this.openAlbumModal(al.id, al.title, al.artist, al.year);
-                el.innerHTML = `<span class="font-bold text-gray-600 dark:text-gray-400 w-4 text-center">${i+1}</span><img ${AlbumUtils.coverAttrs(al)} alt="" class="w-10 h-10 rounded shadow-sm object-cover"><div class="flex-1 min-w-0"><p class="text-sm font-bold truncate italic">${Utils.escapeHTML(al.title)}</p><p class="text-[11px] text-gray-500 truncate">${Utils.escapeHTML(al.artist)}</p></div><span class="text-xs font-bold text-yellow-500 bg-yellow-50 dark:bg-yellow-500/10 px-2 py-1 rounded-lg">${al.averageScore.toFixed(1)}</span>`;
+                el.innerHTML = `<span class="font-bold text-gray-600 dark:text-gray-400 w-4 text-center">${i+1}</span><img ${AlbumUtils.coverAttrs(al)} alt="" class="w-10 h-10 rounded shadow-sm object-cover"><div class="flex-1 min-w-0"><p class="album-name text-sm font-bold truncate italic">${Utils.escapeHTML(al.title)}</p><p class="text-[11px] text-gray-500 truncate">${Utils.escapeHTML(al.artist)}</p></div><span class="text-xs font-bold text-yellow-500 bg-yellow-50 dark:bg-yellow-500/10 px-2 py-1 rounded-lg">${al.averageScore.toFixed(1)}</span>`;
                 tl.appendChild(el);
             });
         }
@@ -4943,7 +5813,7 @@ const app = {
 
 // Ziyaretçi modu: düzenleme işlevleri yalnızca yönetici girişinde çalışır
 const ADMIN_ONLY = [
-    'importData', 'uploadAvatar', 'persistIfSaved', 'chartStep', 'chartSave', 'openQuickRate', 'rateWithUndo', 'commitAndNext', 'saveAlbumData', 'deleteAlbumData', 'cacheCover', 'cacheMissingCovers',
+    'importData', 'toggleListenLater', 'editCountry', 'setCountry', 'setAlbumFact', 'updateTrackDuration', 'trackEditPaste', 'uploadAvatar', 'persistIfSaved', 'chartStep', 'chartSave', 'rateWithUndo', 'toggleHidden', 'openLog', 'openInbox', 'toggleInboxRead', 'markAllInboxRead','approveComment', 'deleteComment', 'deleteSuggestion', 'searchSuggestion', 'refreshInboxCount', 'commitAndNext', 'saveAlbumData', 'deleteAlbumData', 'cacheCover', 'cacheMissingCovers',
     'search', 'searchFromLink', 'addToQueue', 'startListening',
     'toggleLoop', 'toggleShelf', 'setAlbumStatus', 'addTag', 'removeTag', 'logListen', 'deleteListen',
     'editReviewNote', 'updateAddedDate', 'toggleEditMode', 'updateAlbumField', 'updateTrackField',
@@ -4969,7 +5839,7 @@ ADMIN_ONLY.forEach(name => {
     app.toggleSidebar = function (open) {
         const closed = document.getElementById('right-sidebar')?.classList.contains('translate-x-full');
         const opening = open === true || (open === undefined && closed);
-        if (opening && !AppState.isAdmin) return this.toggleLoginModal(true);
+        if (opening && !AppState.isAdmin) return this.toggleVisitorMenu(); // ziyaretçide avatar açılır menü
         return sidebarToggle.call(this, open);
     };
 }

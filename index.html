@@ -29,9 +29,9 @@
                         darker: '#140e0a',
                         surface: '#241a13',
                         surfaceHover: '#3b2b20',
-                        lightBg: '#f7f4f0',
-                        lightHighlight: '#ebe4dc',
-                        lightBorder: '#dcd1c6',
+                        lightBg: '#f8f3ea',
+                        lightHighlight: '#ece2d2',
+                        lightBorder: '#e0d3bf',
                         primary: '#d17b38', 
                         gray: {
                             50: '#fcfbfa', 100: '#f5f0eb', 200: '#e6dbcf', 300: '#d6c5b3',
@@ -48,7 +48,7 @@
 
         if (localStorage.getItem('theme') === 'light' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: light)').matches)) {
             document.documentElement.classList.remove('dark');
-            document.getElementById('meta-theme-color').setAttribute('content', '#f7f4f0');
+            document.getElementById('meta-theme-color').setAttribute('content', '#f8f3ea');
         } else {
             document.documentElement.classList.add('dark');
         }
@@ -69,16 +69,30 @@
           
          
         <div class="flex items-center gap-2">
+            <!-- Geniş ekranda favori rafı (JS doldurur) -->
+            <div id="head-shelf" class="head-shelf" aria-label="Shelf"></div>
             <!-- Ziyaretçi: yalnızca dil ve tema düğmeleri (ayarlar paneli yok) -->
             <div class="visitor-only items-center gap-1.5">
+                <button type="button" onclick="app.openSuggest()" data-i18n-aria="suggest_btn" data-i18n-title="suggest_btn" class="h-9 rounded-full border border-[#c9b8a6] dark:border-[#4a3829] text-gray-800 dark:text-gray-200 hover:bg-lightHighlight dark:hover:bg-surface transition-colors flex items-center justify-center gap-1.5 px-2.5 text-[11px] font-bold tracking-[0.06em]"><i class="ph-bold ph-paper-plane-tilt text-base"></i><span class="hidden sm:inline" data-i18n="suggest_btn">Albüm öner</span></button>
                 <button type="button" onclick="app.toggleLanguage()" data-i18n-aria="toggle_language" data-i18n-title="toggle_language" class="h-9 rounded-full border border-[#c9b8a6] dark:border-[#4a3829] text-gray-800 dark:text-gray-200 hover:bg-lightHighlight dark:hover:bg-surface transition-colors flex items-center justify-center min-w-[2.25rem] px-2 text-[11px] font-bold tracking-[0.12em]"><span id="lang-icon-head">EN</span></button>
                 <button type="button" onclick="app.toggleTheme()" data-i18n-aria="toggle_theme" data-i18n-title="toggle_theme" class="h-9 rounded-full border border-[#c9b8a6] dark:border-[#4a3829] text-gray-800 dark:text-gray-200 hover:bg-lightHighlight dark:hover:bg-surface transition-colors flex items-center justify-center w-9"><i id="theme-icon-head" class="ph-fill ph-sun text-base"></i></button>
             </div>
-            <button id="header-user-btn" onclick="app.toggleSidebar(true)" data-i18n-aria="menu_settings" class="p-1 rounded-full hover:bg-lightHighlight dark:hover:bg-gray-800 transition-colors active:scale-95 flex items-center justify-center border border-transparent">
-                <div id="header-user-avatar-container" class="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shadow-sm overflow-hidden">
+            <div class="relative" id="user-menu-wrap">
+            <button id="header-user-btn" onclick="app.toggleSidebar(true)" data-i18n-aria="menu_settings" class="relative p-1 rounded-full hover:bg-lightHighlight dark:hover:bg-gray-800 transition-colors active:scale-95 flex items-center justify-center border border-transparent">
+                <span id="inbox-dot" class="hidden absolute top-0.5 right-0.5 w-2.5 h-2.5 rounded-full bg-[#d17b38] ring-2 ring-lightBg dark:ring-darker"></span><div id="header-user-avatar-container" class="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shadow-sm overflow-hidden">
                     <i class="ph-bold ph-list text-xl"></i>
                 </div>
             </button>
+            <!-- Ziyaretçi menüsü: avatara dokununca açılır (öneri, tema, dil, özet, yönetici girişi) -->
+            <div id="visitor-menu" role="menu" class="visitor-menu hidden">
+                <button type="button" role="menuitem" onclick="app.toggleVisitorMenu(false); app.openSuggest()"><i class="ph-bold ph-paper-plane-tilt"></i><span data-i18n="suggest_btn">Albüm öner</span></button>
+                <button type="button" role="menuitem" onclick="app.toggleTheme(); app.updateVisitorMenu()"><i id="vm-theme-icon" class="ph-bold ph-moon"></i><span data-i18n="menu_theme">Tema</span><span class="vm-val" id="vm-theme-val"></span></button>
+                <button type="button" role="menuitem" onclick="app.toggleLanguage(); app.updateVisitorMenu()"><i class="ph-bold ph-globe-simple"></i><span data-i18n="menu_lang">Dil</span><span class="vm-val" id="vm-lang-val"></span></button>
+                <button type="button" role="menuitem" onclick="app.toggleVisitorMenu(false); app.showView('stats')"><i class="ph-bold ph-chart-bar"></i><span data-i18n="nav_stats">Özet</span></button>
+                <hr>
+                <button type="button" role="menuitem" onclick="app.toggleVisitorMenu(false); app.toggleLoginModal(true)"><i class="ph-bold ph-sign-in"></i><span data-i18n="admin_login">Yönetici girişi</span></button>
+            </div>
+            </div>
         </div>
     </header>
 
@@ -145,56 +159,40 @@
         </div>
 
         <div class="flex-grow overflow-y-auto">
-            <div class="p-4 border-b border-lightBorder dark:border-gray-800 space-y-4">
-                
-                <div class="flex justify-between items-center">
-                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2"><i class="ph ph-globe text-lg"></i> <span data-i18n="language_label">Dil / Language</span></span>
-                    <button onclick="app.toggleLanguage()" class="bg-lightBorder dark:bg-gray-800 px-3 py-1 rounded-full text-sm font-bold w-12 text-center" id="lang-icon">TR</button>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2"><i class="ph ph-palette text-lg"></i> <span data-i18n="theme_label">Tema / Theme</span></span>
-                    <button onclick="app.toggleTheme()" class="bg-lightBorder dark:bg-gray-800 p-1.5 rounded-full text-sm font-bold">
-                        <i id="theme-icon" class="ph ph-moon text-lg px-1"></i>
+            <!-- Sayfalar (eski alt menü) -->
+            <nav class="side-pages p-4 border-b border-lightBorder dark:border-gray-800" data-i18n-aria="menu_settings">
+                <button onclick="app.showView('library'); app.toggleSidebar(false);"><i class="ph-bold ph-books"></i><span data-i18n="nav_library">Kitaplık</span></button>
+                <button onclick="app.showView('queue'); app.toggleSidebar(false);"><i class="ph-bold ph-queue"></i><span data-i18n="nav_queue">Sırada</span></button>
+                <button onclick="app.showView('search'); app.toggleSidebar(false);"><i class="ph-bold ph-magnifying-glass"></i><span data-i18n="nav_search">Ara</span></button>
+                <button onclick="app.showView('stats'); app.toggleSidebar(false);"><i class="ph-bold ph-chart-bar"></i><span data-i18n="nav_stats">Özet</span></button>
+            </nav>
+            <div class="p-4 border-b border-lightBorder dark:border-gray-800">
+                <div class="side-tools">
+                    <button onclick="app.toggleLanguage()" data-i18n-aria="toggle_language" data-i18n-title="toggle_language"><b id="lang-icon">TR</b><span data-i18n="menu_lang">Dil</span></button>
+                    <button onclick="app.toggleTheme()" data-i18n-aria="toggle_theme" data-i18n-title="toggle_theme"><i id="theme-icon" class="ph ph-moon"></i><span data-i18n="menu_theme">Tema</span></button>
+                    <button id="install-app-btn" onclick="app.installApp()" class="hidden" data-i18n-title="install_app"><i class="ph-bold ph-device-mobile"></i><span data-i18n="install_short">Yükle</span></button>
+                    <button onclick="app.openInbox()" data-i18n-title="inbox"><i class="ph ph-tray"></i><span data-i18n="inbox_short">Gelen</span>
+                        <span id="inbox-count" class="hidden">0</span>
                     </button>
                 </div>
-                <!-- Telefonda uygulama olarak kullan -->
-                <button id="install-app-btn" onclick="app.installApp()" class="hidden w-full h-11 rounded-xl bg-primary text-darker text-sm font-bold items-center justify-center gap-2 active:scale-[0.98] transition-transform">
-                    <i class="ph-bold ph-device-mobile text-lg"></i> <span data-i18n="install_app">Uygulama olarak yükle</span>
-                </button>
-                <p id="install-ios-hint" class="hidden text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+                <p id="install-ios-hint" class="hidden mt-3 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
                     <i class="ph-bold ph-export text-sm align-[-2px]"></i> <span data-i18n="install_ios_hint">Uygulama olarak eklemek için Safari'de Paylaş düğmesine, sonra “Ana Ekrana Ekle”ye dokun.</span>
                 </p>
             </div>
 
             <div class="p-4 border-b border-lightBorder dark:border-gray-800 space-y-2">
-                <h3 class="text-xs font-bold text-gray-500 uppercase mb-3" data-i18n="nav_data">Data</h3>
-                <label class="w-full block text-left px-3 py-2.5 rounded-lg bg-lightBg dark:bg-surfaceHover text-sm flex items-center gap-3 text-gray-700 dark:text-gray-300 active:scale-95 transition-transform cursor-pointer">
-                    <i class="ph ph-upload-simple text-lg text-green-500"></i> <span data-i18n="import_json">Import JSON</span>
-                    <input type="file" id="import-file" class="hidden" accept=".json" onchange="app.importData(event); app.toggleSidebar(false);">
-                </label>
-                <button onclick="app.exportData(); app.toggleSidebar(false);" class="w-full text-left px-3 py-2.5 rounded-lg bg-lightBg dark:bg-surfaceHover text-sm flex items-center gap-3 text-gray-700 dark:text-gray-300 active:scale-95 transition-transform">
-                    <i class="ph ph-download-simple text-lg text-blue-500"></i> <span data-i18n="export_json">Export JSON</span>
-                </button>
-                <button onclick="app.exportMarkdown(); app.toggleSidebar(false);" class="w-full text-left px-3 py-2.5 rounded-lg bg-lightBg dark:bg-surfaceHover text-sm flex items-center gap-3 text-gray-700 dark:text-gray-300 active:scale-95 transition-transform">
-                    <i class="ph ph-article text-lg text-purple-500"></i> <span data-i18n="export_markdown">İncelemeleri Markdown'a aktar</span>
-                </button>
-                <button onclick="app.exportHighRatedTracks(); app.toggleSidebar(false);" class="w-full text-left px-3 py-2.5 rounded-lg bg-lightBg dark:bg-surfaceHover text-sm flex items-center gap-3 text-gray-700 dark:text-gray-300 active:scale-95 transition-transform">
-                    <i class="ph-fill ph-spotify-logo text-lg text-primary"></i> <span data-i18n="export_4_5_star">Favori (4-5 Yıldız) Parçalar</span>
-                </button>
+                <h3 class="text-xs font-bold text-gray-500 uppercase mb-3 pt-2" data-i18n="nav_data">Data</h3>
+                <div class="side-data">
+                    <label data-i18n-title="import_json" data-i18n-aria="import_json" title="Import JSON">
+                        <i class="ph ph-upload-simple"></i>
+                        <input type="file" id="import-file" class="hidden" accept=".json" onchange="app.importData(event); app.toggleSidebar(false);">
+                    </label>
+                    <button onclick="app.exportData(); app.toggleSidebar(false);" data-i18n-title="export_json" data-i18n-aria="export_json" title="Export JSON"><i class="ph ph-download-simple"></i></button>
+                    <button onclick="app.exportMarkdown(); app.toggleSidebar(false);" data-i18n-title="export_markdown" data-i18n-aria="export_markdown" title="Markdown"><i class="ph ph-article"></i></button>
+                    <button onclick="app.exportHighRatedTracks(); app.toggleSidebar(false);" data-i18n-title="export_4_5_star" data-i18n-aria="export_4_5_star" title="4-5"><i class="ph-fill ph-spotify-logo"></i></button>
+                </div>
             </div>
 
-            <div class="flex flex-col h-64 flex-grow">
-                <div class="p-4 pb-2">
-                    <h3 class="text-xs font-bold text-gray-500 uppercase flex items-center gap-2 mb-2">
-                        <i class="ph-fill ph-users text-primary"></i> <span data-i18n="artists">Artists</span>
-                    </h3>
-                    <div class="relative">
-                        <i class="ph ph-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 dark:text-gray-400"></i>
-                        <input type="search" id="sidebar-search" data-i18n-aria="search_artist" data-i18n-placeholder="search_artist" placeholder="Search artist..." class="w-full bg-lightBg dark:bg-darker border-none text-gray-800 dark:text-gray-200 rounded-lg pl-9 pr-3 py-2 text-sm outline-none" oninput="app.debouncedSidebarSearch(event)">
-                    </div>
-                </div>
-                <ul id="sidebar-artist-list" class="overflow-y-auto px-2 pb-4 space-y-1 hide-scrollbar"></ul>
-            </div>
         </div>
     </div>
 
@@ -472,7 +470,7 @@
     </div>
 
     <!-- Alt menü -->
-    <div class="fixed bottom-4 left-0 right-0 z-[50] flex justify-center px-4 pointer-events-none" style="padding-bottom: env(safe-area-inset-bottom);">
+    <div id="bottom-nav" class="fixed bottom-4 left-0 right-0 z-[50] flex justify-center px-4 pointer-events-none" style="padding-bottom: env(safe-area-inset-bottom);">
         <nav aria-label="Ana menü" class="pointer-events-auto w-full max-w-[22rem] bg-white/90 dark:bg-surface/90 backdrop-blur-xl border border-lightBorder/50 dark:border-gray-700/50 rounded-[28px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] flex justify-between items-center p-1.5 gap-1">
             <button onclick="app.showView('library')" id="nav-library" class="nav-btn flex-1 flex flex-col items-center justify-center gap-0.5 h-14 rounded-3xl transition-all active:scale-95">
                 <i id="nav-icon-library" class="ph-fill ph-books text-2xl"></i>
@@ -515,6 +513,13 @@
                         <button onclick="app.toggleEditMode()" id="edit-mode-btn" data-i18n-aria="edit" class="w-11 h-11 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-lightHighlight dark:hover:bg-surface transition-colors">
                             <i class="ph-bold ph-pencil-simple text-lg"></i>
                         </button>
+                        <button type="button" onclick="app.toggleListenLater()" id="later-btn" data-i18n-aria="listen_later" data-i18n-title="listen_later" aria-pressed="false" class="w-11 h-11 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-lightHighlight dark:hover:bg-surface transition-colors"><i class="ph-bold ph-bookmark-simple text-lg"></i></button>
+                        <button type="button" onclick="app.toggleHidden()" id="hidden-btn" data-i18n-aria="hide_from_visitors" aria-pressed="false" class="w-11 h-11 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-lightHighlight dark:hover:bg-surface transition-colors">
+                            <i class="ph-bold ph-eye text-lg"></i>
+                        </button>
+                        <button type="button" onclick="app.openLog()" id="log-btn" data-i18n-aria="change_log" data-i18n-title="change_log" class="w-11 h-11 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-lightHighlight dark:hover:bg-surface transition-colors">
+                            <i class="ph-bold ph-clock-counter-clockwise text-lg"></i>
+                        </button>
                         </div><button onclick="app.closeModal()" data-i18n-aria="close" class="w-11 h-11 rounded-full flex items-center justify-center text-gray-900 dark:text-gray-100 hover:bg-lightHighlight dark:hover:bg-surface transition-colors">
                             <i class="ph-bold ph-x text-xl"></i>
                         </button>
@@ -524,7 +529,7 @@
                 <!-- Başlık ve puan mührü -->
                 <div class="flex items-start md:items-end justify-between gap-4 mt-4 flex-shrink-0">
                     <div class="min-w-0 flex-1">
-                        <h2 id="modal-title" class="text-[34px] md:text-[46px] font-black italic leading-[1.02] tracking-tight outline-none break-words md:line-clamp-2" onblur="app.updateAlbumField('title', this.innerText)">Album Title</h2>
+                        <h2 id="modal-title" class="album-name text-[34px] md:text-[46px] font-black italic leading-[1.02] tracking-tight outline-none break-words md:line-clamp-2" onblur="app.updateAlbumField('title', this.innerText)">Album Title</h2>
                         <p class="mt-2 text-[19px] md:text-[22px] text-gray-700 dark:text-gray-300 flex flex-wrap items-baseline gap-x-2 gap-y-1">
                             <span id="modal-artist" class="outline-none" onblur="app.updateAlbumField('artist', this.innerText)">Artist Name</span>
                             <span class="text-[#a85a1a] dark:text-[#e8955a]" aria-hidden="true">·</span>
@@ -548,7 +553,6 @@
                             <div class="flex items-end gap-4 md:flex-col md:items-stretch md:gap-2">
                                 <div class="relative w-[170px] h-[170px] md:w-full md:h-auto md:aspect-square flex-shrink-0 group shadow-[0_10px_24px_rgba(0,0,0,0.25)]">
                                     <img id="modal-cover" src="" alt="" class="w-full h-full object-cover bg-lightHighlight dark:bg-surface">
-                                    <button type="button" id="pv-cover-btn" onclick="app.pvAlbum()" class="pv-play"><i class="pv-b ph-fill ph-play"></i><span data-i18n="pv_listen">Dinle · 30 sn</span></button>
                                     <button onclick="app.toggleCoverEdit()" data-i18n-aria="image_link" class="absolute bottom-2 right-2 w-10 h-10 bg-black/60 backdrop-blur-md text-white rounded-full flex items-center justify-center shadow-lg active:scale-90 opacity-100 md:opacity-0 md:group-hover:opacity-100 focus-visible:opacity-100 transition-opacity">
                                         <i class="ph-bold ph-image-square"></i>
                                     </button>
@@ -583,6 +587,7 @@
                             <button id="modal-quote" onclick="app.openNotePanel('album')" class="text-left border-l-[3px] border-[#a85a1a] dark:border-[#e8955a] pl-3 py-1 text-[15px] italic leading-relaxed text-gray-800 dark:text-gray-200 hover:opacity-80 transition-opacity line-clamp-3 md:line-clamp-2"></button>
 
                             <div class="flex flex-wrap items-center gap-1.5">
+                                <ul id="modal-facts" class="modal-facts"></ul>
                                 <div id="modal-genres" class="contents"></div>
                                 <button onclick="app.autoFetchGenres(false)" id="auto-fetch-genre-btn" class="hidden h-7 px-2 text-[11px] text-[#a85a1a] dark:text-primary font-bold bg-primary/10 rounded-lg flex-shrink-0" data-i18n="auto_find">Oto Bul</button>
                                 <div id="modal-tags" class="contents"></div>
@@ -596,12 +601,13 @@
                         </div>
                     </div>
 
+                    <section id="modal-side" class="modal-side"></section>
                     <!-- Parçalar (masaüstünde sağ sütun, liste kendi içinde kayar) -->
                     <div id="modal-tracks-col" class="min-w-0 flex flex-col order-2 md:order-none md:col-start-2 md:row-start-1 md:min-h-0">
                         <div class="flex justify-between items-center gap-3 pb-1.5 mb-1 border-b border-[#c9b8a6] dark:border-[#4a3829] flex-shrink-0">
-                            <h3 class="text-xs tracking-[0.2em] font-bold uppercase"><span data-i18n="tracks_header">Parçalar</span> <span id="modal-track-count" class="normal-case tracking-normal font-normal text-gray-600 dark:text-gray-400"></span></h3>
+                            <div class="view-seg" role="group"><button type="button" data-view="chart" onclick="app.setTrackView(true)"><i class="ph-bold ph-vinyl-record"></i><span data-i18n="record_header">Plak</span></button><button type="button" data-view="list" onclick="app.setTrackView(false)"><i class="ph-bold ph-list-dashes"></i><span data-i18n="tracks_header">Parçalar</span></button><button type="button" data-view="review" onclick="app.setReviewView()"><i class="ph-bold ph-article"></i><span data-i18n="review_tab">İnceleme</span></button></div><h3 class="text-xs tracking-[0.2em] font-bold uppercase"><span data-i18n="tracks_header">Parçalar</span> <span id="modal-track-count" class="normal-case tracking-normal font-normal text-gray-600 dark:text-gray-400"></span></h3>
                             <div class="flex items-center gap-1 text-[11px]">
-                                <button type="button" onclick="app.openQuickRate()" id="btn-quick-rate" data-i18n-aria="quick_rate" data-i18n-title="quick_rate" class="w-8 h-8 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-lightHighlight dark:hover:bg-surface transition-colors"><i class="ph-bold ph-lightning text-base"></i></button><button type="button" onclick="app.toggleTrackChart()" id="btn-track-chart" aria-pressed="false" data-i18n-aria="chart_view" data-i18n-title="chart_view" class="w-8 h-8 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-lightHighlight dark:hover:bg-surface transition-colors"><i class="ph-bold ph-vinyl-record text-base"></i></button>
+                                <button type="button" onclick="app.toggleTrackChart()" id="btn-track-chart" aria-pressed="false" data-i18n-aria="chart_view" data-i18n-title="chart_view" class="w-8 h-8 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-lightHighlight dark:hover:bg-surface transition-colors"><i class="ph-bold ph-vinyl-record text-base"></i></button>
                                 <button onclick="app.toggleModalTrackSort('default')" id="btn-track-sort-default" data-i18n-aria="default_sort" data-i18n-title="default_sort" class="w-8 h-8">
                                     <i class="ph-bold ph-list-numbers text-base"></i>
                                 </button>
@@ -610,7 +616,7 @@
                                 </button>
                             </div>
                         </div>
-                        <div id="modal-tracklist" class="track-scroll md:flex-1 md:min-h-0 md:overflow-y-auto md:-mx-2 md:px-2 md:pb-2"></div><div id="modal-trackchart" class="hidden"></div>
+                        <div id="modal-tracklist" class="track-scroll md:flex-1 md:min-h-0 md:overflow-y-auto md:-mx-2 md:px-2 md:pb-2"></div><div id="modal-trackchart" class="hidden"></div><div id="pv-box" class="pv-box"></div>
                     </div>
                 </div>
             </div>
