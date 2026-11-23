@@ -1643,6 +1643,7 @@ const app = {
         const box = document.getElementById('pv-box'), al = AppState.currentModalAlbum;
         if (!box || !al) return;
         const pv = this._pv && this._pv.al === al ? this._pv : null;
+        box.classList.toggle('is-on', !!pv); // telefonda kutu yalnız çalarken görünür
         const paused = !pv || pv.loading || !this._pvAudio || this._pvAudio.paused;
         const cover = this.chartCoverSrc();
         const img = cover ? `<img src="${Utils.escapeHTML(cover)}" alt="" onerror="this.remove()">` : '';
@@ -2428,7 +2429,8 @@ const app = {
         let bar = document.getElementById('pv-bar');
         // Ziyaretçi plak görünümündeyken oynatıcı plağın ortasındadır, alttaki şerit gösterilmez
         this.renderPvBox();
-        if (!pv || this.isThreeCol() || (!AppState.isAdmin && this._trackChart)) { bar?.classList.add('hidden'); return; }
+        // Geniş ekranda ve telefonda çalar panelin içindeki kutuda; alttaki yüzen çubuk yalnız tablet genişliğinde
+        if (!pv || this.isThreeCol() || window.matchMedia('(max-width: 767px)').matches || (!AppState.isAdmin && this._trackChart)) { bar?.classList.add('hidden'); return; }
         if (!bar && content) {
             bar = document.createElement('div');
             bar.id = 'pv-bar';
