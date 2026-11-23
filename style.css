@@ -889,7 +889,7 @@ body:has(#quick-rate:not(.hidden)) #undo-bar.is-open { transform: translate(-50%
     #pv-bar .pv-btns button { width: 32px; height: 32px; }
 }
 /* ===== Plak: dilim numaraları, ortadaki önizleme çalar ve ilerleme halkası ===== */
-.tc-num { transform-box: fill-box; transform-origin: center; transform: rotate(calc(var(--rot, 0deg) * -1)); font-size: 4.4px; font-weight: 700; text-anchor: middle; dominant-baseline: central; fill: rgba(251, 246, 239, .78); pointer-events: none; font-variant-numeric: tabular-nums; }
+.tc-num { font-size: 4.4px; font-weight: 700; text-anchor: middle; dominant-baseline: central; fill: rgba(251, 246, 239, .78); pointer-events: none; font-variant-numeric: tabular-nums; }
 .tc-label-shade { transition: fill-opacity .3s; }
 .tc-wrap.is-bare .tc-label-shade { fill-opacity: .25; }
 .tc-ring { display: none; position: absolute; left: 50%; top: 50%; width: 38.6cqw; height: 38.6cqw; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none;
@@ -1448,4 +1448,10 @@ h1[data-i18n="app_title"] { color: #3a2416 !important; }
 @media (max-width: 1199px) {
     #modal-tracks-col .view-seg { display: flex; flex: 1 1 auto; min-width: 0; }
     #modal-tracks-col .view-seg button { flex: 1 1 0; min-width: 0; justify-content: center; }
+}
+
+/* Parça listesinden önizleme: dokunmatik ekranda ▶ her zaman görünür (ziyaretçide satıra dokunmak da çalar) */
+@media (hover: none) {
+    #modal-tracklist .tr-numc { width: auto; min-width: 20px; gap: 6px; }
+    #modal-tracklist .tr-play { display: inline-block; font-size: 11px; opacity: .8; }
 }

@@ -2138,6 +2138,8 @@ const app = {
         svg.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') st.hover = true; });
         svg.addEventListener('pointerleave', () => { st.hover = false; });
         let prev = performance.now();
+        // Parça numaraları dik kalsın: her numara kendi noktası etrafında ters döndürülür (iPhone Safari'de CSS dönüşü kayıyordu)
+        const numEls = [...svg.querySelectorAll('.tc-num')].map(n => [n, n.getAttribute('x'), n.getAttribute('y')]);
         const tick = (now) => {
             if (!svg.isConnected || svg.getClientRects().length === 0) return; // pencere kapandıysa dur
             const dt = Math.min(64, now - prev) / 1000; prev = now;
@@ -2147,7 +2149,8 @@ const app = {
                 st.angle += st.vel * dt;
             }
             rotor.setAttribute('transform', `rotate(${(st.angle % 360).toFixed(2)} 100 100)`);
-            rotor.style.setProperty('--rot', `${(st.angle % 360).toFixed(2)}deg`); // parça numaraları dik kalsın
+            const back = (-(st.angle % 360)).toFixed(2);
+            numEls.forEach(([n, x, y]) => n.setAttribute('transform', `rotate(${back} ${x} ${y})`));
             this._tcRaf = requestAnimationFrame(tick);
         };
         this._tcRaf = requestAnimationFrame(tick);
@@ -5072,8 +5075,8 @@ const app = {
             }
 
             // Normal satır: noktalı çizgiyle puana bağlanan dergi listesi
-            return `<button type="button" onclick="app.selectTrack(${i})" data-track="${i}"${r === 5 ? ' data-perfect' : ''} aria-label="${title}: ${score} — ${t('tap_to_rate')}" class="w-full h-11 md:h-[34px] flex items-center gap-2.5 text-left rounded-lg -mx-1 px-1 hover:bg-[#ebe2d3]/70 dark:hover:bg-[#2a1f17]/70 transition-colors">
-                <span class="tr-numc w-5 text-xs font-bold ${muted} flex-shrink-0"><span class="tr-n">${num}</span><i class="tr-play ph-fill ph-play" onclick="event.stopPropagation(); app.pvPlay(${i})" title="${t('pv_play')}" aria-hidden="true"></i><span class="pv-eq" aria-hidden="true"><b></b><b></b><b></b></span></span>
+            return `<button type="button" onclick="${AppState.isAdmin ? `app.selectTrack(${i})` : `app.pvPlay(${i})`}" data-track="${i}"${r === 5 ? ' data-perfect' : ''} aria-label="${title}: ${score} — ${AppState.isAdmin ? t('tap_to_rate') : t('pv_play')}" class="w-full h-11 md:h-[34px] flex items-center gap-2.5 text-left rounded-lg -mx-1 px-1 hover:bg-[#ebe2d3]/70 dark:hover:bg-[#2a1f17]/70 transition-colors">
+                <span class="tr-numc w-5 text-xs font-bold ${muted} flex-shrink-0"><span class="tr-n">${num}</span><i class="tr-play ph-fill ph-play" onclick="event.stopPropagation(); app.pvPlay(${i})" title="${t('pv_play')}" aria-hidden="true"></i><span class="pv-eq" aria-hidden="true" onclick="event.stopPropagation(); app.pvToggle()"><b></b><b></b><b></b></span></span>
                 <span class="min-w-0 truncate text-[15px] italic">${title}</span>
                 ${hasNote ? `<i class="ph-fill ph-paperclip text-xs text-[#a85a1a] dark:text-primary flex-shrink-0" aria-hidden="true"></i>` : ''}
                 <span class="flex-1 min-w-[12px] border-b-2 border-dotted border-[#c9b8a6] dark:border-[#4a3829] translate-y-1" aria-hidden="true"></span>
